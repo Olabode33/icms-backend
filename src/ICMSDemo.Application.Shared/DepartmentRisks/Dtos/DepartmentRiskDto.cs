@@ -1,0 +1,20 @@
+﻿
+using System;
+using Abp.Application.Services.Dto;
+
+namespace ICMSDemo.DepartmentRisks.Dtos
+{
+    public class DepartmentRiskDto : EntityDto
+    {
+		public string Code { get; set; }
+
+		public string Comments { get; set; }
+
+
+		 public int? DepartmentId { get; set; }
+
+		 		 public int? RiskId { get; set; }
+
+		 
+    }
+}

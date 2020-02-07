@@ -1,0 +1,129 @@
+{
+  "IsRegenerate": false,
+  "MenuPosition": "main",
+  "RelativeNamespace": "DepartmentRiskControls",
+  "EntityName": "DepartmentRiskControl",
+  "EntityNamePlural": "DepartmentRiskControls",
+  "TableName": "DepartmentRiskControls",
+  "PrimaryKeyType": "int",
+  "BaseClass": "Entity",
+  "EntityHistory": true,
+  "AutoMigration": true,
+  "UpdateDatabase": true,
+  "CreateUserInterface": true,
+  "CreateViewOnly": true,
+  "CreateExcelExport": true,
+  "PagePermission": {
+    "Host": false,
+    "Tenant": true
+  },
+  "Properties": [
+    {
+      "Name": "Code",
+      "Type": "string",
+      "MaxLength": -1,
+      "MinLength": -1,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0,
+        "MaximumValue": 0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": false,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "Notes",
+      "Type": "string",
+      "MaxLength": -1,
+      "MinLength": -1,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0,
+        "MaximumValue": 0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": false,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "Frequency",
+      "Type": "Frequency",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0,
+        "MaximumValue": 0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": true,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    }
+  ],
+  "NavigationProperties": [
+    {
+      "Namespace": "ICMSDemo.DepartmentRisks",
+      "ForeignEntityName": "DepartmentRisk",
+      "IdType": "int",
+      "IsNullable": true,
+      "PropertyName": "DepartmentRiskId",
+      "DisplayPropertyName": "Code",
+      "DuplicationNumber": 0,
+      "RelationType": "single"
+    },
+    {
+      "Namespace": "ICMSDemo.Controls",
+      "ForeignEntityName": "Control",
+      "IdType": "int",
+      "IsNullable": true,
+      "PropertyName": "ControlId",
+      "DisplayPropertyName": "Code",
+      "DuplicationNumber": 0,
+      "RelationType": "single"
+    }
+  ],
+  "EnumDefinitions": [
+    {
+      "Name": "Frequency",
+      "Namespace": "ICMSDemo",
+      "EnumProperties": [
+        {
+          "Name": "Daily",
+          "Value": 0
+        },
+        {
+          "Name": "Weekly",
+          "Value": 1
+        },
+        {
+          "Name": "Monthly",
+          "Value": 2
+        },
+        {
+          "Name": "Quarterly",
+          "Value": 3
+        },
+        {
+          "Name": "Yearly",
+          "Value": 4
+        }
+      ]
+    }
+  ]
+}
