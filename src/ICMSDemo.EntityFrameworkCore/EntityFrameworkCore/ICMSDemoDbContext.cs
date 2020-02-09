@@ -26,6 +26,8 @@ namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
+        
+        public virtual DbSet<ExceptionTypeEscalation> ExceptionTypeEscalations { get; set; }
         public virtual DbSet<ExceptionIncident> ExceptionIncidents { get; set; }
 
         public virtual DbSet<TestingTemplate> TestingTemplates { get; set; }

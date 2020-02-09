@@ -32,5 +32,7 @@ namespace ICMSDemo.TestingTemplates
         [ForeignKey("DepartmentRiskControlId")]
 		public DepartmentRiskControl DepartmentRiskControlFk { get; set; }
 		public string ExtensionData { get; set; }
+
+		public int? SampleSize { set; get; }
 	}
 }

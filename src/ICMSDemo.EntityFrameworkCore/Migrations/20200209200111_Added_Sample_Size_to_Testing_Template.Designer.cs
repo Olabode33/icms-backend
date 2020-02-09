@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200209200111_Added_Sample_Size_to_Testing_Template")]
+    partial class Added_Sample_Size_to_Testing_Template
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1696,31 +1698,6 @@ namespace ICMSDemo.Migrations
                     b.ToTable("ExceptionTypes");
                 });
 
-            modelBuilder.Entity("ICMSDemo.ExceptionTypes.ExceptionTypeEscalation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("EscalationUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("ExceptionTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EscalationUserId");
-
-                    b.HasIndex("ExceptionTypeId");
-
-                    b.ToTable("ExceptionTypeEscalations");
-                });
-
             modelBuilder.Entity("ICMSDemo.Friendships.Friendship", b =>
                 {
                     b.Property<long>("Id")
@@ -2406,21 +2383,6 @@ namespace ICMSDemo.Migrations
             modelBuilder.Entity("ICMSDemo.ExceptionTypeColumns.ExceptionTypeColumn", b =>
                 {
                     b.HasOne("ICMSDemo.ExceptionTypes.ExceptionType", "ExceptionTypeFk")
-                        .WithMany()
-                        .HasForeignKey("ExceptionTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ICMSDemo.ExceptionTypes.ExceptionTypeEscalation", b =>
-                {
-                    b.HasOne("ICMSDemo.Authorization.Users.User", "EscalationUser")
-                        .WithMany()
-                        .HasForeignKey("EscalationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ICMSDemo.ExceptionTypes.ExceptionType", "ExceptionType")
                         .WithMany()
                         .HasForeignKey("ExceptionTypeId")
                         .OnDelete(DeleteBehavior.Cascade)

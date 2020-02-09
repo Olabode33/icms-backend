@@ -16,6 +16,7 @@ using ICMSDemo.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using ICMSDemo.ExceptionTypeColumns;
 
 namespace ICMSDemo.ExceptionTypes
 {
@@ -24,13 +25,18 @@ namespace ICMSDemo.ExceptionTypes
     {
 		 private readonly IRepository<ExceptionType> _exceptionTypeRepository;
 		 private readonly IExceptionTypesExcelExporter _exceptionTypesExcelExporter;
-		 
+		private readonly IRepository<ExceptionTypeColumn> _exceptionTypeColumnRepository;
+		private readonly IRepository<ExceptionTypeEscalation> _exceptionTypeEscalationRepository;
 
-		  public ExceptionTypesAppService(IRepository<ExceptionType> exceptionTypeRepository, IExceptionTypesExcelExporter exceptionTypesExcelExporter ) 
+		public ExceptionTypesAppService(IRepository<ExceptionType> exceptionTypeRepository,
+			IRepository<ExceptionTypeColumn> exceptionTypeColumnRepository,
+			IRepository<ExceptionTypeEscalation> exceptionTypeEscalationRepository,
+			IExceptionTypesExcelExporter exceptionTypesExcelExporter ) 
 		  {
 			_exceptionTypeRepository = exceptionTypeRepository;
 			_exceptionTypesExcelExporter = exceptionTypesExcelExporter;
-			
+			_exceptionTypeColumnRepository = exceptionTypeColumnRepository;
+			_exceptionTypeEscalationRepository = exceptionTypeEscalationRepository;
 		  }
 
 		 public async Task<PagedResultDto<GetExceptionTypeForViewDto>> GetAll(GetAllExceptionTypesInput input)
@@ -99,20 +105,56 @@ namespace ICMSDemo.ExceptionTypes
 
 		 [AbpAuthorize(AppPermissions.Pages_ExceptionTypes_Create)]
 		 protected virtual async Task Create(CreateOrEditExceptionTypeDto input)
-         {
-            var exceptionType = ObjectMapper.Map<ExceptionType>(input);
+		{
+			var previousCount = await _exceptionTypeRepository.CountAsync();
+			previousCount++;
+			var exceptionType = ObjectMapper.Map<ExceptionType>(input);
+			exceptionType.Code = "EXP-" + previousCount.ToString();
 
-			
 			if (AbpSession.TenantId != null)
 			{
-				exceptionType.TenantId = (int) AbpSession.TenantId;
+				exceptionType.TenantId = (int)AbpSession.TenantId;
 			}
+
+			var id = await _exceptionTypeRepository.InsertAndGetIdAsync(exceptionType);
+
+			if (input.OtherColumns != null)
+			await PopulateOtherColumns(input, id);
+
+
+			if (input.Escalations != null)
+				await PopulationEscation(input, id);
+		}
+
+		private async Task PopulationEscation(CreateOrEditExceptionTypeDto input, int id)
+		{
 		
+			foreach (var item in input.Escalations)
+			{
+				await _exceptionTypeEscalationRepository.InsertAsync(new ExceptionTypeEscalation()
+				{
+					TenantId = (int)AbpSession.TenantId,
+					ExceptionTypeId = id,
+					EscalationUserId = item
+				});
+			}
+		}
 
-            await _exceptionTypeRepository.InsertAsync(exceptionType);
-         }
+		private async Task PopulateOtherColumns(CreateOrEditExceptionTypeDto input, int id)
+		{
+			foreach (var item in input.OtherColumns)
+			{
+				await _exceptionTypeColumnRepository.InsertAsync(new ExceptionTypeColumn()
+				{
+					DataType = item.DataType,
+					ExceptionTypeId = id,
+					Name = item.Name,
+					Required = true
+				});
+			}
+		}
 
-		 [AbpAuthorize(AppPermissions.Pages_ExceptionTypes_Edit)]
+		[AbpAuthorize(AppPermissions.Pages_ExceptionTypes_Edit)]
 		 protected virtual async Task Update(CreateOrEditExceptionTypeDto input)
          {
             var exceptionType = await _exceptionTypeRepository.FirstOrDefaultAsync((int)input.Id);
