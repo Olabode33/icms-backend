@@ -21,7 +21,9 @@ namespace ICMSDemo.DepartmentRisks
 
 		Task<FileDto> GetDepartmentRisksToExcel(GetAllDepartmentRisksForExcelInput input);
 
-		
+		Task<PagedResultDto<GetDepartmentRiskForViewDto>> GetRiskForDepartment(GetAllDepartmentRisksInput input);
+
+
 		Task<PagedResultDto<DepartmentRiskDepartmentLookupTableDto>> GetAllDepartmentForLookupTable(GetAllForLookupTableInput input);
 		
 		Task<PagedResultDto<DepartmentRiskRiskLookupTableDto>> GetAllRiskForLookupTable(GetAllForLookupTableInput input);

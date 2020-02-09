@@ -17,6 +17,7 @@ using ICMSDemo.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Abp.Organizations;
 
 namespace ICMSDemo.DepartmentRisks
 {
@@ -44,6 +45,7 @@ namespace ICMSDemo.DepartmentRisks
 			var filteredDepartmentRisks = _departmentRiskRepository.GetAll()
 						.Include( e => e.DepartmentFk)
 						.Include( e => e.RiskFk)
+
 						.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false  || e.Code.Contains(input.Filter) || e.Comments.Contains(input.Filter))
 						.WhereIf(!string.IsNullOrWhiteSpace(input.CodeFilter),  e => e.Code == input.CodeFilter)
 						.WhereIf(!string.IsNullOrWhiteSpace(input.DepartmentNameFilter), e => e.DepartmentFk != null && e.DepartmentFk.Name == input.DepartmentNameFilter)
@@ -65,10 +67,12 @@ namespace ICMSDemo.DepartmentRisks
 							{
                                 Code = o.Code,
                                 Comments = o.Comments,
-                                Id = o.Id
+                                Id = o.Id,
+                                Cascade = o.Cascade
 							},
                          	DepartmentName = s1 == null ? "" : s1.Name.ToString(),
-                         	RiskName = s2 == null ? "" : s2.Name.ToString()
+                         	RiskName = s2 == null ? "" : s2.Name.ToString(),
+                            Severity = s2 == null ? "" : s2.Severity.ToString()
 						};
 
             var totalCount = await filteredDepartmentRisks.CountAsync();
@@ -78,8 +82,68 @@ namespace ICMSDemo.DepartmentRisks
                 await departmentRisks.ToListAsync()
             );
          }
-		 
-		 public async Task<GetDepartmentRiskForViewDto> GetDepartmentRiskForView(int id)
+
+
+        public async Task<PagedResultDto<GetDepartmentRiskForViewDto>> GetRiskForDepartment(GetAllDepartmentRisksInput input)
+        {
+           var departmentCode = await OrganizationUnitManager.GetCodeAsync((long)input.DepartmentId);
+
+            string[] roots = departmentCode.Split(".");
+            string previousCode = string.Empty;
+            List<string> codes = new List<string>();
+
+            foreach (var item in roots)
+            {
+                previousCode = previousCode == string.Empty ? item : previousCode + "." + item;
+                codes.Add(previousCode);
+            }
+
+           var departments =  await _lookup_departmentRepository.GetAllListAsync(x => codes.Any(e => e == x.Code));
+
+
+            var filteredDepartmentRisks = from o in _departmentRiskRepository
+                                          .GetAll()
+                                          .Include(e => e.RiskFk)
+                                          .Include(x => x.DepartmentFk)
+                                          .Where(x => x.DepartmentId == input.DepartmentId || (x.DepartmentId != input.DepartmentId && x.Cascade))
+                                          select new GetDepartmentRiskForViewDto()
+                                          {
+                                              DepartmentRisk = new DepartmentRiskDto
+                                              {
+                                                  DepartmentId = (int)o.DepartmentId,
+                                                  DeptCode = o.DepartmentFk.Code,
+                                                  Code = o.Code,
+                                                  Comments = o.Comments,
+                                                  Id = o.Id,
+                                                  Cascade = o.Cascade,
+                                                  Inherited = o.DepartmentId == input.DepartmentId ? false : true
+                                              },
+                                              DepartmentName = o.DepartmentFk.Name.ToString(),
+                                              RiskName = o.RiskFk.Name.ToString(),
+                                              Severity = o.RiskFk.Severity.ToString()
+                                          } ;
+            
+
+            //var pagedAndFilteredDepartmentRisks = filteredDepartmentRisks
+            //    .PageBy(input);
+
+          //  var totalCount = await filteredDepartmentRisks.CountAsync();
+
+            var lists = await filteredDepartmentRisks.ToListAsync();
+
+            //fix later 
+            lists = lists.Where(x => codes.Any(e => e == x.DepartmentRisk.DeptCode)).ToList();
+
+            var totalCount = lists.Count;
+
+            var output = lists.Skip(input.SkipCount).Take(input.MaxResultCount);
+
+            return new PagedResultDto<GetDepartmentRiskForViewDto>(totalCount, lists);
+        }
+
+
+
+        public async Task<GetDepartmentRiskForViewDto> GetDepartmentRiskForView(int id)
          {
             var departmentRisk = await _departmentRiskRepository.GetAsync(id);
 
@@ -136,9 +200,11 @@ namespace ICMSDemo.DepartmentRisks
 		 protected virtual async Task Create(CreateOrEditDepartmentRiskDto input)
          {
             var departmentRisk = ObjectMapper.Map<DepartmentRisk>(input);
+            var previousCount = await _departmentRiskRepository.CountAsync(x => x.DepartmentId == input.DepartmentId);
+            previousCount++;
+            departmentRisk.Code = "DR-" + previousCount.ToString();
 
-			
-			if (AbpSession.TenantId != null)
+            if (AbpSession.TenantId != null)
 			{
 				departmentRisk.TenantId = (int) AbpSession.TenantId;
 			}

@@ -8,6 +8,6 @@
 
 		public string ControlCode { get; set;}
 
-
+        public string Department { get; set; }
     }
 }

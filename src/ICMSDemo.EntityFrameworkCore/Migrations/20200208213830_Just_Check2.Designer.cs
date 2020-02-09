@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200208213830_Just_Check2")]
+    partial class Just_Check2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1502,9 +1504,6 @@ namespace ICMSDemo.Migrations
                     b.Property<int?>("ControlId")
                         .HasColumnType("int");
 
-                    b.Property<long?>("DepartmentId")
-                        .HasColumnType("bigint");
-
                     b.Property<int?>("DepartmentRiskId")
                         .HasColumnType("int");
 
@@ -1520,8 +1519,6 @@ namespace ICMSDemo.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ControlId");
-
-                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("DepartmentRiskId");
 
@@ -2177,6 +2174,9 @@ namespace ICMSDemo.Migrations
                 {
                     b.HasBaseType("Abp.Organizations.OrganizationUnit");
 
+                    b.Property<long?>("ControlOfficerUserId")
+                        .HasColumnType("bigint");
+
                     b.Property<long?>("ControlTeamId")
                         .HasColumnType("bigint");
 
@@ -2200,6 +2200,8 @@ namespace ICMSDemo.Migrations
 
                     b.Property<long?>("SupervisorUserId")
                         .HasColumnType("bigint");
+
+                    b.HasIndex("ControlOfficerUserId");
 
                     b.HasIndex("ControlTeamId");
 
@@ -2336,10 +2338,6 @@ namespace ICMSDemo.Migrations
                         .WithMany()
                         .HasForeignKey("ControlId");
 
-                    b.HasOne("ICMSDemo.Departments.Department", "DepartmentFk")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId");
-
                     b.HasOne("ICMSDemo.DepartmentRisks.DepartmentRisk", "DepartmentRiskFk")
                         .WithMany()
                         .HasForeignKey("DepartmentRiskId");
@@ -2448,6 +2446,10 @@ namespace ICMSDemo.Migrations
 
             modelBuilder.Entity("ICMSDemo.Departments.Department", b =>
                 {
+                    b.HasOne("ICMSDemo.Authorization.Users.User", "ControlOfficerUserFk")
+                        .WithMany()
+                        .HasForeignKey("ControlOfficerUserId");
+
                     b.HasOne("Abp.Organizations.OrganizationUnit", "ControlTeamFk")
                         .WithMany()
                         .HasForeignKey("ControlTeamId");

@@ -104,8 +104,12 @@ namespace ICMSDemo.Controls
 		 protected virtual async Task Create(CreateOrEditControlDto input)
          {
             var control = ObjectMapper.Map<Control>(input);
+			var prevCount = await _controlRepository.CountAsync();
+			prevCount++;
 
-			
+			control.Code = "C-" + prevCount.ToString();
+
+
 			if (AbpSession.TenantId != null)
 			{
 				control.TenantId = (int) AbpSession.TenantId;

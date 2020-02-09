@@ -8,6 +8,7 @@ using Abp.Threading;
 using Microsoft.AspNetCore.Identity;
 using ICMSDemo.Authorization.Users;
 using ICMSDemo.MultiTenancy;
+using Abp.Organizations;
 
 namespace ICMSDemo
 {
@@ -19,6 +20,7 @@ namespace ICMSDemo
         public TenantManager TenantManager { get; set; }
 
         public UserManager UserManager { get; set; }
+        public OrganizationUnitManager OrganizationUnitManager { get; set; }
 
         protected ICMSDemoAppServiceBase()
         {

@@ -9,7 +9,9 @@ namespace ICMSDemo.DepartmentRiskControls
 {
     public interface IDepartmentRiskControlsAppService : IApplicationService 
     {
-        Task<PagedResultDto<GetDepartmentRiskControlForViewDto>> GetAll(GetAllDepartmentRiskControlsInput input);
+		Task<PagedResultDto<GetDepartmentRiskControlForViewDto>> GetAllForDepartment(GetAllDepartmentRiskControlsInput input);
+
+		Task<PagedResultDto<GetDepartmentRiskControlForViewDto>> GetAll(GetAllDepartmentRiskControlsInput input);
 
         Task<GetDepartmentRiskControlForViewDto> GetDepartmentRiskControlForView(int id);
 

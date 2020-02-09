@@ -7,7 +7,6 @@
 		public string DepartmentName { get; set;}
 
 		public string RiskName { get; set;}
-
-
+        public string Severity { get; set; }
     }
 }

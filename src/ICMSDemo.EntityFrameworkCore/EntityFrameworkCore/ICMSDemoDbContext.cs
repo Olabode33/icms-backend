@@ -36,6 +36,8 @@ namespace ICMSDemo.EntityFrameworkCore
 
         public virtual DbSet<Department> Departments { get; set; }
 
+        public virtual DbSet<UnitOrganizationRole> UnitOrganizationRoles { get; set; }
+
         public virtual DbSet<DataList> DataLists { get; set; }
 
         public virtual DbSet<ExceptionTypeColumn> ExceptionTypeColumns { get; set; }

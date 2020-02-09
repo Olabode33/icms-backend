@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
 using Abp.Auditing;
+using Abp.Authorization.Users;
 
 namespace ICMSDemo.Departments
 {
@@ -30,11 +31,6 @@ namespace ICMSDemo.Departments
         [ForeignKey("SupervisorUserId")]
 		public User SupervisorUserFk { get; set; }
 		
-		public virtual long? ControlOfficerUserId { get; set; }
-		
-        [ForeignKey("ControlOfficerUserId")]
-		public User ControlOfficerUserFk { get; set; }
-		
 		public virtual long? ControlTeamId { get; set; }
 		
         [ForeignKey("ControlTeamId")]
@@ -45,5 +41,11 @@ namespace ICMSDemo.Departments
 
 		[ForeignKey("SupervisingUnitId")]
 		public OrganizationUnit SupervisingUnit { get; set; }
+	}
+
+
+	public class UnitOrganizationRole : UserOrganizationUnit
+	{
+		public DepartmentRole DepartmentRole { get; set; }
 	}
 }

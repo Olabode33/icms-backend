@@ -16,5 +16,8 @@ namespace ICMSDemo.Organizations.Dto
         public Guid? ProfilePictureId { get; set; }
 
         public DateTime AddedTime { get; set; }
+        public string DepartmentRole { get; set; }
+
+
     }
 }

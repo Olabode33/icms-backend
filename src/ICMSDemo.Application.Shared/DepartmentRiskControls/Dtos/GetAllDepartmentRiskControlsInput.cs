@@ -9,8 +9,8 @@ namespace ICMSDemo.DepartmentRiskControls.Dtos
 
 		public int FrequencyFilter { get; set; }
 
-
-		 public string DepartmentRiskCodeFilter { get; set; }
+		public long? DepartmentId { get; set; }
+		public string DepartmentRiskCodeFilter { get; set; }
 
 		 		 public string ControlCodeFilter { get; set; }
 

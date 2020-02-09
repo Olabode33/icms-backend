@@ -11,8 +11,9 @@ namespace ICMSDemo.DepartmentRisks.Dtos
 
 
 		 public string DepartmentNameFilter { get; set; }
+		 public long? DepartmentId { get; set; }
 
-		 		 public string RiskNameFilter { get; set; }
+		 public string RiskNameFilter { get; set; }
 
 		 
     }

@@ -30,5 +30,7 @@ namespace ICMSDemo.Organizations
         Task<PagedResultDto<NameValueDto>> FindUsers(FindOrganizationUnitUsersInput input);
 
         Task<PagedResultDto<NameValueDto>> FindRoles(FindOrganizationUnitRolesInput input);
+
+        Task<PagedResultDto<OrganizationUnitUserListDto>> GetOrganizationUnitUsersRole(GetOrganizationUnitUsersInput input);
     }
 }

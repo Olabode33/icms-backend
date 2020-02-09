@@ -1,6 +1,4 @@
-﻿using ICMSDemo;
-using ICMSDemo;
-
+﻿
 using System;
 using Abp.Application.Services.Dto;
 using System.ComponentModel.DataAnnotations;
@@ -10,8 +8,6 @@ namespace ICMSDemo.Controls.Dtos
     public class CreateOrEditControlDto : EntityDto<int?>
     {
 
-		[Required]
-		public string Code { get; set; }
 		
 		
 		[Required]

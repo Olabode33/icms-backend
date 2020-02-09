@@ -13,14 +13,18 @@ namespace ICMSDemo.DepartmentRiskControls.Dtos
 		
 		
 		public string Notes { get; set; }
-		
-		
+
+		public virtual long? DepartmentId { get; set; }
+
+
 		public Frequency Frequency { get; set; }
 		
 		
 		 public int? DepartmentRiskId { get; set; }
 		 
 		 		 public int? ControlId { get; set; }
+
+		public bool Cascade { set; get; }
 		 
 		 
     }

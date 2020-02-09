@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
 using Abp.Auditing;
+using ICMSDemo.Departments;
 
 namespace ICMSDemo.DepartmentRiskControls
 {
@@ -27,7 +28,12 @@ namespace ICMSDemo.DepartmentRiskControls
 		
         [ForeignKey("DepartmentRiskId")]
 		public DepartmentRisk DepartmentRiskFk { get; set; }
-		
+
+		public virtual long? DepartmentId { get; set; }
+
+		[ForeignKey("DepartmentId")]
+		public Department DepartmentFk { get; set; }
+
 		public virtual int? ControlId { get; set; }
 		
         [ForeignKey("ControlId")]

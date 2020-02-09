@@ -97,12 +97,16 @@ namespace ICMSDemo.Risks
          {
             var risk = ObjectMapper.Map<Risk>(input);
 
-			
+			var prevCount = await _riskRepository.CountAsync();
+
+			prevCount++;
+
 			if (AbpSession.TenantId != null)
 			{
 				risk.TenantId = (int) AbpSession.TenantId;
 			}
-		
+
+			risk.Code = "R-" + prevCount.ToString();
 
             await _riskRepository.InsertAsync(risk);
          }

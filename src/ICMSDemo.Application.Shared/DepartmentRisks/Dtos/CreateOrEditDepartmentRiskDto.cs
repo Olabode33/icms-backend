@@ -8,13 +8,13 @@ namespace ICMSDemo.DepartmentRisks.Dtos
     public class CreateOrEditDepartmentRiskDto : EntityDto<int?>
     {
 
-		public string Comments { get; set; }
-		
-		
-		 public int? DepartmentId { get; set; }
-		 
-		 		 public int? RiskId { get; set; }
-		 
-		 
+        public string Comments { get; set; }
+
+
+        public int? DepartmentId { get; set; }
+
+        public int? RiskId { get; set; }
+
+        public bool Cascade { set; get; }
     }
 }

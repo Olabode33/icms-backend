@@ -1,5 +1,5 @@
 ﻿using ICMSDemo.Authorization.Users;
-using ICMSDemo.Authorization.Users;
+
 using Abp.Organizations;
 
 
@@ -50,13 +50,13 @@ namespace ICMSDemo.Departments
 
             var filteredDepartments = _departmentRepository.GetAll()
                         .Include(e => e.SupervisorUserFk)
-                        .Include(e => e.ControlOfficerUserFk)
+            
                         .Include(e => e.ControlTeamFk)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Code.Contains(input.Filter) || e.Name.Contains(input.Filter) || e.Description.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.CodeFilter), e => e.Code == input.CodeFilter)
                         .WhereIf(input.IsControlTeamFilter > -1, e => (input.IsControlTeamFilter == 1 && e.IsControlTeam) || (input.IsControlTeamFilter == 0 && !e.IsControlTeam))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.SupervisorUserFk != null && e.SupervisorUserFk.Name == input.UserNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.UserName2Filter), e => e.ControlOfficerUserFk != null && e.ControlOfficerUserFk.Name == input.UserName2Filter)
+
                         .WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayNameFilter), e => e.ControlTeamFk != null && e.ControlTeamFk.DisplayName == input.OrganizationUnitDisplayNameFilter);
 
             var pagedAndFilteredDepartments = filteredDepartments
@@ -67,8 +67,7 @@ namespace ICMSDemo.Departments
                               join o1 in _lookup_userRepository.GetAll() on o.SupervisorUserId equals o1.Id into j1
                               from s1 in j1.DefaultIfEmpty()
 
-                              join o2 in _lookup_userRepository.GetAll() on o.ControlOfficerUserId equals o2.Id into j2
-                              from s2 in j2.DefaultIfEmpty()
+               
 
                               join o3 in _lookup_organizationUnitRepository.GetAll() on o.ControlTeamId equals o3.Id into j3
                               from s3 in j3.DefaultIfEmpty()
@@ -88,7 +87,7 @@ namespace ICMSDemo.Departments
                                       Id = o.Id
                                   },
                                   UserName = s1 == null ? "" : s1.FullName.ToString(),
-                                  UserName2 = s2 == null ? "" : s2.FullName.ToString(),
+                         
                                   OrganizationUnitDisplayName = s3 == null ? "" : s3.DisplayName.ToString(),
                                   SupervsingUnitDisplaName = s4 == null ? "" : s4.DisplayName.ToString()
                               };
@@ -141,12 +140,6 @@ namespace ICMSDemo.Departments
                 output.UserName = _lookupUser.FullName.ToString();
             }
 
-            if (output.Department.ControlOfficerUserId != null)
-            {
-                var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)output.Department.ControlOfficerUserId);
-                output.UserName2 = _lookupUser.FullName.ToString();
-            }
-
             if (output.Department.ControlTeamId != null)
             {
                 var _lookupOrganizationUnit = await _lookup_organizationUnitRepository.FirstOrDefaultAsync((long)output.Department.ControlTeamId);
@@ -177,37 +170,53 @@ namespace ICMSDemo.Departments
 
             department.ParentId = input.SupervisingUnitId;
 
+            department.DepartmentCode = input.Code;
+
+
             if (AbpSession.TenantId != null)
             {
                 department.TenantId = (int)AbpSession.TenantId;
             }
-            var id = await _departmentRepository.InsertAndGetIdAsync(department);
 
-            await AddMembersToNewDepartment(input, id);
+            await OrganizationUnitManager.CreateAsync(department);
+            await CurrentUnitOfWork.SaveChangesAsync();
+
+            await AddMembersToNewDepartment(department, department.Id );
         }
 
-        private async Task AddMembersToNewDepartment(CreateOrEditDepartmentDto input, long id)
+        private async Task AddMembersToNewDepartment(Department input, long id)
         {
-            List<long> userIDLists = new List<long>();
+            List<UnitOrganizationRole> unitOrganizationRoles = new List<UnitOrganizationRole>();
+
+            if (input.SupervisorUserId != null)
+                unitOrganizationRoles.Add(new UnitOrganizationRole()
+                {
+                    DepartmentRole = DepartmentRole.UnitHead,
+                    OrganizationUnitId = id,
+                    UserId = (long)input.SupervisorUserId,
+                    TenantId = AbpSession.TenantId
+                });
 
             if (input.ControlTeamId != null)
             {
-                userIDLists = await _userOrganizationUnitRepository
-                    .GetAll()
-                    .Where(x => x.OrganizationUnitId == input.ControlTeamId)
-                    .Select(x => x.UserId)
-                    .ToListAsync();
+                var query = from uo in _userOrganizationUnitRepository.GetAll()
+                                        join d in _departmentRepository.GetAll() on uo.OrganizationUnitId equals d.Id
+                                     where d.Id == input.ControlTeamId
+                                        select  (new UnitOrganizationRole()
+                                        {
+                                            DepartmentRole = uo.UserId == d.SupervisorUserId ? DepartmentRole.ControlHead : DepartmentRole.ControlTeamMember,
+                                            OrganizationUnitId = id,
+                                            UserId = uo.UserId,
+                                            TenantId = AbpSession.TenantId
+                                        });
+                unitOrganizationRoles = await query.ToListAsync();
             }
 
-            if (input.ControlOfficerUserId != null)
-                userIDLists.Add((long)input.ControlOfficerUserId);
 
-            if (input.SupervisorUserId != null)
-                userIDLists.Add((long)input.SupervisorUserId);
 
-            foreach (var userId in userIDLists)
+            foreach (var unitOrganizationRole in unitOrganizationRoles)
             {
-                await UserManager.AddToOrganizationUnitAsync(userId, id);
+                await _userOrganizationUnitRepository.InsertAsync(unitOrganizationRole);
             }
         }
 
@@ -229,21 +238,19 @@ namespace ICMSDemo.Departments
 
             var filteredDepartments = _departmentRepository.GetAll()
                         .Include(e => e.SupervisorUserFk)
-                        .Include(e => e.ControlOfficerUserFk)
+                      
                         .Include(e => e.ControlTeamFk)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Code.Contains(input.Filter) || e.Name.Contains(input.Filter) || e.Description.Contains(input.Filter))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.CodeFilter), e => e.Code == input.CodeFilter)
                         .WhereIf(input.IsControlTeamFilter > -1, e => (input.IsControlTeamFilter == 1 && e.IsControlTeam) || (input.IsControlTeamFilter == 0 && !e.IsControlTeam))
                         .WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.SupervisorUserFk != null && e.SupervisorUserFk.Name == input.UserNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.UserName2Filter), e => e.ControlOfficerUserFk != null && e.ControlOfficerUserFk.Name == input.UserName2Filter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayNameFilter), e => e.ControlTeamFk != null && e.ControlTeamFk.DisplayName == input.OrganizationUnitDisplayNameFilter);
 
             var query = (from o in filteredDepartments
                          join o1 in _lookup_userRepository.GetAll() on o.SupervisorUserId equals o1.Id into j1
                          from s1 in j1.DefaultIfEmpty()
 
-                         join o2 in _lookup_userRepository.GetAll() on o.ControlOfficerUserId equals o2.Id into j2
-                         from s2 in j2.DefaultIfEmpty()
+                    
 
                          join o3 in _lookup_organizationUnitRepository.GetAll() on o.ControlTeamId equals o3.Id into j3
                          from s3 in j3.DefaultIfEmpty()
@@ -260,7 +267,7 @@ namespace ICMSDemo.Departments
                                  Id = o.Id
                              },
                              UserName = s1 == null ? "" : s1.FullName.ToString(),
-                             UserName2 = s2 == null ? "" : s2.FullName.ToString(),
+                      
                              OrganizationUnitDisplayName = s3 == null ? "" : s3.DisplayName.ToString()
                          });
 
@@ -305,7 +312,9 @@ namespace ICMSDemo.Departments
         [AbpAuthorize(AppPermissions.Pages_Departments)]
         public async Task<PagedResultDto<DepartmentOrganizationUnitLookupTableDto>> GetAllOrganizationUnitForLookupTable(GetAllForLookupTableInput input)
         {
-            var query = _lookup_organizationUnitRepository.GetAll().WhereIf(
+            var query = _departmentRepository.GetAll()
+                .Where(x => x.IsControlTeam)
+                .WhereIf(
                    !string.IsNullOrWhiteSpace(input.Filter),
                   e => e.DisplayName.ToString().Contains(input.Filter)
                );
@@ -322,7 +331,7 @@ namespace ICMSDemo.Departments
                 lookupTableDtoList.Add(new DepartmentOrganizationUnitLookupTableDto
                 {
                     Id = organizationUnit.Id,
-                    DisplayName = organizationUnit.DisplayName?.ToString()
+                    DisplayName = organizationUnit.DisplayName?.ToString() + "  [" + organizationUnit.DepartmentCode + "]"
                 });
             }
 

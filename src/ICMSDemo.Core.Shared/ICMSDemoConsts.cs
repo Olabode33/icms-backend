@@ -38,11 +38,14 @@
         String, Number, Bool, Date, List
     }
 
-
+    public enum DepartmentRole
+    {
+        UnitHead, ControlHead, UnitTeamMember, ControlTeamMember
+    }
 
 
     public enum Frequency
     {
-        Daily, Weekly, Monthly, Quarterly, Yearly
+        Daily, Weekly, Monthly, Quarterly, Yearly, Continuous
     }
 }

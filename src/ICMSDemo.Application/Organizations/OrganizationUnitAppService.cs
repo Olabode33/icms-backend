@@ -12,6 +12,8 @@ using System.Linq.Dynamic.Core;
 using Abp.Extensions;
 using Microsoft.EntityFrameworkCore;
 using ICMSDemo.Authorization.Roles;
+using ICMSDemo.Departments;
+using System.Collections.Generic;
 
 namespace ICMSDemo.Organizations
 {
@@ -20,12 +22,16 @@ namespace ICMSDemo.Organizations
     {
         private readonly OrganizationUnitManager _organizationUnitManager;
         private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
+        private readonly IRepository<Department, long> _departmentRepository;
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
+        private readonly IRepository<UnitOrganizationRole, long> _userOrganizationRoleRepository;
         private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
         private readonly RoleManager _roleManager;
 
         public OrganizationUnitAppService(
             OrganizationUnitManager organizationUnitManager,
+            IRepository<Department, long> departmentRepository,
+            IRepository<UnitOrganizationRole, long> unitOrganizationRoleRepository,
             IRepository<OrganizationUnit, long> organizationUnitRepository,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             RoleManager roleManager,
@@ -36,13 +42,15 @@ namespace ICMSDemo.Organizations
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
             _roleManager = roleManager;
             _organizationUnitRoleRepository = organizationUnitRoleRepository;
+            this._userOrganizationRoleRepository = unitOrganizationRoleRepository;
+            _departmentRepository = departmentRepository;
         }
 
         public async Task<ListResultDto<OrganizationUnitDto>> GetOrganizationUnits()
         {
             var organizationUnits = await _organizationUnitRepository.GetAllListAsync();
 
-            var organizationUnitMemberCounts = await _userOrganizationUnitRepository.GetAll()
+            var organizationUnitMemberCounts = await _userOrganizationRoleRepository.GetAll()
                 .GroupBy(x => x.OrganizationUnitId)
                 .Select(groupedUsers => new
                 {
@@ -89,6 +97,34 @@ namespace ICMSDemo.Organizations
                 {
                     var organizationUnitUserDto = ObjectMapper.Map<OrganizationUnitUserListDto>(item.user);
                     organizationUnitUserDto.AddedTime = item.ouUser.CreationTime;
+                    return organizationUnitUserDto;
+                }).ToList());
+        }
+
+
+        public async Task<PagedResultDto<OrganizationUnitUserListDto>> GetOrganizationUnitUsersRole(GetOrganizationUnitUsersInput input)
+        {
+
+            var query = from ouUser in _userOrganizationRoleRepository.GetAll()
+                        join ou in _organizationUnitRepository.GetAll() on ouUser.OrganizationUnitId equals ou.Id
+                        join user in UserManager.Users on ouUser.UserId equals user.Id
+                        where ouUser.OrganizationUnitId == input.Id
+                        select new
+                        {
+                            ouUser,
+                            user
+                        };
+
+            var totalCount = await query.CountAsync();
+            var items = await query.OrderBy(input.Sorting).PageBy(input).ToListAsync();
+
+            return new PagedResultDto<OrganizationUnitUserListDto>(
+                totalCount,
+                items.Select(item =>
+                {
+                    var organizationUnitUserDto = ObjectMapper.Map<OrganizationUnitUserListDto>(item.user);
+                    organizationUnitUserDto.AddedTime = item.ouUser.CreationTime;
+                    organizationUnitUserDto.DepartmentRole = item.ouUser.DepartmentRole.ToString();
                     return organizationUnitUserDto;
                 }).ToList());
         }
@@ -161,7 +197,20 @@ namespace ICMSDemo.Organizations
         [AbpAuthorize(AppPermissions.Pages_Administration_OrganizationUnits_ManageMembers)]
         public async Task RemoveUserFromOrganizationUnit(UserToOrganizationUnitInput input)
         {
+            Department department = await _departmentRepository.FirstOrDefaultAsync(x => x.Id == input.OrganizationUnitId);
+
             await UserManager.RemoveFromOrganizationUnitAsync(input.UserId, input.OrganizationUnitId);
+
+            //Remove control Users from monitored department
+            if (department.IsControlTeam)
+            {
+                List<Department> monitoredDepartments = await _departmentRepository.GetAllListAsync(x => x.ControlTeamId == input.OrganizationUnitId);
+
+                foreach (var dept in monitoredDepartments)
+                {
+                    await UserManager.RemoveFromOrganizationUnitAsync(input.UserId, dept.Id);
+                }
+            }
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_OrganizationUnits_ManageRoles)]
@@ -173,9 +222,41 @@ namespace ICMSDemo.Organizations
         [AbpAuthorize(AppPermissions.Pages_Administration_OrganizationUnits_ManageMembers)]
         public async Task AddUsersToOrganizationUnit(UsersToOrganizationUnitInput input)
         {
+            Department department = await _departmentRepository.FirstOrDefaultAsync(x => x.Id == input.OrganizationUnitId);
+
             foreach (var userId in input.UserIds)
             {
-                await UserManager.AddToOrganizationUnitAsync(userId, input.OrganizationUnitId);
+                await _userOrganizationRoleRepository.InsertAsync(new UnitOrganizationRole()
+                {
+                    TenantId = AbpSession.TenantId,
+                    OrganizationUnitId = input.OrganizationUnitId,
+                    UserId = userId,
+                    DepartmentRole = DepartmentRole.UnitTeamMember
+                });
+            }
+
+            await AddMemberToMonitoredDepartments(input, department);
+        }
+
+        private async Task AddMemberToMonitoredDepartments(UsersToOrganizationUnitInput input, Department department)
+        {
+            if (department.IsControlTeam)
+            {
+                List<Department> monitoredDepartments = await _departmentRepository.GetAllListAsync(x => x.ControlTeamId == input.OrganizationUnitId);
+
+                foreach (var dept in monitoredDepartments)
+                {
+                    foreach (var controlUserId in input.UserIds)
+                    {
+                        await _userOrganizationRoleRepository.InsertAsync(new UnitOrganizationRole()
+                        {
+                            TenantId = AbpSession.TenantId,
+                            OrganizationUnitId = dept.Id,
+                            UserId = controlUserId,
+                            DepartmentRole = DepartmentRole.ControlTeamMember
+                        });
+                    }
+                }
             }
         }
 
