@@ -1,4 +1,5 @@
-﻿using ICMSDemo.ExceptionIncidents;
+﻿using ICMSDemo.WorkingPaperNews;
+using ICMSDemo.ExceptionIncidents;
 using ICMSDemo.TestingTemplates;
 using ICMSDemo.DepartmentRiskControls;
 using ICMSDemo.DepartmentRisks;
@@ -11,7 +12,6 @@ using ICMSDemo.Risks;
 using Abp.IdentityServer4;
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using ICMSDemo.Authorization.Roles;
 using ICMSDemo.Authorization.Users;
 using ICMSDemo.Chat;
@@ -27,7 +27,6 @@ namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
-       
         public virtual DbSet<ExceptionTypeEscalation> ExceptionTypeEscalations { get; set; }
         public virtual DbSet<ExceptionIncidentColumn> ExceptionIncidentColumns { get; set; }
         public virtual DbSet<TestingAttrribute> TestingAttrributesList { get; set; }
@@ -92,8 +91,8 @@ namespace ICMSDemo.EntityFrameworkCore
            
            
            
-           
-            modelBuilder.Entity<ExceptionIncident>(x =>
+ 
+ modelBuilder.Entity<ExceptionIncident>(x =>
             {
                 x.HasIndex(e => new { e.TenantId });
             });

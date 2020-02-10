@@ -15,8 +15,9 @@ namespace ICMSDemo.WorkingPapers
     {
         public int TenantId { get; set; }
         public long OrganizationUnitId { get; set; }
-
+     
         public string Code { get; set; }
+        public string Comment { get; set; }
 
         public virtual int? TestingTemplateId { get; set; }
 
@@ -34,6 +35,11 @@ namespace ICMSDemo.WorkingPapers
         public DateTime? CompletionDate { get; set; }
 
         public DateTime? ReviewedDate { get; set; }
+
+        public DateTime TaskDate { set; get; }
+
+        public DateTime DueDate { get; set; }
+
 
         public TaskStatus TaskStatus { get; set; }
 
