@@ -28,6 +28,7 @@ namespace ICMSDemo.TestingTemplates
 		public virtual string Title { get; set; }
 		
 		public virtual Frequency Frequency { get; set; }
+		public virtual int DaysToComplete { get; set; }
 		
 
 		public virtual int? DepartmentRiskControlId { get; set; }
@@ -37,6 +38,11 @@ namespace ICMSDemo.TestingTemplates
 		public string ExtensionData { get; set; }
 
 		public int? SampleSize { set; get; }
+
+		public virtual int? ExceptionTypeId { get; set; }
+
+		[ForeignKey("ExceptionTypeId")]
+		public ExceptionType ExceptionType { get; set; }
 	}
 
 
@@ -49,10 +55,7 @@ namespace ICMSDemo.TestingTemplates
 		[ForeignKey("TestingTemplateId")]
 		public TestingTemplate TestingTemplate { get; set; }
 
-		public virtual int? ExceptionTypeId { get; set; }
 
-		[ForeignKey("ExceptionTypeId")]
-		public ExceptionType ExceptionType { get; set; }
 
 	}
 }
