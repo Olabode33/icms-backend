@@ -48,4 +48,9 @@
     {
         Daily, Weekly, Monthly, Quarterly, Yearly, Continuous
     }
+
+    public enum TaskStatus
+    {
+        Completed, PendingReview, Rejected, Approved 
+    }
 }

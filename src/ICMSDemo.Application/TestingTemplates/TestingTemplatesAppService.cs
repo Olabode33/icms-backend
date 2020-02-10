@@ -24,17 +24,21 @@ namespace ICMSDemo.TestingTemplates
     public class TestingTemplatesAppService : ICMSDemoAppServiceBase, ITestingTemplatesAppService
     {
 		 private readonly IRepository<TestingTemplate> _testingTemplateRepository;
+		 private readonly IRepository<TestingAttrribute> _testingTemplateAttributesRepository;
 		 private readonly ITestingTemplatesExcelExporter _testingTemplatesExcelExporter;
 		 private readonly IRepository<DepartmentRiskControl,int> _lookup_departmentRiskControlRepository;
 		 
 
-		  public TestingTemplatesAppService(IRepository<TestingTemplate> testingTemplateRepository, ITestingTemplatesExcelExporter testingTemplatesExcelExporter , IRepository<DepartmentRiskControl, int> lookup_departmentRiskControlRepository) 
+		  public TestingTemplatesAppService(IRepository<TestingTemplate> testingTemplateRepository,
+              IRepository<TestingAttrribute> testingTemplateAttributesRepository,
+              ITestingTemplatesExcelExporter testingTemplatesExcelExporter , IRepository<DepartmentRiskControl, int> lookup_departmentRiskControlRepository) 
 		  {
 			_testingTemplateRepository = testingTemplateRepository;
 			_testingTemplatesExcelExporter = testingTemplatesExcelExporter;
 			_lookup_departmentRiskControlRepository = lookup_departmentRiskControlRepository;
-		
-		  }
+            _testingTemplateAttributesRepository = testingTemplateAttributesRepository;
+
+          }
 
 		 public async Task<PagedResultDto<GetTestingTemplateForViewDto>> GetAll(GetAllTestingTemplatesInput input)
          {
@@ -119,16 +123,30 @@ namespace ICMSDemo.TestingTemplates
 		 [AbpAuthorize(AppPermissions.Pages_TestingTemplates_Create)]
 		 protected virtual async Task Create(CreateOrEditTestingTemplateDto input)
          {
-            var testingTemplate = ObjectMapper.Map<TestingTemplate>(input);
+            var previousCount = await _testingTemplateRepository.CountAsync();
 
-			
-			if (AbpSession.TenantId != null)
+            previousCount++;
+
+            var testingTemplate = ObjectMapper.Map<TestingTemplate>(input);
+            testingTemplate.Code = "TT-" + previousCount.ToString();
+
+
+            if (AbpSession.TenantId != null)
 			{
 				testingTemplate.TenantId = (int) AbpSession.TenantId;
 			}
 		
+           var id =  await _testingTemplateRepository.InsertAndGetIdAsync(testingTemplate);
 
-            await _testingTemplateRepository.InsertAsync(testingTemplate);
+            foreach (var item in input.Attributes)
+            {
+                await _testingTemplateAttributesRepository.InsertAsync(new TestingAttrribute()
+                {
+                    TestAttribute = item.TestAttribute,
+                    ExceptionTypeId = item.ExceptionTypeId,
+                    TestingTemplateId = id
+                });
+            }
          }
 
 		 [AbpAuthorize(AppPermissions.Pages_TestingTemplates_Edit)]

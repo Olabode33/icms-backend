@@ -26,13 +26,16 @@ namespace ICMSDemo.TestingTemplates.Dtos
 		 public int? DepartmentRiskControlId { get; set; }
 		 
 		 public int? SampleSize { set; get; }
-    }
+
+		public CreateorEditTestTemplateDetailsDto[] Attributes { get; set; }
+	}
 
 
-	public class TestTemplateDetails
+	public class CreateorEditTestTemplateDetailsDto
 	{
-		public string Question { get; set; }
+		public string TestAttribute { get; set; }
 
-		public int? ExceptionType { get; set; }
+		public int? ExceptionTypeId { get; set; }
+
 	}
 }

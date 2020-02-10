@@ -21,13 +21,16 @@ using ICMSDemo.MultiTenancy;
 using ICMSDemo.MultiTenancy.Accounting;
 using ICMSDemo.MultiTenancy.Payments;
 using ICMSDemo.Storage;
+using ICMSDemo.WorkingPapers;
 
 namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
-        
+       
         public virtual DbSet<ExceptionTypeEscalation> ExceptionTypeEscalations { get; set; }
+        public virtual DbSet<TestingAttrribute> TestingAttrributesList { get; set; }
+        public virtual DbSet<WorkingPaperDetail> WorkingPaperDetails { get; set; }
         public virtual DbSet<ExceptionIncident> ExceptionIncidents { get; set; }
 
         public virtual DbSet<TestingTemplate> TestingTemplates { get; set; }

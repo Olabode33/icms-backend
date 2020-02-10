@@ -33,4 +33,6 @@ namespace ICMSDemo.ExceptionTypeColumns
 		public ExceptionType ExceptionTypeFk { get; set; }
 		
     }
+
+	
 }

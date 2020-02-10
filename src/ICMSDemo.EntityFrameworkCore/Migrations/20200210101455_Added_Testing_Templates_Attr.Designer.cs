@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200210101455_Added_Testing_Templates_Attr")]
+    partial class Added_Testing_Templates_Attr
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2043,7 +2045,7 @@ namespace ICMSDemo.Migrations
                     b.ToTable("AppBinaryObjects");
                 });
 
-            modelBuilder.Entity("ICMSDemo.TestingTemplates.TestingAttrribute", b =>
+            modelBuilder.Entity("ICMSDemo.TestingTemplates.TestingAttrributes", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2138,46 +2140,6 @@ namespace ICMSDemo.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("TestingTemplates");
-                });
-
-            modelBuilder.Entity("ICMSDemo.WorkingPapers.WorkingPaperDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ExceptionIncidentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Identifier")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("MyProperty")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Result")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Sequence")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TestingAttrributeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExceptionIncidentId");
-
-                    b.HasIndex("TestingAttrributeId");
-
-                    b.ToTable("WorkingPaperDetails");
                 });
 
             modelBuilder.Entity("ICMSDemo.Editions.SubscribableEdition", b =>
@@ -2529,7 +2491,7 @@ namespace ICMSDemo.Migrations
                         .HasForeignKey("LastModifierUserId");
                 });
 
-            modelBuilder.Entity("ICMSDemo.TestingTemplates.TestingAttrribute", b =>
+            modelBuilder.Entity("ICMSDemo.TestingTemplates.TestingAttrributes", b =>
                 {
                     b.HasOne("ICMSDemo.ExceptionTypes.ExceptionType", "ExceptionType")
                         .WithMany()
@@ -2545,17 +2507,6 @@ namespace ICMSDemo.Migrations
                     b.HasOne("ICMSDemo.DepartmentRiskControls.DepartmentRiskControl", "DepartmentRiskControlFk")
                         .WithMany()
                         .HasForeignKey("DepartmentRiskControlId");
-                });
-
-            modelBuilder.Entity("ICMSDemo.WorkingPapers.WorkingPaperDetail", b =>
-                {
-                    b.HasOne("ICMSDemo.ExceptionIncidents.ExceptionIncident", "ExceptionIncident")
-                        .WithMany()
-                        .HasForeignKey("ExceptionIncidentId");
-
-                    b.HasOne("ICMSDemo.TestingTemplates.TestingAttrribute", "TestingAttrribute")
-                        .WithMany()
-                        .HasForeignKey("TestingAttrributeId");
                 });
 
             modelBuilder.Entity("Abp.Application.Features.EditionFeatureSetting", b =>
