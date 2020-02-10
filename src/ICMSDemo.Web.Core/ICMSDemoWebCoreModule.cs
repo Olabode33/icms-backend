@@ -29,6 +29,8 @@ using ICMSDemo.Web.Authentication.TwoFactor;
 using ICMSDemo.Web.Chat.SignalR;
 using ICMSDemo.Web.Configuration;
 using ICMSDemo.Web.DashboardCustomization;
+using Abp.Threading.BackgroundWorkers;
+using ICMSDemo.HangfireJob;
 
 namespace ICMSDemo.Web
 {
@@ -117,6 +119,9 @@ namespace ICMSDemo.Web
 
             IocManager.Resolve<ApplicationPartManager>()
                 .AddApplicationPartsIfNotAddedBefore(typeof(ICMSDemoWebCoreModule).Assembly);
+
+            var workManager = IocManager.Resolve<IBackgroundWorkerManager>();
+            workManager.Add(IocManager.Resolve<ScheduleJob>());
         }
 
         private void SetAppFolders()
