@@ -17,7 +17,6 @@ namespace ICMSDemo.TestingTemplates.Dtos
 
 
 		 public int? DepartmentRiskControlId { get; set; }
-
-		 
+        public bool IsActive { get; set; }
     }
 }
