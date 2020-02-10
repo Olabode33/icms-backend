@@ -9,9 +9,6 @@ namespace ICMSDemo.TestingTemplates.Dtos
     public class CreateOrEditTestingTemplateDto : EntityDto<int?>
     {
 
-		[Required]
-		public string Code { get; set; }
-		
 		
 		public string DetailedInstructions { get; set; }
 		
@@ -21,9 +18,11 @@ namespace ICMSDemo.TestingTemplates.Dtos
 		
 		
 		public Frequency Frequency { get; set; }
-		
-		
-		 public int? DepartmentRiskControlId { get; set; }
+
+		public virtual int? ExceptionTypeId { get; set; }
+
+
+		public int? DepartmentRiskControlId { get; set; }
 		 
 		 public int? SampleSize { set; get; }
 
@@ -34,8 +33,6 @@ namespace ICMSDemo.TestingTemplates.Dtos
 	public class CreateorEditTestTemplateDetailsDto
 	{
 		public string TestAttribute { get; set; }
-
-		public int? ExceptionTypeId { get; set; }
 
 	}
 }

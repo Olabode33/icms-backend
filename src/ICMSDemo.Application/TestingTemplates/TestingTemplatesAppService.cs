@@ -66,7 +66,8 @@ namespace ICMSDemo.TestingTemplates
                                 DetailedInstructions = o.DetailedInstructions,
                                 Title = o.Title,
                                 Frequency = o.Frequency,
-                                Id = o.Id
+                                Id = o.Id,
+                                IsActive = o.IsActive
 							},
                          	DepartmentRiskControlCode = s1 == null ? "" : s1.Code.ToString()
 						};
@@ -143,7 +144,6 @@ namespace ICMSDemo.TestingTemplates
                 await _testingTemplateAttributesRepository.InsertAsync(new TestingAttrribute()
                 {
                     TestAttribute = item.TestAttribute,
-                    ExceptionTypeId = item.ExceptionTypeId,
                     TestingTemplateId = id
                 });
             }
