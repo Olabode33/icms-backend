@@ -135,3 +135,5 @@ src/ICMSDemo.Web.Public/wwwroot/view-resources/Views/_Bundles
 src/ICMSDemo.Web.Public/wwwroot/view-resources/**/*.min.*
 src/ICMSDemo.Web.Public/wwwroot/Common/**/*.min.*
 src/ICMSDemo.Web.Public/node_modules
+src/ICMSDemo.Web.Public/node_modules
+src/ICMSDemo.Web.Host/appsettings.json
