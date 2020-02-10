@@ -8,6 +8,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
+using ICMSDemo.WorkingPapers;
+using ICMSDemo.ExceptionTypeColumns;
 
 namespace ICMSDemo.ExceptionIncidents
 {
@@ -42,11 +44,21 @@ namespace ICMSDemo.ExceptionIncidents
 		
         [ForeignKey("RaisedById")]
 		public User RaisedByFk { get; set; }
+
+		public virtual long? ClosedById { get; set; }
+
+		[ForeignKey("ClosedById")]
+		public User ClosedByFk { get; set; }
+
+		public virtual long? CausedById { get; set; }
+
+		[ForeignKey("CausedById")]
+		public User CausedByFk { get; set; }
+
+		public virtual Guid? WorkingPaperFkId { get; set; }
 		
-		public virtual int? TestingTemplateId { get; set; }
-		
-        [ForeignKey("TestingTemplateId")]
-		public TestingTemplate TestingTemplateFk { get; set; }
+        [ForeignKey("WorkingPaperFkId")]
+		public WorkingPaper WorkingPaperFk { get; set; }
 		
 		public virtual long? OrganizationUnitId { get; set; }
 		
@@ -54,4 +66,23 @@ namespace ICMSDemo.ExceptionIncidents
 		public OrganizationUnit OrganizationUnitFk { get; set; }
 		
     }
+
+
+	public class ExceptionIncidentColumn : Entity, IMustHaveTenant
+	{
+		public int TenantId { get; set; }
+
+		public virtual int? ExceptionIncidentId { get; set; }
+
+		[ForeignKey("ExceptionIncidentId")]
+		public ExceptionIncident ExceptionIncidentFk { get; set; }
+
+		public virtual int? ExceptionTypeColumnId { get; set; }
+
+		[ForeignKey("ExceptionTypeColumnId")]
+		public ExceptionTypeColumn ExceptionTypeColumnFk { get; set; }
+
+		public virtual string Value { get; set; }
+
+	}
 }

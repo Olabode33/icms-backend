@@ -16,6 +16,8 @@ namespace ICMSDemo.WorkingPapers
         public int TenantId { get; set; }
         public long OrganizationUnitId { get; set; }
 
+        public string Code { get; set; }
+
         public virtual int? TestingTemplateId { get; set; }
 
         [ForeignKey("TestingTemplateId")]

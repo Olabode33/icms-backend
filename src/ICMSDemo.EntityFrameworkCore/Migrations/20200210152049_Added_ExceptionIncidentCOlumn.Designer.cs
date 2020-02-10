@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200210152049_Added_ExceptionIncidentCOlumn")]
+    partial class Added_ExceptionIncidentCOlumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1573,12 +1575,6 @@ namespace ICMSDemo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("CausedById")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("ClosedById")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("ClosureComments")
                         .HasColumnType("nvarchar(max)");
 
@@ -1617,10 +1613,6 @@ namespace ICMSDemo.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CausedById");
-
-                    b.HasIndex("ClosedById");
 
                     b.HasIndex("ExceptionTypeId");
 
@@ -2187,9 +2179,6 @@ namespace ICMSDemo.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<long?>("CompletedById")
                         .HasColumnType("bigint");
 
@@ -2569,14 +2558,6 @@ namespace ICMSDemo.Migrations
 
             modelBuilder.Entity("ICMSDemo.ExceptionIncidents.ExceptionIncident", b =>
                 {
-                    b.HasOne("ICMSDemo.Authorization.Users.User", "CausedByFk")
-                        .WithMany()
-                        .HasForeignKey("CausedById");
-
-                    b.HasOne("ICMSDemo.Authorization.Users.User", "ClosedByFk")
-                        .WithMany()
-                        .HasForeignKey("ClosedById");
-
                     b.HasOne("ICMSDemo.ExceptionTypes.ExceptionType", "ExceptionTypeFk")
                         .WithMany()
                         .HasForeignKey("ExceptionTypeId");

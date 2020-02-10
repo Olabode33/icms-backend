@@ -59,7 +59,7 @@ namespace ICMSDemo.ExceptionIncidents.Exporting
                         _ => _.ExceptionIncident.RaisedByClosureComments,
                         _ => _.ExceptionTypeName,
                         _ => _.UserName,
-                        _ => _.TestingTemplateCode,
+                        _ => _.WorkingPaperCode,
                         _ => _.OrganizationUnitDisplayName
                         );
 

@@ -29,6 +29,7 @@ namespace ICMSDemo.EntityFrameworkCore
     {
        
         public virtual DbSet<ExceptionTypeEscalation> ExceptionTypeEscalations { get; set; }
+        public virtual DbSet<ExceptionIncidentColumn> ExceptionIncidentColumns { get; set; }
         public virtual DbSet<TestingAttrribute> TestingAttrributesList { get; set; }
         public virtual DbSet<WorkingPaperDetail> WorkingPaperDetails { get; set; }
         public virtual DbSet<WorkingPaper> WorkingPapers { get; set; }
