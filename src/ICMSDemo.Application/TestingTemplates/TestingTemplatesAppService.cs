@@ -17,6 +17,9 @@ using ICMSDemo.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using ICMSDemo.Risks.Dtos;
+using ICMSDemo.Controls.Dtos;
+using ICMSDemo.ExceptionTypes;
 
 namespace ICMSDemo.TestingTemplates
 {
@@ -24,12 +27,14 @@ namespace ICMSDemo.TestingTemplates
     public class TestingTemplatesAppService : ICMSDemoAppServiceBase, ITestingTemplatesAppService
     {
 		 private readonly IRepository<TestingTemplate> _testingTemplateRepository;
+		 private readonly IRepository<ExceptionType> _exceptionTypesRepository;
 		 private readonly IRepository<TestingAttrribute> _testingTemplateAttributesRepository;
 		 private readonly ITestingTemplatesExcelExporter _testingTemplatesExcelExporter;
 		 private readonly IRepository<DepartmentRiskControl,int> _lookup_departmentRiskControlRepository;
 		 
 
 		  public TestingTemplatesAppService(IRepository<TestingTemplate> testingTemplateRepository,
+              IRepository<ExceptionType> exceptionTypesRepository,
               IRepository<TestingAttrribute> testingTemplateAttributesRepository,
               ITestingTemplatesExcelExporter testingTemplatesExcelExporter , IRepository<DepartmentRiskControl, int> lookup_departmentRiskControlRepository) 
 		  {
@@ -37,7 +42,7 @@ namespace ICMSDemo.TestingTemplates
 			_testingTemplatesExcelExporter = testingTemplatesExcelExporter;
 			_lookup_departmentRiskControlRepository = lookup_departmentRiskControlRepository;
             _testingTemplateAttributesRepository = testingTemplateAttributesRepository;
-
+            _exceptionTypesRepository = exceptionTypesRepository;
           }
 
 		 public async Task<PagedResultDto<GetTestingTemplateForViewDto>> GetAll(GetAllTestingTemplatesInput input)
@@ -66,7 +71,7 @@ namespace ICMSDemo.TestingTemplates
                                            Code = o.Code,
                                            DetailedInstructions = o.DetailedInstructions,
                                            Title = o.Title,
-                                           Frequency = o.Frequency,
+                                           Frequency = o.Frequency.ToString(),
                                            Id = o.Id,
                                            IsActive = o.IsActive
                                        },
@@ -92,10 +97,28 @@ namespace ICMSDemo.TestingTemplates
 
 		    if (output.TestingTemplate.DepartmentRiskControlId != null)
             {
-                var _lookupDepartmentRiskControl = await _lookup_departmentRiskControlRepository.FirstOrDefaultAsync((int)output.TestingTemplate.DepartmentRiskControlId);
-                output.DepartmentRiskControlCode = _lookupDepartmentRiskControl.Code.ToString();
+                var _lookupDepartmentRiskControl = await _lookup_departmentRiskControlRepository
+                    .GetAll()
+                      .Include(x => x.ControlFk)
+                    .Include(x => x.DepartmentRiskFk).ThenInclude(x => x.RiskFk)
+                    .Include(x =>x.DepartmentRiskFk).ThenInclude(x => x.DepartmentFk)
+                    .FirstOrDefaultAsync(x => x.Id == (int)output.TestingTemplate.DepartmentRiskControlId);
+
+                output.Risk = ObjectMapper.Map<RiskDto>(_lookupDepartmentRiskControl.DepartmentRiskFk.RiskFk);
+                output.Control = ObjectMapper.Map<ControlDto>(_lookupDepartmentRiskControl.ControlFk);
             }
-			
+
+
+           var attributesList = await _testingTemplateAttributesRepository.GetAllListAsync(x => x.TestingTemplateId == id);
+
+           output.Attributes = attributesList.Select(x => x.TestAttribute).ToArray();
+
+            if (testingTemplate.ExceptionTypeId != null)
+            {
+               var exceptionType = await _exceptionTypesRepository.FirstOrDefaultAsync((int)testingTemplate.ExceptionTypeId);
+                output.ExceptionTypeName = exceptionType.Name;
+            }
+
             return output;
          }
 		 
@@ -187,7 +210,7 @@ namespace ICMSDemo.TestingTemplates
                                 Code = o.Code,
                                 DetailedInstructions = o.DetailedInstructions,
                                 Title = o.Title,
-                                Frequency = o.Frequency,
+                                Frequency = o.Frequency.ToString(),
                                 Id = o.Id
 							},
                          	DepartmentRiskControlCode = s1 == null ? "" : s1.Code.ToString()
@@ -202,7 +225,7 @@ namespace ICMSDemo.TestingTemplates
 
 
 		[AbpAuthorize(AppPermissions.Pages_TestingTemplates)]
-         public async Task<PagedResultDto<TestingTemplateDepartmentRiskControlLookupTableDto>> GetAllDepartmentRiskControlForLookupTable(GetAllForLookupTableInput input)
+         public async Task<PagedResultDto<TestingTemplateDepartmentRiskControlLookupTableDto>> GetAllDepartmentRiskControlForLookupTable(Dtos.GetAllForLookupTableInput input)
          {
              var query = _lookup_departmentRiskControlRepository.GetAll().WhereIf(
                     !string.IsNullOrWhiteSpace(input.Filter),
