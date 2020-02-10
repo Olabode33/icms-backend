@@ -13,8 +13,9 @@ namespace ICMSDemo.TestingTemplates.Dtos
 
 		public string Title { get; set; }
 
-		public Frequency Frequency { get; set; }
-
+		public string Frequency { get; set; }
+		public int SampleSize { get; set; }
+		public int DaysToComplete { get; set; }
 
 		 public int? DepartmentRiskControlId { get; set; }
         public bool IsActive { get; set; }
