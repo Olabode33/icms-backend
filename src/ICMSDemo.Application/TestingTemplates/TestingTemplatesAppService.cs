@@ -55,22 +55,26 @@ namespace ICMSDemo.TestingTemplates
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-			var testingTemplates = from o in pagedAndFilteredTestingTemplates
-                         join o1 in _lookup_departmentRiskControlRepository.GetAll() on o.DepartmentRiskControlId equals o1.Id into j1
-                         from s1 in j1.DefaultIfEmpty()
-                         
-                         select new GetTestingTemplateForViewDto() {
-							TestingTemplate = new TestingTemplateDto
-							{
-                                Code = o.Code,
-                                DetailedInstructions = o.DetailedInstructions,
-                                Title = o.Title,
-                                Frequency = o.Frequency,
-                                Id = o.Id,
-                                IsActive = o.IsActive
-							},
-                         	DepartmentRiskControlCode = s1 == null ? "" : s1.Code.ToString()
-						};
+            var testingTemplates = from o in pagedAndFilteredTestingTemplates
+                                   join o1 in _lookup_departmentRiskControlRepository
+                                   .GetAll().Include(x => x.DepartmentFk) on o.DepartmentRiskControlId equals o1.Id into j1
+                                   from s1 in j1.DefaultIfEmpty()
+
+                                   select new GetTestingTemplateForViewDto() {
+                                       TestingTemplate = new TestingTemplateDto
+                                       {
+                                           Code = o.Code,
+                                           DetailedInstructions = o.DetailedInstructions,
+                                           Title = o.Title,
+                                           Frequency = o.Frequency,
+                                           Id = o.Id,
+                                           IsActive = o.IsActive
+                                       },
+                                       DepartmentRiskControlCode = s1 == null ? "" : s1.Code,
+                                       AffectedDepartments = s1 == null ? "" : s1.DepartmentFk.Name,
+                                       Cascade = s1 == null ? "" : s1.Cascade.ToString()
+
+                                   };
 
             var totalCount = await filteredTestingTemplates.CountAsync();
 

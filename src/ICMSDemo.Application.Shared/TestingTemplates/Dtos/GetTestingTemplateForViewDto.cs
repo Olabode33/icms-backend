@@ -5,7 +5,7 @@
 		public TestingTemplateDto TestingTemplate { get; set; }
 
 		public string DepartmentRiskControlCode { get; set;}
-
-
+        public string AffectedDepartments { get; set; }
+        public string Cascade { get; set; }
     }
 }

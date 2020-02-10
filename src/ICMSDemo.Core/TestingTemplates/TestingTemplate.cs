@@ -28,6 +28,7 @@ namespace ICMSDemo.TestingTemplates
 		public virtual string Title { get; set; }
 		
 		public virtual Frequency Frequency { get; set; }
+		public virtual int DaysToComplete { get; set; }
 		
 
 		public virtual int? DepartmentRiskControlId { get; set; }

@@ -9,7 +9,8 @@ namespace ICMSDemo.TestingTemplates.Dtos
     public class CreateOrEditTestingTemplateDto : EntityDto<int?>
     {
 
-		
+		public virtual int DaysToComplete { get; set; }
+
 		public string DetailedInstructions { get; set; }
 		
 		
