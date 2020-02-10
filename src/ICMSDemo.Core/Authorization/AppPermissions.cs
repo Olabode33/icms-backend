@@ -6,6 +6,16 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_WorkingPaperNews = "Pages.WorkingPaperNews";
+        public const string Pages_WorkingPaperNews_Create = "Pages.WorkingPaperNews.Create";
+        public const string Pages_WorkingPaperNews_Edit = "Pages.WorkingPaperNews.Edit";
+        public const string Pages_WorkingPaperNews_Delete = "Pages.WorkingPaperNews.Delete";
+
+        public const string Pages_WorkingPaper2s = "Pages.WorkingPaper2s";
+        public const string Pages_WorkingPaper2s_Create = "Pages.WorkingPaper2s.Create";
+        public const string Pages_WorkingPaper2s_Edit = "Pages.WorkingPaper2s.Edit";
+        public const string Pages_WorkingPaper2s_Delete = "Pages.WorkingPaper2s.Delete";
+
         public const string Pages_ExceptionIncidents = "Pages.ExceptionIncidents";
         public const string Pages_ExceptionIncidents_Create = "Pages.ExceptionIncidents.Create";
         public const string Pages_ExceptionIncidents_Edit = "Pages.ExceptionIncidents.Edit";

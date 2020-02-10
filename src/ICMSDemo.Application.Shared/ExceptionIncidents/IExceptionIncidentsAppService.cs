@@ -4,6 +4,7 @@ using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using ICMSDemo.ExceptionIncidents.Dtos;
 using ICMSDemo.Dto;
+using System.Collections.Generic;
 
 namespace ICMSDemo.ExceptionIncidents
 {
@@ -16,6 +17,8 @@ namespace ICMSDemo.ExceptionIncidents
 		Task<GetExceptionIncidentForEditOutput> GetExceptionIncidentForEdit(EntityDto input);
 
 		Task CreateOrEdit(CreateOrEditExceptionIncidentDto input);
+		Task<List<GetExceptionTypeColumnsForEdit>> GetExceptionColumnsForIncident(int id);
+
 
 		Task Delete(EntityDto input);
 

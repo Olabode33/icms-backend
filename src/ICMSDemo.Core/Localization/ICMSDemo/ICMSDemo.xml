@@ -1,6 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="WorkingPaperNews">Working paper news</text>
+    <text name="WorkingPaperNew">Working paper new</text>
+    <text name="Comment">Comment</text>
+    <text name="TaskDate">Task date</text>
+    <text name="DueDate">Due date</text>
+    <text name="TaskStatus">Task status</text>
+    <text name="Score">Score</text>
+    <text name="ReviewDate">Review date</text>
+    <text name="CompletionDate">Completion date</text>
+    <text name="WorkingPaperNewsHeaderInfo">Working paper news header info</text>
+    <text name="CreateNewWorkingPaperNew">Create new working paper new</text>
+    <text name="EditWorkingPaperNew">Edit working paper new</text>
+    <text name="DeleteWorkingPaperNew">Delete working paper new</text>
+    <text name="TaskDateRange">Task date range</text>
+    <text name="DueDateRange">Due date range</text>
+    <text name="ReviewDateRange">Review date range</text>
+    <text name="CompletionDateRange">Completion date range</text>
     <text name="ExceptionIncidents">Exception incidents</text>
     <text name="ExceptionIncident">Exception incident</text>
     <text name="ClosureDate">Closure date</text>

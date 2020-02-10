@@ -1,4 +1,7 @@
-﻿using ICMSDemo.ExceptionIncidents.Dtos;
+﻿using ICMSDemo.WorkingPaperNews.Dtos;
+using ICMSDemo.WorkingPaperNews;
+
+using ICMSDemo.ExceptionIncidents.Dtos;
 using ICMSDemo.ExceptionIncidents;
 using ICMSDemo.TestingTemplates.Dtos;
 using ICMSDemo.TestingTemplates;
@@ -61,6 +64,7 @@ namespace ICMSDemo
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+   
             configuration.CreateMap<CreateOrEditExceptionIncidentDto, ExceptionIncident>().ReverseMap();
             configuration.CreateMap<ExceptionIncidentDto, ExceptionIncident>().ReverseMap();
             configuration.CreateMap<CreateOrEditTestingTemplateDto, TestingTemplate>().ReverseMap();

@@ -8,7 +8,7 @@
 
 		public string UserName { get; set;}
 
-		public string TestingTemplateCode { get; set;}
+		public string WorkingPaperCode { get; set;}
 
 		public string OrganizationUnitDisplayName { get; set;}
 

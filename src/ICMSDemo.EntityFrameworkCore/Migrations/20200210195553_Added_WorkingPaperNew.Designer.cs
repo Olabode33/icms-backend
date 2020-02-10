@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200210195553_Added_WorkingPaperNew")]
+    partial class Added_WorkingPaperNew
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2181,7 +2183,7 @@ namespace ICMSDemo.Migrations
                     b.ToTable("TestingTemplates");
                 });
 
-            modelBuilder.Entity("ICMSDemo.WorkingPapers.WorkingPaper", b =>
+            modelBuilder.Entity("ICMSDemo.WorkingPaperNews.WorkingPaperNew", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2191,6 +2193,84 @@ namespace ICMSDemo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("CompletedUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("CompletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("OrganizationUnitId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("ReviewDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("ReviewedUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("Score")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("TaskDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TaskStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TestingTemplateId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompletedUserId");
+
+                    b.HasIndex("OrganizationUnitId");
+
+                    b.HasIndex("ReviewedUserId");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("TestingTemplateId");
+
+                    b.ToTable("WorkingPaperNews");
+                });
+
+            modelBuilder.Entity("ICMSDemo.WorkingPapers.WorkingPaper", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("CompletedById")
@@ -2682,6 +2762,25 @@ namespace ICMSDemo.Migrations
                     b.HasOne("ICMSDemo.ExceptionTypes.ExceptionType", "ExceptionType")
                         .WithMany()
                         .HasForeignKey("ExceptionTypeId");
+                });
+
+            modelBuilder.Entity("ICMSDemo.WorkingPaperNews.WorkingPaperNew", b =>
+                {
+                    b.HasOne("ICMSDemo.Authorization.Users.User", "CompletedUserFk")
+                        .WithMany()
+                        .HasForeignKey("CompletedUserId");
+
+                    b.HasOne("Abp.Organizations.OrganizationUnit", "OrganizationUnitFk")
+                        .WithMany()
+                        .HasForeignKey("OrganizationUnitId");
+
+                    b.HasOne("ICMSDemo.Authorization.Users.User", "ReviewedUserFk")
+                        .WithMany()
+                        .HasForeignKey("ReviewedUserId");
+
+                    b.HasOne("ICMSDemo.TestingTemplates.TestingTemplate", "TestingTemplateFk")
+                        .WithMany()
+                        .HasForeignKey("TestingTemplateId");
                 });
 
             modelBuilder.Entity("ICMSDemo.WorkingPapers.WorkingPaper", b =>
