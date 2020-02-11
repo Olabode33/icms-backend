@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using ICMSDemo.WorkingPapers;
 using ICMSDemo.Departments;
 using ICMSDemo.ExceptionTypeColumns;
+using Abp.UI;
 
 namespace ICMSDemo.ExceptionIncidents
 {
@@ -27,6 +28,8 @@ namespace ICMSDemo.ExceptionIncidents
     public class ExceptionIncidentsAppService : ICMSDemoAppServiceBase, IExceptionIncidentsAppService
     {
         private readonly IRepository<ExceptionIncident> _exceptionIncidentRepository;
+        private readonly IRepository<UnitOrganizationRole,long> _unitOrganizationRoleRepository;
+
         private readonly IRepository<ExceptionIncidentColumn> _exceptionIncidentColumnRepository;
         private readonly IRepository<ExceptionTypeColumn> _exceptionTypeColumnColumnRepository;
         private readonly IExceptionIncidentsExcelExporter _exceptionIncidentsExcelExporter;
@@ -38,6 +41,7 @@ namespace ICMSDemo.ExceptionIncidents
 
         public ExceptionIncidentsAppService(IRepository<ExceptionIncident> exceptionIncidentRepository,
             IRepository<ExceptionIncidentColumn> exceptionIncidentColumnRepository,
+            IRepository<UnitOrganizationRole, long> unitOrganizationRoleRepository,
              IRepository<ExceptionTypeColumn> exceptionTypeColumnColumnRepository,
             IExceptionIncidentsExcelExporter exceptionIncidentsExcelExporter, IRepository<ExceptionType, int> lookup_exceptionTypeRepository, IRepository<User, long> lookup_userRepository,
           IRepository<WorkingPaper, Guid> lookup_workingPaperTemplateRepository,
@@ -48,6 +52,7 @@ namespace ICMSDemo.ExceptionIncidents
             _exceptionIncidentsExcelExporter = exceptionIncidentsExcelExporter;
             _lookup_exceptionTypeRepository = lookup_exceptionTypeRepository;
             _lookup_userRepository = lookup_userRepository;
+            _unitOrganizationRoleRepository = unitOrganizationRoleRepository;
             _lookup_workingPaperTemplateRepository = lookup_workingPaperTemplateRepository;
             _lookup_organizationUnitRepository = lookup_organizationUnitRepository;
             _exceptionIncidentColumnRepository = exceptionIncidentColumnRepository;
@@ -56,6 +61,26 @@ namespace ICMSDemo.ExceptionIncidents
 
         public async Task<PagedResultDto<GetExceptionIncidentForViewDto>> GetAll(GetAllExceptionIncidentsInput input)
         {
+            var departments = await UserManager.GetOrganizationUnitsAsync(await UserManager.GetUserByIdAsync((long)AbpSession.UserId));
+
+
+            string previousCode = string.Empty;
+            List<string> codes = new List<string>();
+
+            List<Department> allDepartments = await _lookup_organizationUnitRepository.GetAllListAsync();
+
+            foreach(var item in departments)
+            {
+                var departmentCode = await OrganizationUnitManager.GetCodeAsync(item.Id);
+                var childrenDept = allDepartments.Where(x => x.Code.StartsWith(item.Code)).Select(x => x.Code).ToList();
+                codes.AddRange(childrenDept);
+            }
+
+ 
+
+           
+
+
             var statusFilter = (Status)input.StatusFilter;
 
             var filteredExceptionIncidents = _exceptionIncidentRepository.GetAll()
@@ -74,9 +99,7 @@ namespace ICMSDemo.ExceptionIncidents
 
                         .WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayNameFilter), e => e.OrganizationUnitFk != null && e.OrganizationUnitFk.DisplayName == input.OrganizationUnitDisplayNameFilter);
 
-            var pagedAndFilteredExceptionIncidents = filteredExceptionIncidents
-                .OrderBy(input.Sorting ?? "id asc")
-                .PageBy(input);
+            var pagedAndFilteredExceptionIncidents = filteredExceptionIncidents;
 
             var exceptionIncidents = from o in pagedAndFilteredExceptionIncidents
                                      join o1 in _lookup_exceptionTypeRepository.GetAll() on o.ExceptionTypeId equals o1.Id into j1
@@ -104,15 +127,23 @@ namespace ICMSDemo.ExceptionIncidents
                                          },
                                          ExceptionTypeName = s1 == null ? "" : s1.Name.ToString(),
                                          UserName = s2 == null ? "" : s2.FullName,
-
+                                         DeptCode = s4 == null ? "" : s4.Code.ToString(),
                                          OrganizationUnitDisplayName = s4 == null ? "" : s4.DisplayName.ToString()
                                      };
+            var exceptions = await exceptionIncidents.ToListAsync();
+            var totalCount = 0;
 
-            var totalCount = await filteredExceptionIncidents.CountAsync();
+            if (codes.Count > 0)
+            {
+                exceptions = exceptions.Where(x => codes.Any(e => e == x.DeptCode)).ToList();
+                totalCount = exceptions.Count();
+            }
+
+            var output = exceptions.Skip(input.SkipCount).Take(input.MaxResultCount).ToList();
 
             return new PagedResultDto<GetExceptionIncidentForViewDto>(
-                totalCount,
-                await exceptionIncidents.ToListAsync()
+                totalCount,output
+                 
             );
         }
 
@@ -154,6 +185,8 @@ namespace ICMSDemo.ExceptionIncidents
         {
             var exceptionIncident = await _exceptionIncidentRepository.FirstOrDefaultAsync(input.Id);
 
+            await ExceptionRoleTest(exceptionIncident);
+
             var output = new GetExceptionIncidentForEditOutput { ExceptionIncident = ObjectMapper.Map<CreateOrEditExceptionIncidentDto>(exceptionIncident) };
 
             if (output.ExceptionIncident.ExceptionTypeId != null)
@@ -165,7 +198,7 @@ namespace ICMSDemo.ExceptionIncidents
             if (exceptionIncident.RaisedById != null)
             {
                 var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)exceptionIncident.RaisedById);
-                output.UserName = _lookupUser.Name.ToString();
+                output.UserName = _lookupUser.FullName.ToString();
             }
 
             if (output.ExceptionIncident.WorkingPaperId != null)
@@ -180,7 +213,60 @@ namespace ICMSDemo.ExceptionIncidents
                 output.OrganizationUnitDisplayName = _lookupOrganizationUnit.DisplayName.ToString();
             }
 
+            var listIncidentColumns = await _exceptionIncidentColumnRepository.GetAll().Include(x => x.ExceptionTypeColumnFk)
+                .Where(x => x.ExceptionIncidentId == input.Id).ToListAsync();
+
+            List<CreateOrEditExceptionIncidentColumnDto> outputIncidents = new List<CreateOrEditExceptionIncidentColumnDto>();
+
+            foreach(var item in listIncidentColumns)
+            {
+                outputIncidents.Add(new CreateOrEditExceptionIncidentColumnDto()
+                {
+                    Id = item.Id,
+                    Name = item.ExceptionTypeColumnFk.Name,
+                    Value = item.Value
+                });
+            }
+
+            output.ExceptionIncident.IncidentColumns = outputIncidents.ToArray();
+
             return output;
+        }
+
+        private async Task ExceptionRoleTest(ExceptionIncident exceptionIncident)
+        {
+            if (exceptionIncident == null)
+            {
+                var userRole = await _unitOrganizationRoleRepository.FirstOrDefaultAsync(x =>  x.UserId == AbpSession.UserId && (x.DepartmentRole == DepartmentRole.ControlHead || x.DepartmentRole == DepartmentRole.ControlTeamMember));
+
+                if (userRole == null)
+                    throw new UserFriendlyException("You do not have the right to raise an exception!");
+            }
+
+            if (exceptionIncident.Status == Status.Open)
+            {
+                if (exceptionIncident.CausedById != AbpSession.UserId)
+                {
+                    var departments = await UserManager.GetOrganizationUnitsAsync(await UserManager.GetUserByIdAsync((long)AbpSession.UserId));
+
+
+                    if (departments.Count(x => x.Id == exceptionIncident.OrganizationUnitId) == 0)
+                        throw new UserFriendlyException("You are not authorized to treat this exception");
+                }
+            }
+
+            if (exceptionIncident.Status == Status.Resolved)
+            {
+                if (exceptionIncident.RaisedById != AbpSession.UserId)
+                {
+                    var departments = await UserManager.GetOrganizationUnitsAsync(await UserManager.GetUserByIdAsync((long)exceptionIncident.RaisedById));
+
+                    var userRole = await _unitOrganizationRoleRepository.FirstOrDefaultAsync(x => x.OrganizationUnitId == exceptionIncident.OrganizationUnitId && x.UserId == AbpSession.UserId && (x.DepartmentRole == DepartmentRole.ControlHead || x.DepartmentRole == DepartmentRole.ControlTeamMember));
+
+                    if (userRole == null)
+                        throw new UserFriendlyException("You are not authorized to close this exception");
+                }
+            }
         }
 
         public async Task CreateOrEdit(CreateOrEditExceptionIncidentDto input)
@@ -215,15 +301,18 @@ namespace ICMSDemo.ExceptionIncidents
 
             var id = await _exceptionIncidentRepository.InsertAndGetIdAsync(exceptionIncident);
 
-            foreach (var item in input.IncidentColumns)
+            if (input.IncidentColumns != null)
             {
-                await _exceptionIncidentColumnRepository.InsertAsync(new ExceptionIncidentColumn()
+                foreach (var item in input.IncidentColumns)
                 {
-                    TenantId = (int)AbpSession.TenantId,
-                    ExceptionIncidentId = id,
-                    ExceptionTypeColumnId = item.ExceptionTypeColumnId,
-                    Value = item.Value
-                });
+                    await _exceptionIncidentColumnRepository.InsertAsync(new ExceptionIncidentColumn()
+                    {
+                        TenantId = (int)AbpSession.TenantId,
+                        ExceptionIncidentId = id,
+                        ExceptionTypeColumnId = item.ExceptionTypeColumnId,
+                        Value = item.Value
+                    });
+                }
             }
         }
 
@@ -232,6 +321,60 @@ namespace ICMSDemo.ExceptionIncidents
         {
             var exceptionIncident = await _exceptionIncidentRepository.FirstOrDefaultAsync((int)input.Id);
             ObjectMapper.Map(input, exceptionIncident);
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_ExceptionIncidents_Edit)]
+        public virtual async Task Resolve(CreateOrEditExceptionIncidentDto input)
+        {
+ 
+            var exceptionIncident = await _exceptionIncidentRepository.FirstOrDefaultAsync((int)input.Id);
+
+            if (exceptionIncident.Status != Status.Resolved)
+            {
+                throw new UserFriendlyException("This exception is not open for resolution.");
+            }
+
+            exceptionIncident.ResolutionDate = DateTime.Now;
+            exceptionIncident.ResolutionComments = input.ResolutionComments;
+            exceptionIncident.Status = Status.Resolved;
+ 
+        }
+
+
+        [AbpAuthorize(AppPermissions.Pages_ExceptionIncidents_Edit)]
+        public virtual async Task Close(CreateOrEditExceptionIncidentDto input)
+        {
+
+            var exceptionIncident = await _exceptionIncidentRepository.FirstOrDefaultAsync((int)input.Id);
+
+            if (exceptionIncident.Status != Status.Resolved)
+            {
+                throw new UserFriendlyException("This exception is not open for resolution.");
+            }
+
+            exceptionIncident.ResolutionDate = DateTime.Now;
+            exceptionIncident.Status = Status.Closed;
+            exceptionIncident.ClosureComments = input.ClosureComments;
+            exceptionIncident.ClosureDate = input.ClosureDate;
+        }
+
+
+        [AbpAuthorize(AppPermissions.Pages_ExceptionIncidents_Edit)]
+        public virtual async Task Reject(CreateOrEditExceptionIncidentDto input)
+        {
+
+            var exceptionIncident = await _exceptionIncidentRepository.FirstOrDefaultAsync((int)input.Id);
+
+            if (exceptionIncident.Status != Status.Open)
+            {
+                throw new UserFriendlyException("This exception is not open for resolution.");
+            }
+
+            exceptionIncident.ResolutionDate = null;
+            exceptionIncident.ResolutionComments = input.ResolutionComments;
+            exceptionIncident.ClosureComments = input.ClosureComments;
+            exceptionIncident.Status = Status.Open;
+
         }
 
 

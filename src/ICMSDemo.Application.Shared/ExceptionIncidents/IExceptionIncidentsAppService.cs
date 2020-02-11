@@ -10,7 +10,13 @@ namespace ICMSDemo.ExceptionIncidents
 {
     public interface IExceptionIncidentsAppService : IApplicationService 
     {
-        Task<PagedResultDto<GetExceptionIncidentForViewDto>> GetAll(GetAllExceptionIncidentsInput input);
+		Task Reject(CreateOrEditExceptionIncidentDto input);
+
+		Task Close(CreateOrEditExceptionIncidentDto input);
+
+		Task Resolve(CreateOrEditExceptionIncidentDto input);
+
+		Task<PagedResultDto<GetExceptionIncidentForViewDto>> GetAll(GetAllExceptionIncidentsInput input);
 
         Task<GetExceptionIncidentForViewDto> GetExceptionIncidentForView(int id);
 

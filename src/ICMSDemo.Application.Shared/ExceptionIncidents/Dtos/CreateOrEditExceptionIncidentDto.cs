@@ -20,6 +20,16 @@ namespace ICMSDemo.ExceptionIncidents.Dtos
 
         public CreateOrEditExceptionIncidentColumnDto[] IncidentColumns { set; get; }
 
+        public virtual Status Status { get; set; }
+
+        public virtual DateTime? ClosureDate { get; set; }
+
+        public virtual string ClosureComments { get; set; }
+
+        public virtual DateTime? ResolutionDate { get; set; }
+
+        public virtual string ResolutionComments { get; set; }
+
     }
 
 
@@ -31,6 +41,8 @@ namespace ICMSDemo.ExceptionIncidents.Dtos
         public virtual int? ExceptionTypeColumnId { get; set; }
 
         public virtual string Value { get; set; }
+
+        public string Name { set; get; }
     }
 
 

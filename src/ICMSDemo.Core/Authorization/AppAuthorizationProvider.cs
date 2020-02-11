@@ -37,11 +37,7 @@ namespace ICMSDemo.Authorization
 
 
 
-            var workingPaper2s = pages.CreateChildPermission(AppPermissions.Pages_WorkingPaper2s, L("WorkingPaper2s"), multiTenancySides: MultiTenancySides.Tenant);
-            workingPaper2s.CreateChildPermission(AppPermissions.Pages_WorkingPaper2s_Create, L("CreateNewWorkingPaper2"), multiTenancySides: MultiTenancySides.Tenant);
-            workingPaper2s.CreateChildPermission(AppPermissions.Pages_WorkingPaper2s_Edit, L("EditWorkingPaper2"), multiTenancySides: MultiTenancySides.Tenant);
-            workingPaper2s.CreateChildPermission(AppPermissions.Pages_WorkingPaper2s_Delete, L("DeleteWorkingPaper2"), multiTenancySides: MultiTenancySides.Tenant);
-
+            var homePage = pages.CreateChildPermission(AppPermissions.HomePage, L("HomePage"), multiTenancySides: MultiTenancySides.Tenant );
 
 
             var exceptionIncidents = pages.CreateChildPermission(AppPermissions.Pages_ExceptionIncidents, L("ExceptionIncidents"), multiTenancySides: MultiTenancySides.Tenant);

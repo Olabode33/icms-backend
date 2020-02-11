@@ -27,10 +27,14 @@ namespace ICMSDemo.ExceptionIncidents
 		public virtual string Description { get; set; }
 		
 		public virtual Status Status { get; set; }
-		
+
 		public virtual DateTime? ClosureDate { get; set; }
-		
+
 		public virtual string ClosureComments { get; set; }
+
+		public virtual DateTime? ResolutionDate { get; set; }
+		
+		public virtual string ResolutionComments { get; set; }
 		
 		public virtual string RaisedByClosureComments { get; set; }
 		
