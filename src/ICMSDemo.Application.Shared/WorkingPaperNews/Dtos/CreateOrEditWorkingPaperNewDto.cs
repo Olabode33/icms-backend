@@ -8,7 +8,7 @@ namespace ICMSDemo.WorkingPaperNews.Dtos
 {
     public class CreateOrEditWorkingPaperNewDto : EntityDto<Guid?>
     {
-
+		public CreateOrEditTestingAttributeDto[] Attributes { set; get; }
 		public string Code { get; set; }
 		
 		
@@ -43,4 +43,16 @@ namespace ICMSDemo.WorkingPaperNews.Dtos
 		 
 		 
     }
+
+	public class CreateOrEditTestingAttributeDto {
+		public string AttributeText { get; set; }
+
+		public bool Result { get; set; }
+
+		public string Comments { get; set; }
+
+		public int? TestingAttrributeId { get; set; }
+        public int Sequence { get; set; }
+    }
+
 }
