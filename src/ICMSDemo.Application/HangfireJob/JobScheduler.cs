@@ -60,7 +60,9 @@ namespace ICMSDemo.HangfireJob
 
             //if(1!=1)
             //{
-                var buIds = _lookup_departmentRepository.GetAll().Where(o => !o.IsAbstract).Select(p => p.Id).ToList();
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.MayHaveTenant))
+            {
+                var buIds = _lookup_departmentRepository.GetAll().Where(o => !o.IsAbstract).Select(p => p.Id).ToList(); //
                 var deptRisks = _departmentRisk.GetAll().Where(o => buIds.Contains(o.DepartmentId ?? 0)).ToList();
                 var deptRiskIds = deptRisks.Select(o => o.Id).ToList();
 
@@ -71,35 +73,53 @@ namespace ICMSDemo.HangfireJob
                 var testingTemplateIds = testingTemplate.Select(o => o.Id).ToList();
 
 
+                Logger.Info($"buIds Count : {buIds.Count}");
+
+
                 var wp = new WorkingPaper();
                 foreach (var buId in buIds)
                 {
-                    var deptR = deptRisks.FirstOrDefault(o => o.DepartmentId == buId);
-                    if (deptR == null)
+                    var deptR = deptRisks.Where(o => o.DepartmentId == buId).ToList();
+                    if (!deptR.Any())
                         continue;
 
-                    var deptRC = deptRiskControls.FirstOrDefault(o => o.DepartmentRiskId == deptR.Id);
-                    if (deptRC == null)
-                        continue;
-
-                    var tTemplate = testingTemplate.FirstOrDefault(o => o.DepartmentRiskControlId == deptRC.Id);
-                    if (tTemplate == null)
-                        continue;
-
-                    wp = new WorkingPaper
+                    Logger.Info($"deptR Count : {deptR.Count}");
+                    foreach (var dr in deptR)
                     {
-                        OrganizationUnitId = buId,
-                        TaskStatus = TaskStatus.PendingReview,
-                        CreatorUserId = _abpSession.UserId,
-                        Score = 0,
-                        TestingTemplateId = tTemplate.Id,
-                        CreationTime = DateTime.Now,
-                        TenantId = _abpSession.TenantId ?? 0
-                    };
+                        var deptRC = deptRiskControls.Where(o => o.DepartmentRiskId == dr.Id).ToList();
+                        if (!deptRC.Any())
+                            continue;
 
-                    _wpRepository.Insert(wp);
+                        Logger.Info($"deptRC Count : {deptRC.Count}");
+                        foreach (var drc in deptRC)
+                        {
+                            var tTemplate = testingTemplate.Where(o => o.DepartmentRiskControlId == drc.Id).ToList();
+                            if (!tTemplate.Any())
+                                continue;
+
+                            Logger.Info($"tTemplate Count : {tTemplate.Count}");
+                            foreach (var tt in tTemplate)
+                            {
+
+                                wp = new WorkingPaper
+                                {
+                                    OrganizationUnitId = buId,
+                                    TaskStatus = TaskStatus.PendingReview,
+                                    CreatorUserId = _abpSession.UserId,
+                                    Score = 0,
+                                    TestingTemplateId = tt.Id,
+                                    CreationTime = DateTime.Now,
+                                    TenantId = _abpSession.TenantId ?? 0
+                                };
+                                Logger.Info($"About Inserting");
+                                wp = _wpRepository.Insert(wp);
+                                Logger.Info($"Inserted : {wp.Id}");
+                            }
+                        }
+
+                    }
                 }
-
+            }
             //}
 
         }
