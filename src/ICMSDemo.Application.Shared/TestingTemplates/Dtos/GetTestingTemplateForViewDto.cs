@@ -1,5 +1,6 @@
 ﻿using ICMSDemo.Controls.Dtos;
 using ICMSDemo.Risks.Dtos;
+using ICMSDemo.WorkingPaperNews.Dtos;
 
 namespace ICMSDemo.TestingTemplates.Dtos
 {
@@ -15,7 +16,7 @@ namespace ICMSDemo.TestingTemplates.Dtos
 
         public ControlDto Control { set; get; }
 
-        public string[] Attributes { set; get; }
+        public CreateOrEditTestingAttributeDto[] Attributes { set; get; }
         public string ExceptionTypeName { get; set; }
     }
 }

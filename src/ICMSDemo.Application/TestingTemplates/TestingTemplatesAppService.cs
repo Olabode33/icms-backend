@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using ICMSDemo.Risks.Dtos;
 using ICMSDemo.Controls.Dtos;
 using ICMSDemo.ExceptionTypes;
+using ICMSDemo.WorkingPaperNews.Dtos;
 
 namespace ICMSDemo.TestingTemplates
 {
@@ -111,7 +112,19 @@ namespace ICMSDemo.TestingTemplates
 
            var attributesList = await _testingTemplateAttributesRepository.GetAllListAsync(x => x.TestingTemplateId == id);
 
-           output.Attributes = attributesList.Select(x => x.TestAttribute).ToArray();
+            List<CreateOrEditTestingAttributeDto> outputAttributes = new List<CreateOrEditTestingAttributeDto>();
+
+            foreach (var item in attributesList)
+            {
+                outputAttributes.Add(new CreateOrEditTestingAttributeDto()
+                {
+                    AttributeText = item.TestAttribute,
+                    TestingAttrributeId = item.Id,
+                    Result = false
+                });
+            }
+
+            output.Attributes = outputAttributes.ToArray();
 
             if (testingTemplate.ExceptionTypeId != null)
             {
@@ -121,8 +134,27 @@ namespace ICMSDemo.TestingTemplates
 
             return output;
          }
-		 
-		 [AbpAuthorize(AppPermissions.Pages_TestingTemplates_Edit)]
+
+        //public async Task<List<CreateOrEditTestingAttributeDto>> GetTestAttributesForTemplate(int testTemplateId)
+        //{
+        //    var attributesToTest = await _lookup_testingAttributeRepository.GetAllListAsync(x => x.TestingTemplateId == testTemplateId);
+
+        //    List<CreateOrEditTestingAttributeDto> output = new List<CreateOrEditTestingAttributeDto>();
+
+        //    foreach (var item in attributesToTest)
+        //    {
+        //        output.Add(new CreateOrEditTestingAttributeDto()
+        //        {
+        //            AttributeText = item.TestAttribute,
+        //            TestingAttrributeId = item.Id,
+        //            Result = false
+        //        });
+        //    }
+
+        //    return output;
+        //}
+
+        [AbpAuthorize(AppPermissions.Pages_TestingTemplates_Edit)]
 		 public async Task<GetTestingTemplateForEditOutput> GetTestingTemplateForEdit(EntityDto input)
          {
             var testingTemplate = await _testingTemplateRepository.FirstOrDefaultAsync(input.Id);
