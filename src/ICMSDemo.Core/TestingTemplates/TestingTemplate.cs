@@ -49,11 +49,14 @@ namespace ICMSDemo.TestingTemplates
 	public class TestingAttrribute : CreationAuditedEntity
 	{
 		public string TestAttribute { get; set; }
+		
+		public int Weight { get; set; }
 
 		public virtual int? TestingTemplateId { get; set; }
 
 		[ForeignKey("TestingTemplateId")]
 		public TestingTemplate TestingTemplate { get; set; }
+
 
 
 

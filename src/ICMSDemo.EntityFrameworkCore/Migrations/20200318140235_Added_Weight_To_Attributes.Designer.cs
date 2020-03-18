@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200318140235_Added_Weight_To_Attributes")]
+    partial class Added_Weight_To_Attributes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2289,9 +2291,6 @@ namespace ICMSDemo.Migrations
                     b.Property<bool>("Result")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
-
                     b.Property<int>("Sequence")
                         .HasColumnType("int");
 
@@ -2299,9 +2298,6 @@ namespace ICMSDemo.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("TestingAttrributeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Weight")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

@@ -49,6 +49,8 @@ namespace ICMSDemo.WorkingPaperNews.Dtos
 
 		public bool Result { get; set; }
 
+		public int Weight { get; set; }
+
 		public string Comments { get; set; }
 
 		public int? TestingAttrributeId { get; set; }

@@ -136,7 +136,7 @@ namespace ICMSDemo.DepartmentRiskControls
 
             return new PagedResultDto<GetDepartmentRiskControlForViewDto>(
                 totalCount, outputList.Skip(input.SkipCount).Take(input.MaxResultCount).ToList()
-            ); ;
+            ); 
         }
 
         public async Task<GetDepartmentRiskControlForViewDto> GetDepartmentRiskControlForView(int id)

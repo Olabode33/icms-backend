@@ -120,6 +120,7 @@ namespace ICMSDemo.TestingTemplates
                 {
                     AttributeText = item.TestAttribute,
                     TestingAttrributeId = item.Id,
+                     Weight = item.Weight,
                     Result = false
                 });
             }

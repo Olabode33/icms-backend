@@ -35,5 +35,7 @@ namespace ICMSDemo.TestingTemplates.Dtos
 	{
 		public string TestAttribute { get; set; }
 
+		public int Weight { get; set; }
+
 	}
 }

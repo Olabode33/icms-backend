@@ -16,6 +16,7 @@ using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ICMSDemo.WorkingPapers;
 using ICMSDemo.Departments;
+using Abp.UI;
 
 namespace ICMSDemo.WorkingPaperNews
 {
@@ -160,29 +161,22 @@ namespace ICMSDemo.WorkingPaperNews
         [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews_Create)]
         protected virtual async Task Create(CreateOrEditWorkingPaperNewDto input)
         {
+            var testingTemplateAttributes = await _lookup_testingAttributeRepository.GetAllListAsync(x => x.TestingTemplateId == input.TestingTemplateId);
+            
+            if (testingTemplateAttributes == null)
+            {
+                throw new UserFriendlyException("There is no testing template for this document.");
+            }
+            
+            
             var workingPaperNew = new WorkingPaper();
 
             workingPaperNew.Comment = input.Comment;
             workingPaperNew.OrganizationUnitId  = (long)input.OrganizationUnitId;
             workingPaperNew.TestingTemplateId  = input.TestingTemplateId;
 
-            int totalNumber = 0;
-            int totalTrue = 0;
-            int totalFalse = 0;
-            foreach (var item in input.Attributes)
-            {
-                totalNumber++;
-
-                if (item.Result)
-                {
-                    totalTrue++;
-                }
-                else
-                {
-                    totalFalse++;
-                }
-            }
-            workingPaperNew.Score = (totalTrue / totalNumber) * 100;
+            decimal totalNumber = 0.00M;
+            decimal workPaperTotal = 0.00M;
 
             if (AbpSession.TenantId != null)
             {
@@ -194,19 +188,40 @@ namespace ICMSDemo.WorkingPaperNews
             workingPaperNew.DueDate = DateTime.Now.AddDays(1);
             workingPaperNew.TaskStatus = TaskStatus.PendingReview;
             workingPaperNew.TaskDate = DateTime.Now;
-            await _workingPaperNewRepository.InsertAsync(workingPaperNew);
 
+            List<WorkingPaperDetail> workingPaperDetails = new List<WorkingPaperDetail>();
 
             foreach (var item in input.Attributes)
             {
-                await _workingPaperDetailsRepository.InsertAsync(new WorkingPaperDetail()
+                var testingTemplateAttribute = testingTemplateAttributes.FirstOrDefault(x => x.Id == item.TestingAttrributeId);
+
+                if (testingTemplateAttribute == null)
+                {
+                    throw new UserFriendlyException(string.Format("This test attribute ({0}) no longer exists.", item.AttributeText));
+                }
+
+                var workPaperDetail = new WorkingPaperDetail()
                 {
                     Sequence = item.Sequence,
                     TestingAttrributeId = item.TestingAttrributeId,
                     Result = item.Result,
-                    TenantId = (int)AbpSession.TenantId
+                    TenantId = (int)AbpSession.TenantId,
+                    Weight = testingTemplateAttribute.Weight,
+                    Score = item.Result ? testingTemplateAttribute.Weight : 0
+                };
 
-                });
+                workingPaperDetails.Add(workPaperDetail);
+                totalNumber += workPaperDetail.Weight;
+                workPaperTotal += workPaperDetail.Score;
+            }
+
+            workingPaperNew.Score = Math.Round((workPaperTotal / totalNumber) * 100.0M,2);
+
+            await _workingPaperNewRepository.InsertAsync(workingPaperNew);
+
+            foreach (var item in workingPaperDetails)
+            {
+                await _workingPaperDetailsRepository.InsertAsync(item);
             }
         }
 

@@ -53,6 +53,8 @@ namespace ICMSDemo.WorkingPapers
         public int TenantId { get; set; }
 
         public int MyProperty { get; set; }
+        public int Score { get; set; }
+        public int Weight { get; set; }
       
         public virtual int? TestingAttrributeId { get; set; }
 
