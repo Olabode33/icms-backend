@@ -1,4 +1,5 @@
-﻿using ICMSDemo.TestingTemplates;
+﻿using ICMSDemo.Processes;
+using ICMSDemo.TestingTemplates;
 using ICMSDemo.DepartmentRiskControls;
 using ICMSDemo.Departments;
 using ICMSDemo.ExceptionTypeColumns;
@@ -18,11 +19,13 @@ namespace ICMSDemo.EntityHistory
 
         public static readonly Type[] HostSideTrackedTypes =
         {
+            typeof(Process),
             typeof(OrganizationUnit), typeof(Role), typeof(Tenant)
         };
 
         public static readonly Type[] TenantSideTrackedTypes =
         {
+            typeof(Process),
             typeof(TestingTemplate),
             typeof(DepartmentRiskControl),
             typeof(Department),

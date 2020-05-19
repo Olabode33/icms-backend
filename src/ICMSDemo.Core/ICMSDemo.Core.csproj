@@ -37,4 +37,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ICMSDemo.Core.Shared\ICMSDemo.Core.Shared.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Processes\" />
+  </ItemGroup>
 </Project>

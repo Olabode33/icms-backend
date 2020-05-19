@@ -83,9 +83,8 @@
 												<ul class="dropdown-menu" {{Dropdown_Menu_Dropdown_Attrr_After_V6}}>
 {{View_Button_Here}}
 												<li>
-													<a {{Dropdown_Href_Attrr_After_V6}} *ngIf="permission.isGranted('{{Permission_Value_Here}}.Edit')"
-														(click)="createOrEdit{{Entity_Name_Here}}Modal.show(record.{{entity_Name_Here}}.id)">{{l('Edit')}}</a>
-												</li>
+                                                {{Edit_Button_Here}}												
+                                                </li>
 												<li>
 											        <a {{Dropdown_Href_Attrr_After_V6}} *ngIf="permission.isGranted('{{Permission_Value_Here}}.Delete')"
 														(click)="delete{{Entity_Name_Here}}(record.{{entity_Name_Here}})">{{l('Delete')}}</a>
@@ -117,8 +116,7 @@
             </div>
         </div>
     </div>
-
-    <createOrEdit{{Entity_Name_Here}}Modal #createOrEdit{{Entity_Name_Here}}Modal (modalSave)="get{{Entity_Name_Plural_Here}}()"></createOrEdit{{Entity_Name_Here}}Modal>
+    {{Create_Or_Edit_Modal_Tag_Here}}    
     {{View_Modal_Tag_Here}}
     {{History_Modal_Tag_Here}}
   {{Div_After_Metronic_V606}}

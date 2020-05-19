@@ -143,6 +143,16 @@
 			"placeholder": "{{Container_Class_After_Metronic_V606}}",
 			"condition": "{{Project_Version_Here}} >= 070200",
 			"content": "<div class=\"@(await GetContainerClass())\">"
+		},		
+		{
+			"placeholder": "{{Create_Button_Here}}",
+			"condition": "{{Is_Master_Detail_Page_Here}} == false",
+			"content": "<button id=\"CreateNew{{Entity_Name_Here}}Button\" class=\"btn btn-primary blue\"><i class=\"fa fa-plus\"></i> @L(\"CreateNew{{Entity_Name_Here}}\")</button>"
+		},		
+		{
+			"placeholder": "{{Create_Button_Here}}",
+			"condition": "{{Is_Master_Detail_Page_Here}} == true",
+			"content": "<a href=\"\\{{App_Area_Name_Here}}\\{{Entity_Name_Plural_Here}}\\CreateOrEdit\" class=\"btn btn-primary blue\"><i class=\"fa fa-plus\"></i> @L(\"CreateNew{{Entity_Name_Here}}\")</a>"
 		}
 	]
 }

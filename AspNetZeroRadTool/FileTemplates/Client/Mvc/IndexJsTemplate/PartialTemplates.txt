@@ -109,12 +109,23 @@
 		},
 		{
 			"placeholder": "{{View_Button_Here}}",
-			"condition": "{{Create_View_Only_Here}} == true",
+			"condition": "{{Create_View_Only_Here}} == true && {{Is_Master_Detail_Page_Here}} == false",
 			"content": "
 						{
                                 text: app.localize('View'),
                                 action: function (data) {
                                     _view{{Entity_Name_Here}}Modal.open({ id: data.record.{{entity_Name_Here}}.id });
+                                }
+                        },"
+		},
+		{
+			"placeholder": "{{View_Button_Here}}",
+			"condition": "{{Create_View_Only_Here}} == true && {{Is_Master_Detail_Page_Here}} == true",
+			"content": "
+						{
+                                text: app.localize('View'),
+                                action: function (data) {
+                                    window.location=\"/{{App_Area_Name_Here}}/{{Entity_Name_Plural_Here}}/View{{Entity_Name_Here}}/\" + data.record.{{entity_Name_Here}}.id;
                                 }
                         },"
 		},
@@ -146,7 +157,8 @@
 			"placeholder": "{{EntityHistoryIsEnabled_Dec_Here}}",
 			"condition": "{{Entity_History_Here}} == true",
 			"content": "        function entityHistoryIsEnabled() {
-            return abp.custom.EntityHistory &&
+            return abp.auth.hasPermission('Pages.Administration.AuditLogs') &&
+                abp.custom.EntityHistory &&
                 abp.custom.EntityHistory.IsEnabled &&
                 _.filter(abp.custom.EntityHistory.EnabledEntities, entityType => entityType === _entityTypeFullName).length === 1;
         }"
@@ -167,6 +179,42 @@
                                 });
                             }
 						},"
+		},
+		{
+			"placeholder": "{{Create_Button_Here}}",
+			"condition": "{{Is_Master_Detail_Page_Here}} == true",
+			"content": ""
+		},
+		{
+			"placeholder": "{{Create_Button_Here}}",
+			"condition": "{{Is_Master_Detail_Page_Here}} == false",
+			"content": "$('#CreateNew{{Entity_Name_Here}}Button').click(function () {
+            _createOrEditModal.open();
+        });"
+		},
+		{
+			"placeholder": "{{Create_Or_Edit_Modal_Dec_Here}}",
+			"condition": "{{Is_Master_Detail_Page_Here}} == true",
+			"content": ""
+		},
+		{
+			"placeholder": "{{Create_Or_Edit_Modal_Dec_Here}}",
+			"condition": "{{Is_Master_Detail_Page_Here}} == false",
+			"content": " var _createOrEditModal = new app.ModalManager({
+            viewUrl: abp.appPath + '{{App_Area_Name_Here}}/{{Entity_Name_Plural_Here}}/CreateOrEditModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/{{App_Area_Name_Here}}/Views/{{Entity_Name_Plural_Here}}/_CreateOrEditModal.js',
+            modalClass: 'CreateOrEdit{{Entity_Name_Here}}Modal'
+        });"
+		},
+		{
+			"placeholder": "{{Edit_Button_OnClick_Here}}",
+			"condition": "{{Is_Master_Detail_Page_Here}} == true",
+			"content": "window.location=\"/{{App_Area_Name_Here}}/{{Entity_Name_Plural_Here}}/CreateOrEdit/\" + data.record.{{entity_Name_Here}}.id;"
+		},
+		{
+			"placeholder": "{{Edit_Button_OnClick_Here}}",
+			"condition": "{{Is_Master_Detail_Page_Here}} == false",
+			"content": "_createOrEditModal.open({ id: data.record.{{entity_Name_Here}}.id });"
 		}
 	]
 }

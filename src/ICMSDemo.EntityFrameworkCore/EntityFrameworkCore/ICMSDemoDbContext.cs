@@ -1,4 +1,7 @@
-﻿using ICMSDemo.WorkingPaperNews;
+﻿using ICMSDemo.ProcessRiskControls;
+using ICMSDemo.ProcessRisks;
+using ICMSDemo.Processes;
+using ICMSDemo.WorkingPaperNews;
 using ICMSDemo.ExceptionIncidents;
 using ICMSDemo.TestingTemplates;
 using ICMSDemo.DepartmentRiskControls;
@@ -27,6 +30,12 @@ namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<ProcessRiskControl> ProcessRiskControls { get; set; }
+
+        public virtual DbSet<ProcessRisk> ProcessRisks { get; set; }
+
+        public virtual DbSet<Process> Processes { get; set; }
+
         public virtual DbSet<ExceptionTypeEscalation> ExceptionTypeEscalations { get; set; }
         public virtual DbSet<ExceptionIncidentColumn> ExceptionIncidentColumns { get; set; }
         public virtual DbSet<TestingAttrribute> TestingAttrributesList { get; set; }
@@ -92,6 +101,21 @@ namespace ICMSDemo.EntityFrameworkCore
            
            
  
+
+           
+           
+            modelBuilder.Entity<ProcessRiskControl>(p =>
+            {
+                p.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<ProcessRisk>(p =>
+            {
+                p.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<Process>(p =>
+            {
+                p.HasIndex(e => new { e.TenantId });
+            });
  modelBuilder.Entity<ExceptionIncident>(x =>
             {
                 x.HasIndex(e => new { e.TenantId });

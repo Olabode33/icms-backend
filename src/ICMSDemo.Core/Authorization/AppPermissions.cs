@@ -6,6 +6,21 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_ProcessRiskControls = "Pages.ProcessRiskControls";
+        public const string Pages_ProcessRiskControls_Create = "Pages.ProcessRiskControls.Create";
+        public const string Pages_ProcessRiskControls_Edit = "Pages.ProcessRiskControls.Edit";
+        public const string Pages_ProcessRiskControls_Delete = "Pages.ProcessRiskControls.Delete";
+
+        public const string Pages_ProcessRisks = "Pages.ProcessRisks";
+        public const string Pages_ProcessRisks_Create = "Pages.ProcessRisks.Create";
+        public const string Pages_ProcessRisks_Edit = "Pages.ProcessRisks.Edit";
+        public const string Pages_ProcessRisks_Delete = "Pages.ProcessRisks.Delete";
+
+        public const string Pages_Processes = "Pages.Processes";
+        public const string Pages_Processes_Create = "Pages.Processes.Create";
+        public const string Pages_Processes_Edit = "Pages.Processes.Edit";
+        public const string Pages_Processes_Delete = "Pages.Processes.Delete";
+
         public const string Pages_WorkingPaperNews = "Pages.WorkingPaperNews";
         public const string Pages_WorkingPaperNews_Create = "Pages.WorkingPaperNews.Create";
         public const string Pages_WorkingPaperNews_Edit = "Pages.WorkingPaperNews.Edit";

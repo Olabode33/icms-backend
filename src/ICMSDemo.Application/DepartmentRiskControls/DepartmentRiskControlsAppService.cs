@@ -122,9 +122,9 @@ namespace ICMSDemo.DepartmentRiskControls
                     Inherited = x.DepartmentId == null ? true : false,
                     DepartmentRiskId = x.DepartmentRiskId,
                     ControlId = x.ControlId,
-                    DepartmentCode = x.DepartmentRiskFk.DepartmentFk.Code
+                    DepartmentCode = x.DepartmentFk == null ? "" : x.DepartmentFk.Code
                 },
-                DepartmentRiskCode = x.DepartmentRiskFk.Code,
+                DepartmentRiskCode = x.DepartmentRiskFk == null ? "" : x.DepartmentRiskFk.Code,
                 ControlCode = x.ControlFk.Name + " [" + x.ControlFk.Code + "]"
             });
 

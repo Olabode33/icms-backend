@@ -1,7 +1,7 @@
 ﻿import { Component, ViewChild, Injector, Output, EventEmitter} from '@angular/core';
-import { ModalDirective } from 'ngx-bootstrap';
+{{Import_Modal_Directive_Here}}
 import { finalize } from 'rxjs/operators';
-import { {{Entity_Name_Plural_Here}}ServiceProxy, CreateOrEdit{{Entity_Name_Here}}Dto } from '@shared/service-proxies/service-proxies';
+import { {{Entity_Name_Plural_Here}}ServiceProxy, CreateOrEdit{{Entity_Name_Here}}Dto {{NP_Looped_Import_Dropdown_LookupTableDto_Here}}} from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import * as moment from 'moment';{{NP_Looped_Lookup_Component_Import_Here}}
 
@@ -21,7 +21,7 @@ export class CreateOrEdit{{Entity_Name_Here}}ModalComponent extends AppComponent
     {{entity_Name_Here}}: CreateOrEdit{{Entity_Name_Here}}Dto = new CreateOrEdit{{Entity_Name_Here}}Dto();
 {{Property_Nullable_Datetime_Dec_Looped_Template_Here}}
 {{NP_Looped_Display_Declaration_Here}}
-
+{{NP_Looped_Dropdown_Property_Here}}
     constructor(
         injector: Injector,
         private _{{entity_Name_Plural_Here}}ServiceProxy: {{Entity_Name_Plural_Here}}ServiceProxy
@@ -33,7 +33,7 @@ export class CreateOrEdit{{Entity_Name_Here}}ModalComponent extends AppComponent
 {{Property_Nullable_Datetime_SetNull_Looped_Template_Here}}
         if (!{{entity_Name_Here}}Id) {
             this.{{entity_Name_Here}} = new CreateOrEdit{{Entity_Name_Here}}Dto();
-            this.{{entity_Name_Here}}.id = {{entity_Name_Here}}Id;{{Property_Datetime_Init_Looped_Template_Here}}
+            this.{{entity_Name_Here}}.id = {{entity_Name_Here}}Id;{{Property_Datetime_Init_Looped_Template_Here}}{{Property_Datetime_Init_Looped_Template_Here_After_070200}}
 {{NP_Looped_Display_Init_Here}}
             this.active = true;
             this.modal.show();
@@ -46,6 +46,7 @@ export class CreateOrEdit{{Entity_Name_Here}}ModalComponent extends AppComponent
                 this.modal.show();
             });
         }
+        {{NP_Looped_Dropdown_GetAll_Here}}
     }
 
     save(): void {

@@ -1,6 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>
+  <texts>    <text name="ProcessRiskControls">Process risk controls</text>
+    <text name="ProcessRiskControl">Process risk control</text>
+    <text name="CreateNewProcessRiskControl">Create new process risk control</text>
+    <text name="EditProcessRiskControl">Edit process risk control</text>
+    <text name="DeleteProcessRiskControl">Delete process risk control</text>
+    <text name="ProcessRisks">Process risks</text>
+    <text name="ProcessRisk">Process risk</text>
+    <text name="ICMSDemo.ProcessRisks.ProcessRisk">ProcessRisk</text>
+    <text name="Cascade">Cascade</text>
+    <text name="NotCascade">Not cascade</text>
+    <text name="ProcessRisksHeaderInfo">Process risks header info</text>
+    <text name="CreateNewProcessRisk">Create new process risk</text>
+    <text name="EditProcessRisk">Edit process risk</text>
+    <text name="DeleteProcessRisk">Delete process risk</text>
+    <text name="Processes">Processes</text>
+    <text name="Process">Process</text>
+    <text name="ICMSDemo.Processes.Process">Process</text>
+    <text name="Casade">Casade</text>
+    <text name="NotCasade">Not casade</text>
+    <text name="ProcessesHeaderInfo">Processes header info</text>
+    <text name="CreateNewProcess">Create new process</text>
+    <text name="EditProcess">Edit process</text>
+    <text name="DeleteProcess">Delete process</text>
+
     
     <text name="WorkingPaperNews">Working paper news</text>
 

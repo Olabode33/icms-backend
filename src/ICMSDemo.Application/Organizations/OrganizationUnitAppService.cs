@@ -48,7 +48,7 @@ namespace ICMSDemo.Organizations
 
         public async Task<ListResultDto<OrganizationUnitDto>> GetOrganizationUnits()
         {
-            var organizationUnits = await _organizationUnitRepository.GetAllListAsync();
+            var organizationUnits = await _departmentRepository.GetAllListAsync();
 
             var organizationUnitMemberCounts = await _userOrganizationRoleRepository.GetAll()
                 .GroupBy(x => x.OrganizationUnitId)

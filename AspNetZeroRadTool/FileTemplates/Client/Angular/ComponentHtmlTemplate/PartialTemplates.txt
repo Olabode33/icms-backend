@@ -149,15 +149,25 @@
 "conditionalTemplates":[
 		{
 			"placeholder": "{{View_Button_Here}}",
-			"condition": "{{Create_View_Only_Here}} == true",
+			"condition": "{{Create_View_Only_Here}} == true && {{Is_Master_Detail_Page_Here}} == false",
 			"content": "										    <li>
                                                 <a 
                                                    (click)=\"view{{Entity_Name_Here}}Modal.show(record)\">{{l('View')}}</a>
                                             </li>"
 		},
 		{
+			"placeholder": "{{View_Button_Here}}",
+			"condition": "{{Create_View_Only_Here}} == true && {{Is_Master_Detail_Page_Here}} == true",
+			"content": "										    <li>
+                                                <a *ngIf=\"permission.isGranted('{{Permission_Value_Here}}.Edit')\"
+			[routerLink]=\"['/app/{{menu_Position_Here}}/{{namespace_Relative_Here}}/{{entity_Name_Plural_Here}}/view']\" [queryParams]=\"{id: record.{{entity_Name_Here}}.id}\">
+  {{l('View')}}	
+</a>
+                                            </li>"
+		},
+		{
 			"placeholder": "{{View_Modal_Tag_Here}}",
-			"condition": "{{Create_View_Only_Here}} == true",
+			"condition": "{{Create_View_Only_Here}} == true && {{Is_Master_Detail_Page_Here}} == false",
 			"content": "<view{{Entity_Name_Here}}Modal #view{{Entity_Name_Here}}Modal></view{{Entity_Name_Here}}Modal>"
 		},
 		{
@@ -165,6 +175,25 @@
 			"condition": "{{Create_Excel_Export_Here}} == true",
 			"content": "<button (click)=\"exportToExcel()\" class=\"btn btn-outline-success\"><i class=\"far fa-file-excel\"></i> {{l(\"ExportToExcel\")}}</button>
                 "
+		},
+		{
+			"placeholder": "{{Edit_Button_Here}}",
+			"condition": "{{Is_Master_Detail_Page_Here}} == false",
+			"content": "<a *ngIf=\"permission.isGranted('{{Permission_Value_Here}}.Edit')\"
+                                                   (click)=\"createOrEdit{{Entity_Name_Here}}Modal.show(record.{{entity_Name_Here}}.id)\">{{l('Edit')}}</a>"
+		},
+		{
+			"placeholder": "{{Edit_Button_Here}}",
+			"condition": "{{Is_Master_Detail_Page_Here}} == true",
+			"content": " <a *ngIf=\"permission.isGranted('{{Permission_Value_Here}}.Edit')\"
+			[routerLink]=\"['/app/{{menu_Position_Here}}/{{namespace_Relative_Here}}/{{entity_Name_Plural_Here}}/createOrEdit']\" [queryParams]=\"{id: record.{{entity_Name_Here}}.id}\">
+  {{l('Edit')}}	
+</a>"
+		},
+		{
+			"placeholder": "{{Create_Or_Edit_Modal_Tag_Here}}",
+			"condition": "{{Is_Master_Detail_Page_Here}} == false",
+			"content": "<createOrEdit{{Entity_Name_Here}}Modal #createOrEdit{{Entity_Name_Here}}Modal (modalSave)=\"get{{Entity_Name_Plural_Here}}()\"></createOrEdit{{Entity_Name_Here}}Modal>"
 		}
 	]
 }

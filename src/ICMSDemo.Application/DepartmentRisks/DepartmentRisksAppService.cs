@@ -111,16 +111,16 @@ namespace ICMSDemo.DepartmentRisks
                                               DepartmentRisk = new DepartmentRiskDto
                                               {
                                                   DepartmentId = (int)o.DepartmentId,
-                                                  DeptCode = o.DepartmentFk.Code,
+                                                  DeptCode = o.DepartmentFk == null ? "" : o.DepartmentFk.Code,
                                                   Code = o.Code,
                                                   Comments = o.Comments,
                                                   Id = o.Id,
                                                   Cascade = o.Cascade,
                                                   Inherited = o.DepartmentId == input.DepartmentId ? false : true
                                               },
-                                              DepartmentName = o.DepartmentFk.Name.ToString(),
-                                              RiskName = o.RiskFk.Name.ToString(),
-                                              Severity = o.RiskFk.Severity.ToString()
+                                              DepartmentName = o.DepartmentFk == null ? "" : o.DepartmentFk.Name.ToString(),
+                                              RiskName = o.RiskFk == null ? "" : o.RiskFk.Name.ToString(),
+                                              Severity = o.RiskFk == null ? "" : o.RiskFk.Severity.ToString()
                                           } ;
             
 

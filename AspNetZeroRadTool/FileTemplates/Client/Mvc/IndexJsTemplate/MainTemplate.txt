@@ -15,11 +15,7 @@
             'delete': abp.auth.hasPermission('{{Permission_Value_Here}}.Delete')
         };
 
-        var _createOrEditModal = new app.ModalManager({
-            viewUrl: abp.appPath + '{{App_Area_Name_Here}}/{{Entity_Name_Plural_Here}}/CreateOrEditModal',
-            scriptUrl: abp.appPath + 'view-resources/Areas/{{App_Area_Name_Here}}/Views/{{Entity_Name_Plural_Here}}/_CreateOrEditModal.js',
-            modalClass: 'CreateOrEdit{{Entity_Name_Here}}Modal'
-        });
+        {{Create_Or_Edit_Modal_Dec_Here}}       
 {{View_Modal_Manager_Here}}
 
 		{{EntityTypeHistoyModal_Dec_Here}}
@@ -62,7 +58,7 @@
                                 return _permissions.edit;
                             },
                             action: function (data) {
-                                _createOrEditModal.open({ id: data.record.{{entity_Name_Here}}.id });
+                            {{Edit_Button_OnClick_Here}}                                
                             }
                         },{{EntityHistory_Action_Here}} 
 						{
@@ -112,9 +108,7 @@
             $('#AdvacedAuditFiltersArea').slideUp();
         });
 
-        $('#CreateNew{{Entity_Name_Here}}Button').click(function () {
-            _createOrEditModal.open();
-        });
+        {{Create_Button_Here}}        
 
 		{{Get_Excel_Method_Here}}
 

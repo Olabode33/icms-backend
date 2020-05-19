@@ -25,7 +25,7 @@
         <div class="kt-subheader__wrapper">
             {{Get_Excel_Button_Here}}@if (IsGranted(AppPermissions.{{Permission_Name_Here}}_Create))
             {
-                <button id="CreateNew{{Entity_Name_Here}}Button" class="btn btn-primary blue"><i class="fa fa-plus"></i> @L("CreateNew{{Entity_Name_Here}}")</button>
+                {{Create_Button_Here}}                
             }
         </div>
     </div>

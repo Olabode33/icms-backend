@@ -5,11 +5,32 @@
 			"templates" : [
 					{
 					"relation" : "single",
+					"viewType": "LookupTable",
 					"preventDuplicate":true,
 					"content" : "
 		Task<PagedResultDto<{{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableDto>> GetAll{{NP_Foreign_Entity_Name_Here}}ForLookupTable(GetAllForLookupTableInput input);
 		"
+					},
+					{
+					"relation" : "single",
+					"viewType": "Dropdown",
+					"preventDuplicate":true,
+					"content" : "
+		Task<List<{{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableDto>> GetAll{{NP_Foreign_Entity_Name_Here}}ForTableDropdown();
+		"
 					}
+				]
+		},
+		{
+			"placeholder" : "{{NP_Using_Looped_Template_Here}}",
+			"preventDuplicate":true,
+			"templates" : [					
+					{
+					"relation" : "single",
+					"viewType": "Dropdown",
+					"content" : "using System.Collections.Generic;
+"
+					},
 				]
 		}
 	],

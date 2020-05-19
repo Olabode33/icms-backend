@@ -4,6 +4,7 @@ using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using {{Namespace_Here}}.{{Namespace_Relative_Full_Here}}.Dtos;
 using {{Namespace_Here}}.Dto;
+{{NP_Using_Looped_Template_Here}}
 
 namespace {{Namespace_Here}}.{{Namespace_Relative_Full_Here}}
 {

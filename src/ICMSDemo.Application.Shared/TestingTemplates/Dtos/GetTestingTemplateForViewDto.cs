@@ -18,5 +18,6 @@ namespace ICMSDemo.TestingTemplates.Dtos
 
         public CreateOrEditTestingAttributeDto[] Attributes { set; get; }
         public string ExceptionTypeName { get; set; }
+        public string EntityType { get; set; }
     }
 }

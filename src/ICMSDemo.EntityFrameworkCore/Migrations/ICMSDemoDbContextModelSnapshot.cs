@@ -1508,6 +1508,10 @@ namespace ICMSDemo.Migrations
                     b.Property<int?>("DepartmentRiskId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Frequency")
                         .HasColumnType("int");
 
@@ -1528,6 +1532,8 @@ namespace ICMSDemo.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("DepartmentRiskControls");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("DepartmentRiskControl");
                 });
 
             modelBuilder.Entity("ICMSDemo.DepartmentRisks.DepartmentRisk", b =>
@@ -1549,6 +1555,10 @@ namespace ICMSDemo.Migrations
                     b.Property<long?>("DepartmentId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("RiskId")
                         .HasColumnType("int");
 
@@ -1564,6 +1574,8 @@ namespace ICMSDemo.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("DepartmentRisks");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("DepartmentRisk");
                 });
 
             modelBuilder.Entity("ICMSDemo.ExceptionIncidents.ExceptionIncident", b =>
@@ -2449,6 +2461,72 @@ namespace ICMSDemo.Migrations
                     b.HasDiscriminator().HasValue("Department");
                 });
 
+            modelBuilder.Entity("ICMSDemo.Processes.Process", b =>
+                {
+                    b.HasBaseType("Abp.Organizations.OrganizationUnit");
+
+                    b.Property<bool>("Casade")
+                        .HasColumnType("bit");
+
+                    b.Property<long?>("DepartmentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnName("Process_Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("Process_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("OwnerId")
+                        .HasColumnType("bigint");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("TenantId")
+                        .HasName("IX_AbpOrganizationUnits_TenantId1");
+
+                    b.ToTable("Processes");
+
+                    b.HasDiscriminator().HasValue("Process");
+                });
+
+            modelBuilder.Entity("ICMSDemo.ProcessRiskControls.ProcessRiskControl", b =>
+                {
+                    b.HasBaseType("ICMSDemo.DepartmentRiskControls.DepartmentRiskControl");
+
+                    b.Property<long?>("ProcessId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("ProcessRiskId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("ProcessId");
+
+                    b.HasIndex("ProcessRiskId");
+
+                    b.ToTable("DepartmentRiskControls");
+
+                    b.HasDiscriminator().HasValue("ProcessRiskControl");
+                });
+
+            modelBuilder.Entity("ICMSDemo.ProcessRisks.ProcessRisk", b =>
+                {
+                    b.HasBaseType("ICMSDemo.DepartmentRisks.DepartmentRisk");
+
+                    b.Property<long>("ProcessId")
+                        .HasColumnType("bigint");
+
+                    b.HasIndex("ProcessId");
+
+                    b.ToTable("DepartmentRisks");
+
+                    b.HasDiscriminator().HasValue("ProcessRisk");
+                });
+
             modelBuilder.Entity("Abp.Authorization.Roles.RoleClaim", b =>
                 {
                     b.HasOne("ICMSDemo.Authorization.Roles.Role", null)
@@ -2765,6 +2843,37 @@ namespace ICMSDemo.Migrations
                     b.HasOne("ICMSDemo.Authorization.Users.User", "SupervisorUserFk")
                         .WithMany()
                         .HasForeignKey("SupervisorUserId");
+                });
+
+            modelBuilder.Entity("ICMSDemo.Processes.Process", b =>
+                {
+                    b.HasOne("Abp.Organizations.OrganizationUnit", "DepartmentFk")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId");
+
+                    b.HasOne("ICMSDemo.Authorization.Users.User", "OwnerFk")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+                });
+
+            modelBuilder.Entity("ICMSDemo.ProcessRiskControls.ProcessRiskControl", b =>
+                {
+                    b.HasOne("ICMSDemo.Processes.Process", "ProcessFk")
+                        .WithMany()
+                        .HasForeignKey("ProcessId");
+
+                    b.HasOne("ICMSDemo.ProcessRisks.ProcessRisk", "ProcessRiskFk")
+                        .WithMany()
+                        .HasForeignKey("ProcessRiskId");
+                });
+
+            modelBuilder.Entity("ICMSDemo.ProcessRisks.ProcessRisk", b =>
+                {
+                    b.HasOne("ICMSDemo.Processes.Process", "ProcessFk")
+                        .WithMany()
+                        .HasForeignKey("ProcessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

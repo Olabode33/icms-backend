@@ -30,6 +30,27 @@ namespace ICMSDemo.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var processRiskControls = pages.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls, L("ProcessRiskControls"));
+            processRiskControls.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls_Create, L("CreateNewProcessRiskControl"));
+            processRiskControls.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls_Edit, L("EditProcessRiskControl"));
+            processRiskControls.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls_Delete, L("DeleteProcessRiskControl"));
+
+
+
+            var processRisks = pages.CreateChildPermission(AppPermissions.Pages_ProcessRisks, L("ProcessRisks"));
+            processRisks.CreateChildPermission(AppPermissions.Pages_ProcessRisks_Create, L("CreateNewProcessRisk"));
+            processRisks.CreateChildPermission(AppPermissions.Pages_ProcessRisks_Edit, L("EditProcessRisk"));
+            processRisks.CreateChildPermission(AppPermissions.Pages_ProcessRisks_Delete, L("DeleteProcessRisk"));
+
+
+
+            var processes = pages.CreateChildPermission(AppPermissions.Pages_Processes, L("Processes"));
+            processes.CreateChildPermission(AppPermissions.Pages_Processes_Create, L("CreateNewProcess"));
+            processes.CreateChildPermission(AppPermissions.Pages_Processes_Edit, L("EditProcess"));
+            processes.CreateChildPermission(AppPermissions.Pages_Processes_Delete, L("DeleteProcess"));
+
+
+
             var workingPaperNews = pages.CreateChildPermission(AppPermissions.Pages_WorkingPaperNews, L("WorkingPaperNews"), multiTenancySides: MultiTenancySides.Tenant);
             workingPaperNews.CreateChildPermission(AppPermissions.Pages_WorkingPaperNews_Create, L("CreateNewWorkingPaperNew"), multiTenancySides: MultiTenancySides.Tenant);
             workingPaperNews.CreateChildPermission(AppPermissions.Pages_WorkingPaperNews_Edit, L("EditWorkingPaperNew"), multiTenancySides: MultiTenancySides.Tenant);

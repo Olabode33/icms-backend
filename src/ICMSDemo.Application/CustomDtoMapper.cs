@@ -1,4 +1,10 @@
-﻿using ICMSDemo.WorkingPaperNews.Dtos;
+﻿using ICMSDemo.ProcessRiskControls.Dtos;
+using ICMSDemo.ProcessRiskControls;
+using ICMSDemo.ProcessRisks.Dtos;
+using ICMSDemo.ProcessRisks;
+using ICMSDemo.Processes.Dtos;
+using ICMSDemo.Processes;
+using ICMSDemo.WorkingPaperNews.Dtos;
 using ICMSDemo.WorkingPaperNews;
 
 using ICMSDemo.ExceptionIncidents.Dtos;
@@ -64,6 +70,12 @@ namespace ICMSDemo
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditProcessRiskControlDto, ProcessRiskControl>().ReverseMap();
+            configuration.CreateMap<ProcessRiskControlDto, ProcessRiskControl>().ReverseMap();
+            configuration.CreateMap<CreateOrEditProcessRiskDto, ProcessRisk>().ReverseMap();
+            configuration.CreateMap<ProcessRiskDto, ProcessRisk>().ReverseMap();
+            configuration.CreateMap<CreateOrEditProcessDto, Process>().ReverseMap();
+            configuration.CreateMap<ProcessDto, Process>().ReverseMap();
    
             configuration.CreateMap<CreateOrEditExceptionIncidentDto, ExceptionIncident>().ReverseMap();
             configuration.CreateMap<ExceptionIncidentDto, ExceptionIncident>().ReverseMap();
