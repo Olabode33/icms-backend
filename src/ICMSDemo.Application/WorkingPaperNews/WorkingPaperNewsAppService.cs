@@ -215,7 +215,7 @@ namespace ICMSDemo.WorkingPaperNews
                 workPaperTotal += workPaperDetail.Score;
             }
 
-            workingPaperNew.Score = Math.Round((workPaperTotal / totalNumber) * 100.0M,2);
+            workingPaperNew.Score = totalNumber <= 0 ? 0 : Math.Round((workPaperTotal / totalNumber) * 100.0M,2);
 
             await _workingPaperNewRepository.InsertAsync(workingPaperNew);
 

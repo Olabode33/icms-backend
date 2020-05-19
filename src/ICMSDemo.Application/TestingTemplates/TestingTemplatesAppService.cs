@@ -231,7 +231,8 @@ namespace ICMSDemo.TestingTemplates
                 await _testingTemplateAttributesRepository.InsertAsync(new TestingAttrribute()
                 {
                     TestAttribute = item.TestAttribute,
-                    TestingTemplateId = id
+                    TestingTemplateId = id,
+                    Weight = item.Weight  
                 });
             }
         }
