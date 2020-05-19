@@ -123,11 +123,13 @@ namespace ICMSDemo.TestingTemplates
                     output.Risk = ObjectMapper.Map<RiskDto>(_lookupProcessRiskControl.ProcessRiskFk.RiskFk);
                     output.Control = ObjectMapper.Map<ControlDto>(_lookupProcessRiskControl.ControlFk);
                     output.EntityType = "Process";
+                    output.OuDisplayName = _lookupProcessRiskControl.ProcessRiskFk.ProcessFk.Name;
                 } else
                 {
                     output.Risk = ObjectMapper.Map<RiskDto>(_lookupDepartmentRiskControl.DepartmentRiskFk.RiskFk);
                     output.Control = ObjectMapper.Map<ControlDto>(_lookupDepartmentRiskControl.ControlFk);
                     output.EntityType = "Business Unit";
+                    output.OuDisplayName = _lookupDepartmentRiskControl.DepartmentRiskFk.DepartmentFk.DisplayName;
                 }
 
             }
