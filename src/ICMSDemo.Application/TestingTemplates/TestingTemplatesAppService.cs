@@ -96,6 +96,32 @@ namespace ICMSDemo.TestingTemplates
             );
         }
 
+        public async Task<ListResultDto<GetTestingTemplateForViewDto>> GetForProcessControl(EntityDto input)
+        {
+            var filteredTestingTemplates = _testingTemplateRepository.GetAll()
+                        .Include(e => e.DepartmentRiskControlFk)
+                        .Where(x => x.DepartmentRiskControlId == input.Id);
+
+            var testingTemplates = from o in filteredTestingTemplates
+                                   select new GetTestingTemplateForViewDto()
+                                   {
+                                       TestingTemplate = new TestingTemplateDto
+                                       {
+                                           Code = o.Code,
+                                           DetailedInstructions = o.DetailedInstructions,
+                                           Title = o.Title,
+                                           Frequency = o.Frequency.ToString(),
+                                           Id = o.Id,
+                                           IsActive = o.IsActive
+                                       }
+                                   };
+
+            var totalCount = await filteredTestingTemplates.CountAsync();
+
+            return new ListResultDto<GetTestingTemplateForViewDto>(await testingTemplates.ToListAsync());
+        }
+
+
         public async Task<GetTestingTemplateForViewDto> GetTestingTemplateForView(int id)
         {
             var testingTemplate = await _testingTemplateRepository.GetAsync(id);

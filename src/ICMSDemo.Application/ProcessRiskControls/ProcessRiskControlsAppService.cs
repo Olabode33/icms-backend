@@ -19,6 +19,7 @@ using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ICMSDemo.Processes;
+using ICMSDemo.TestingTemplates;
 
 namespace ICMSDemo.ProcessRiskControls
 {
@@ -29,19 +30,20 @@ namespace ICMSDemo.ProcessRiskControls
         private readonly IRepository<ProcessRisk, int> _lookup_processRiskRepository;
         private readonly IRepository<Process, long> _lookup_processRepository;
         private readonly IRepository<Control, int> _lookup_controlRepository;
-
+        private readonly IRepository<TestingTemplate> _testingTemplateRepository;
 
         public ProcessRiskControlsAppService(
             IRepository<ProcessRiskControl> processRiskControlRepository, 
             IRepository<ProcessRisk, int> lookup_processRiskRepository, 
             IRepository<Process, long> lookup_processRepository, 
-            IRepository<Control, int> lookup_controlRepository)
+            IRepository<Control, int> lookup_controlRepository,
+            IRepository<TestingTemplate> testingTemplateRepository)
         {
             _processRiskControlRepository = processRiskControlRepository;
             _lookup_processRiskRepository = lookup_processRiskRepository;
             _lookup_processRepository = lookup_processRepository;
             _lookup_controlRepository = lookup_controlRepository;
-
+            _testingTemplateRepository = testingTemplateRepository;
         }
 
         public async Task<PagedResultDto<GetProcessRiskControlForViewDto>> GetAll(GetAllProcessRiskControlsInput input)
@@ -131,9 +133,39 @@ namespace ICMSDemo.ProcessRiskControls
 
             var totalCount = outputList.Count();
 
+            foreach (var item in outputList)
+            {
+                item.TestingTemplates = await GetForProcessControl(item.ProcessRiskControl.Id);
+            }
+
             return new ListResultDto<GetProcessRiskControlForViewDto>(
                 outputList.Skip(input.SkipCount).Take(input.MaxResultCount).ToList()
             );
+        }
+
+        private async Task<ListResultDto<TestingTemplates.Dtos.GetTestingTemplateForViewDto>> GetForProcessControl(int input)
+        {
+            var filteredTestingTemplates = _testingTemplateRepository.GetAll()
+                        .Include(e => e.DepartmentRiskControlFk)
+                        .Where(x => x.DepartmentRiskControlId == input);
+
+            var testingTemplates = from o in filteredTestingTemplates
+                                   select new TestingTemplates.Dtos.GetTestingTemplateForViewDto()
+                                   {
+                                       TestingTemplate = new TestingTemplates.Dtos.TestingTemplateDto
+                                       {
+                                           Code = o.Code,
+                                           DetailedInstructions = o.DetailedInstructions,
+                                           Title = o.Title,
+                                           Frequency = o.Frequency.ToString(),
+                                           Id = o.Id,
+                                           IsActive = o.IsActive
+                                       }
+                                   };
+
+            var totalCount = await filteredTestingTemplates.CountAsync();
+
+            return new ListResultDto<TestingTemplates.Dtos.GetTestingTemplateForViewDto>(await testingTemplates.ToListAsync());
         }
 
 

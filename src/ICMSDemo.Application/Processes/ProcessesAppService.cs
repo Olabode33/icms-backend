@@ -47,9 +47,9 @@ namespace ICMSDemo.Processes
             _lookup_processRiskControlRepository = lookup_processRiskControlRepository;
         }
 
-        public async Task<ListResultDto<OrganizationUnitDto>> GetProcesses()
+        public async Task<ListResultDto<OrganizationUnitDto>> GetProcesses(EntityDto<long?> input)
         {
-            var processes = await _processRepository.GetAllListAsync();
+            var processes = await _processRepository.GetAll().WhereIf(input.Id != null && input.Id > 0, x => x.DepartmentId == (long)input.Id).ToListAsync();
 
             var processRiskCounts = await _lookup_processRiskRepository.GetAll()
                 .GroupBy(x => x.ProcessId)
