@@ -13,5 +13,8 @@ namespace ICMSDemo.Organizations.Dto
         public int MemberCount { get; set; }
         
         public int RoleCount { get; set; }
+
+        public string DepartmentCode { get; set; }
+        public long? DepartmentId { get; set; }
     }
 }

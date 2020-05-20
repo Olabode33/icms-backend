@@ -49,7 +49,10 @@ namespace ICMSDemo.Processes
 
         public async Task<ListResultDto<OrganizationUnitDto>> GetProcesses(EntityDto<long?> input)
         {
-            var processes = await _processRepository.GetAll().WhereIf(input.Id != null && input.Id > 0, x => x.DepartmentId == (long)input.Id).ToListAsync();
+
+            var processes = await _processRepository.GetAll()
+                                                    .Include(x => x.DepartmentFk)
+                                                    .WhereIf(input.Id != null && input.Id > 0, x => x.DepartmentId == (long)input.Id || (x.DepartmentId != input.Id && x.Casade)).ToListAsync();
 
             var processRiskCounts = await _lookup_processRiskRepository.GetAll()
                 .GroupBy(x => x.ProcessId)
@@ -67,14 +70,36 @@ namespace ICMSDemo.Processes
                     count = groupedRoles.Count()
                 }).ToDictionaryAsync(x => x.processId, y => y.count);
 
-            return new ListResultDto<OrganizationUnitDto>(
-                processes.Select(ou =>
+            var processsList = processes.Select(ou =>
+                                {
+                                    var organizationUnitDto = ObjectMapper.Map<OrganizationUnitDto>(ou);
+                                    organizationUnitDto.MemberCount = processRiskCounts.ContainsKey(ou.Id) ? processRiskCounts[ou.Id] : 0;
+                                    organizationUnitDto.RoleCount = processRiskControlCounts.ContainsKey(ou.Id) ? processRiskControlCounts[ou.Id] : 0;
+                                    organizationUnitDto.DepartmentCode = ou.DepartmentFk == null ? "" : ou.DepartmentFk.Code;
+                                    organizationUnitDto.DepartmentId = ou.DepartmentId;
+                                    return organizationUnitDto;
+                                }).ToList();
+
+            //Can cascade if getting for a deparment
+            if (input.Id != null && input.Id > 0)
+            {
+                var processCode = await OrganizationUnitManager.GetCodeAsync((long)input.Id);
+
+                string[] roots = processCode.Split(".");
+                string previousCode = string.Empty;
+                List<string> codes = new List<string>();
+
+                foreach (var item in roots)
                 {
-                    var organizationUnitDto = ObjectMapper.Map<OrganizationUnitDto>(ou);
-                    organizationUnitDto.MemberCount = processRiskCounts.ContainsKey(ou.Id) ? processRiskCounts[ou.Id] : 0;
-                    organizationUnitDto.RoleCount = processRiskControlCounts.ContainsKey(ou.Id) ? processRiskControlCounts[ou.Id] : 0;
-                    return organizationUnitDto;
-                }).ToList());
+                    previousCode = previousCode == string.Empty ? item : previousCode + "." + item;
+                    codes.Add(previousCode);
+                }
+
+                var departments = await _lookup_organizationUnitRepository.GetAllListAsync(x => codes.Any(e => e == x.Code));
+                processsList = processsList.Where(x => codes.Any(e => e == x.DepartmentCode)).ToList();
+            }
+
+            return new ListResultDto<OrganizationUnitDto>(processsList);
         }
 
         public async Task<PagedResultDto<GetProcessForViewDto>> GetAll(GetAllProcessesInput input)
