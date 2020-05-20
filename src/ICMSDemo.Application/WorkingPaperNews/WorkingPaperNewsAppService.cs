@@ -117,7 +117,21 @@ namespace ICMSDemo.WorkingPaperNews
         {
             var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync(input.Id);
 
-            var output = new GetWorkingPaperNewForEditOutput { WorkingPaperNew = ObjectMapper.Map<CreateOrEditWorkingPaperNewDto>(workingPaperNew) };
+            var output = new GetWorkingPaperNewForEditOutput { WorkingPaperNew = new CreateOrEditWorkingPaperNewDto { 
+                Code = workingPaperNew.Code,
+                Comment = workingPaperNew.Comment,
+                CompletionDate = workingPaperNew.CompletionDate,
+                CompletedUserId = workingPaperNew.CompletedById,
+                DueDate = workingPaperNew.DueDate,
+                Id = workingPaperNew.Id,
+                OrganizationUnitId = workingPaperNew.OrganizationUnitId,
+                ReviewDate = workingPaperNew.ReviewedDate,
+                ReviewedUserId = workingPaperNew.ReviewedById,
+                Score = workingPaperNew.Score,
+                TaskDate = workingPaperNew.TaskDate,
+                TaskStatus = workingPaperNew.TaskStatus,
+                TestingTemplateId = workingPaperNew.TestingTemplateId
+            } };
 
             if (output.WorkingPaperNew.TestingTemplateId != null)
             {

@@ -27,7 +27,7 @@ namespace ICMSDemo.WorkingPaperNews.Dtos
 		public decimal Score { get; set; }
 		
 		
-		public DateTime ReviewDate { get; set; }
+		public DateTime? ReviewDate { get; set; }
 		
 		
 		public DateTime? CompletionDate { get; set; }
