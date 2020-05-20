@@ -83,7 +83,7 @@ namespace ICMSDemo.TestingTemplates
                                            IsActive = o.IsActive
                                        },
                                        DepartmentRiskControlCode = s1 == null ? "" : s1.Code,
-                                       AffectedDepartments = s1 == null ? "" : s1.DepartmentFk.Name,
+                                       AffectedDepartments = s1 == null ? "Operations" : s1.DepartmentFk.Name,
                                        Cascade = s1 == null ? "" : s1.Cascade.ToString()
 
                                    };
