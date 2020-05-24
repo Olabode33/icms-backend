@@ -51,6 +51,10 @@ namespace ICMSDemo.WorkingPapers
     public class WorkingPaperDetail : Entity, IMustHaveTenant
     {
         public int TenantId { get; set; }
+        public virtual Guid? WorkingPaperId { get; set; }
+
+        [ForeignKey("WorkingPaperId")]
+        public WorkingPaper WorkinPaperFK { get; set; }
 
         public int MyProperty { get; set; }
         public int Score { get; set; }

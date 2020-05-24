@@ -46,15 +46,12 @@ namespace ICMSDemo.WorkingPaperNews.Dtos
 
 	public class CreateOrEditTestingAttributeDto {
 		public string AttributeText { get; set; }
-
 		public bool Result { get; set; }
-
 		public int Weight { get; set; }
-
 		public string Comments { get; set; }
-
 		public int? TestingAttrributeId { get; set; }
         public int Sequence { get; set; }
+		public Guid? WorkingPaperId { get; set; }
     }
 
 }

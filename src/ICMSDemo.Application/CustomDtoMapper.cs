@@ -63,6 +63,7 @@ using ICMSDemo.MultiTenancy.Payments.Dto;
 using ICMSDemo.Notifications.Dto;
 using ICMSDemo.Organizations.Dto;
 using ICMSDemo.Sessions.Dto;
+using ICMSDemo.WorkingPapers;
 
 namespace ICMSDemo
 {
@@ -70,6 +71,10 @@ namespace ICMSDemo
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+
+            configuration.CreateMap<CreateOrEditWorkingPaperNewDto, WorkingPaper>().ReverseMap()
+                         .ForMember(x => x.Attributes, opt => opt.Ignore());
+
             configuration.CreateMap<CreateOrEditProcessRiskControlDto, ProcessRiskControl>().ReverseMap();
             configuration.CreateMap<ProcessRiskControlDto, ProcessRiskControl>().ReverseMap();
             configuration.CreateMap<CreateOrEditProcessRiskDto, ProcessRisk>().ReverseMap();

@@ -137,6 +137,10 @@ namespace ICMSDemo.WorkingPaperNews
             {
                 var _lookupTestingTemplate = await _lookup_testingTemplateRepository.FirstOrDefaultAsync((int)output.WorkingPaperNew.TestingTemplateId);
                 output.TestingTemplateCode = _lookupTestingTemplate.Code.ToString();
+                output.TestingTemplate = new TestingTemplates.Dtos.GetTestingTemplateForViewDto()
+                {
+                    TestingTemplate = ObjectMapper.Map<TestingTemplates.Dtos.TestingTemplateDto>(_lookupTestingTemplate)
+                };
             }
 
             if (output.WorkingPaperNew.OrganizationUnitId != null)
@@ -155,6 +159,22 @@ namespace ICMSDemo.WorkingPaperNews
             {
                 var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)output.WorkingPaperNew.ReviewedUserId);
                 output.UserName2 = _lookupUser.Name.ToString();
+            }
+
+            //Get working paper details 
+            var workingPaperDetils = await _workingPaperDetailsRepository.GetAll().Where(x => x.WorkingPaperId == input.Id)
+                                         .Select(x => new CreateOrEditTestingAttributeDto
+                                         {
+                                             Sequence = x.Sequence,
+                                             TestingAttrributeId = x.TestingAttrributeId,
+                                             Result = x.Result,
+                                             Weight = x.Weight
+                                         }).ToListAsync();
+            output.WorkingPaperDetails = workingPaperDetils;
+
+            if (workingPaperDetils.Count > 0)
+            {
+                output.LastSequence = workingPaperDetils.Max(x => x.Sequence);
             }
 
             return output;
@@ -189,9 +209,6 @@ namespace ICMSDemo.WorkingPaperNews
             workingPaperNew.OrganizationUnitId  = (long)input.OrganizationUnitId;
             workingPaperNew.TestingTemplateId  = input.TestingTemplateId;
 
-            decimal totalNumber = 0.00M;
-            decimal workPaperTotal = 0.00M;
-
             if (AbpSession.TenantId != null)
             {
                 workingPaperNew.TenantId = (int)AbpSession.TenantId;
@@ -203,11 +220,44 @@ namespace ICMSDemo.WorkingPaperNews
             workingPaperNew.TaskStatus = TaskStatus.PendingReview;
             workingPaperNew.TaskDate = DateTime.Now;
 
-            List<WorkingPaperDetail> workingPaperDetails = new List<WorkingPaperDetail>();
+            var id = await _workingPaperNewRepository.InsertAndGetIdAsync(workingPaperNew);
+            await CurrentUnitOfWork.SaveChangesAsync();
+            workingPaperNew.Score = await SaveWorkingPaperDetails(input.Attributes, testingTemplateAttributes, id);
 
-            foreach (var item in input.Attributes)
+            //Save score
+            workingPaperNew.Id = id;
+            await _workingPaperNewRepository.UpdateAsync(workingPaperNew);
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews_Edit)]
+        protected virtual async Task Update(CreateOrEditWorkingPaperNewDto input)
+        {
+            var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync((Guid)input.Id);
+
+            var testingTemplateAttributes = await _lookup_testingAttributeRepository.GetAllListAsync(x => x.TestingTemplateId == input.TestingTemplateId);
+
+            if (testingTemplateAttributes == null)
             {
-                var testingTemplateAttribute = testingTemplateAttributes.FirstOrDefault(x => x.Id == item.TestingAttrributeId);
+                throw new UserFriendlyException("There is no testing template for this document.");
+            }
+
+            input.Score = await SaveWorkingPaperDetails(input.Attributes, testingTemplateAttributes, workingPaperNew.Id);
+            input.CompletionDate = DateTime.Now;
+
+            ObjectMapper.Map(input, workingPaperNew);
+        }
+
+
+        private async Task<decimal> SaveWorkingPaperDetails(CreateOrEditTestingAttributeDto[] input, List<TestingAttrribute> testingAttrributes, Guid workingPaperId)
+        {
+            decimal totalNumber = 0.00M;
+            decimal workPaperTotal = 0.00M;
+            List<WorkingPaperDetail> workingPaperDetails = new List<WorkingPaperDetail>();
+            
+
+            foreach (var item in input)
+            {
+                var testingTemplateAttribute = testingAttrributes.FirstOrDefault(x => x.Id == item.TestingAttrributeId);
 
                 if (testingTemplateAttribute == null)
                 {
@@ -216,6 +266,7 @@ namespace ICMSDemo.WorkingPaperNews
 
                 var workPaperDetail = new WorkingPaperDetail()
                 {
+                    WorkingPaperId = workingPaperId,
                     Sequence = item.Sequence,
                     TestingAttrributeId = item.TestingAttrributeId,
                     Result = item.Result,
@@ -228,22 +279,12 @@ namespace ICMSDemo.WorkingPaperNews
                 totalNumber += workPaperDetail.Weight;
                 workPaperTotal += workPaperDetail.Score;
             }
-
-            workingPaperNew.Score = totalNumber <= 0 ? 0 : Math.Round((workPaperTotal / totalNumber) * 100.0M,2);
-
-            await _workingPaperNewRepository.InsertAsync(workingPaperNew);
-
             foreach (var item in workingPaperDetails)
             {
                 await _workingPaperDetailsRepository.InsertAsync(item);
             }
-        }
 
-        [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews_Edit)]
-        protected virtual async Task Update(CreateOrEditWorkingPaperNewDto input)
-        {
-            var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync((Guid)input.Id);
-            ObjectMapper.Map(input, workingPaperNew);
+            return totalNumber <= 0 ? 0 : Math.Round((workPaperTotal / totalNumber) * 100.0M, 2);
         }
 
         [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews_Delete)]
