@@ -1,6 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="ProcessRiskControls">Process risk controls</text>
+  <texts>    <text name="Projects">Projects</text>
+    <text name="Project">Project</text>
+    <text name="ICMSDemo.Projects.Project">Project</text>
+    <text name="StartDate">Start date</text>
+    <text name="EndDate">End date</text>
+    <text name="BudgetedStartDate">Budgeted start date</text>
+    <text name="BudgetedEndDate">Budgeted end date</text>
+    <text name="ProjectsHeaderInfo">Projects header info</text>
+    <text name="CreateNewProject">Create new project</text>
+    <text name="EditProject">Edit project</text>
+    <text name="DeleteProject">Delete project</text>
+    <text name="StartDateRange">Start date range</text>
+    <text name="EndDateRange">End date range</text>
+    <text name="BudgetedStartDateRange">Budgeted start date range</text>
+    <text name="BudgetedEndDateRange">Budgeted end date range</text>
+    <text name="ProcessRiskControls">Process risk controls</text>
     <text name="ProcessRiskControl">Process risk control</text>
     <text name="CreateNewProcessRiskControl">Create new process risk control</text>
     <text name="EditProcessRiskControl">Edit process risk control</text>

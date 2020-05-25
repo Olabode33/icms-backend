@@ -1,4 +1,5 @@
-﻿using ICMSDemo.ProcessRiskControls;
+﻿using ICMSDemo.Projects;
+using ICMSDemo.ProcessRiskControls;
 using ICMSDemo.ProcessRisks;
 using ICMSDemo.Processes;
 using ICMSDemo.WorkingPaperNews;
@@ -30,6 +31,8 @@ namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<Project> Projects { get; set; }
+
         public virtual DbSet<ProcessRiskControl> ProcessRiskControls { get; set; }
 
         public virtual DbSet<ProcessRisk> ProcessRisks { get; set; }
@@ -104,7 +107,12 @@ namespace ICMSDemo.EntityFrameworkCore
 
            
            
-            modelBuilder.Entity<ProcessRiskControl>(p =>
+           
+            modelBuilder.Entity<Project>(p =>
+            {
+                p.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<ProcessRiskControl>(p =>
             {
                 p.HasIndex(e => new { e.TenantId });
             });

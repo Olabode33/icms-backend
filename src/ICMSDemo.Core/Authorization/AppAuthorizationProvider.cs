@@ -30,6 +30,13 @@ namespace ICMSDemo.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var projects = pages.CreateChildPermission(AppPermissions.Pages_Projects, L("Projects"), multiTenancySides: MultiTenancySides.Tenant);
+            projects.CreateChildPermission(AppPermissions.Pages_Projects_Create, L("CreateNewProject"), multiTenancySides: MultiTenancySides.Tenant);
+            projects.CreateChildPermission(AppPermissions.Pages_Projects_Edit, L("EditProject"), multiTenancySides: MultiTenancySides.Tenant);
+            projects.CreateChildPermission(AppPermissions.Pages_Projects_Delete, L("DeleteProject"), multiTenancySides: MultiTenancySides.Tenant);
+
+
+
             var processRiskControls = pages.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls, L("ProcessRiskControls"));
             processRiskControls.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls_Create, L("CreateNewProcessRiskControl"));
             processRiskControls.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls_Edit, L("EditProcessRiskControl"));

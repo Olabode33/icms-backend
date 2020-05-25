@@ -22,6 +22,9 @@ namespace ICMSDemo.Processes
 		Task<PagedResultDto<ProcessUserLookupTableDto>> GetAllUserForLookupTable(GetAllForLookupTableInput input);
 		
 		Task<PagedResultDto<ProcessOrganizationUnitLookupTableDto>> GetAllOrganizationUnitForLookupTable(GetAllForLookupTableInput input);
-		
-    }
+
+
+
+
+	}
 }

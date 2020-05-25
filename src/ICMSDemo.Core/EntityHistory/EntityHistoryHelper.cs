@@ -1,4 +1,5 @@
-﻿using ICMSDemo.Processes;
+﻿using ICMSDemo.Projects;
+using ICMSDemo.Processes;
 using ICMSDemo.TestingTemplates;
 using ICMSDemo.DepartmentRiskControls;
 using ICMSDemo.Departments;
@@ -25,6 +26,7 @@ namespace ICMSDemo.EntityHistory
 
         public static readonly Type[] TenantSideTrackedTypes =
         {
+            typeof(Project),
             typeof(Process),
             typeof(TestingTemplate),
             typeof(DepartmentRiskControl),

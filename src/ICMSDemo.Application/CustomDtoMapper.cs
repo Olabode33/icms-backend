@@ -1,4 +1,6 @@
-﻿using ICMSDemo.ProcessRiskControls.Dtos;
+﻿using ICMSDemo.Projects.Dtos;
+using ICMSDemo.Projects;
+using ICMSDemo.ProcessRiskControls.Dtos;
 using ICMSDemo.ProcessRiskControls;
 using ICMSDemo.ProcessRisks.Dtos;
 using ICMSDemo.ProcessRisks;
@@ -71,6 +73,8 @@ namespace ICMSDemo
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditProjectDto, Project>().ReverseMap();
+            configuration.CreateMap<ProjectDto, Project>().ReverseMap();
 
             configuration.CreateMap<CreateOrEditWorkingPaperNewDto, WorkingPaper>().ReverseMap()
                          .ForMember(x => x.Attributes, opt => opt.Ignore());

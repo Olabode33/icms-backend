@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200525115355_Added_Project")]
+    partial class Added_Project
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2061,14 +2063,8 @@ namespace ICMSDemo.Migrations
                     b.Property<DateTime>("BudgetedStartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Cascade")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Commenced")
-                        .HasColumnType("bit");
 
                     b.Property<long?>("ControlUnitId")
                         .HasColumnType("bigint");
@@ -2079,22 +2075,10 @@ namespace ICMSDemo.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("Progress")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ReviewType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ScopeEndDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<long?>("ScopeId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("ScopeStartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("StartDate")
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("TenantId")
