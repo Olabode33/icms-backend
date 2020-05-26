@@ -7,6 +7,7 @@ using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
 using Abp.Auditing;
 using ICMSDemo.ExceptionTypes;
+using ICMSDemo.ProcessRiskControls;
 
 namespace ICMSDemo.TestingTemplates
 {
@@ -31,10 +32,10 @@ namespace ICMSDemo.TestingTemplates
 		public virtual int DaysToComplete { get; set; }
 		
 
-		public virtual int? DepartmentRiskControlId { get; set; }
+		public virtual int? ProcessRiskControlId { get; set; }
 		
         [ForeignKey("DepartmentRiskControlId")]
-		public DepartmentRiskControl DepartmentRiskControlFk { get; set; }
+		public ProcessRiskControl DepartmentRiskControlFk { get; set; }
 		public string ExtensionData { get; set; }
 
 		public int? SampleSize { set; get; }

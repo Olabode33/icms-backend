@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200525203608_Modified_Some_Columns")]
+    partial class Modified_Some_Columns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2316,9 +2318,6 @@ namespace ICMSDemo.Migrations
                     b.Property<long>("OrganizationUnitId")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
                     b.Property<long?>("ReviewedById")
                         .HasColumnType("bigint");
 
@@ -2343,8 +2342,6 @@ namespace ICMSDemo.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompletedById");
-
-                    b.HasIndex("ProjectId");
 
                     b.HasIndex("ReviewedById");
 
@@ -2872,10 +2869,6 @@ namespace ICMSDemo.Migrations
                     b.HasOne("ICMSDemo.Authorization.Users.User", "CompletedBy")
                         .WithMany()
                         .HasForeignKey("CompletedById");
-
-                    b.HasOne("ICMSDemo.Projects.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId");
 
                     b.HasOne("ICMSDemo.Authorization.Users.User", "ReviewedBy")
                         .WithMany()

@@ -32,7 +32,7 @@ namespace ICMSDemo.TestingTemplates
         private readonly IRepository<ExceptionType> _exceptionTypesRepository;
         private readonly IRepository<TestingAttrribute> _testingTemplateAttributesRepository;
         private readonly ITestingTemplatesExcelExporter _testingTemplatesExcelExporter;
-        private readonly IRepository<DepartmentRiskControl, int> _lookup_departmentRiskControlRepository;
+
         private readonly IRepository<ProcessRiskControl, int> _lookup_processRiskControlRepository;
 
 
@@ -40,12 +40,12 @@ namespace ICMSDemo.TestingTemplates
             IRepository<ExceptionType> exceptionTypesRepository,
             IRepository<TestingAttrribute> testingTemplateAttributesRepository,
             ITestingTemplatesExcelExporter testingTemplatesExcelExporter, 
-            IRepository<DepartmentRiskControl, int> lookup_departmentRiskControlRepository,
+
             IRepository<ProcessRiskControl, int> lookup_processRiskControlRepository)
         {
             _testingTemplateRepository = testingTemplateRepository;
             _testingTemplatesExcelExporter = testingTemplatesExcelExporter;
-            _lookup_departmentRiskControlRepository = lookup_departmentRiskControlRepository;
+       
             _lookup_processRiskControlRepository = lookup_processRiskControlRepository;
             _testingTemplateAttributesRepository = testingTemplateAttributesRepository;
             _exceptionTypesRepository = exceptionTypesRepository;
@@ -67,8 +67,8 @@ namespace ICMSDemo.TestingTemplates
                 .PageBy(input);
 
             var testingTemplates = from o in pagedAndFilteredTestingTemplates
-                                   join o1 in _lookup_departmentRiskControlRepository
-                                   .GetAll().Include(x => x.DepartmentFk) on o.DepartmentRiskControlId equals o1.Id into j1
+                                   join o1 in _lookup_processRiskControlRepository
+                                   .GetAll().Include(x => x.ProcessRiskFk).Include(x => x.ProcessRiskFk.ProcessFk) on o.ProcessRiskControlId equals o1.Id into j1
                                    from s1 in j1.DefaultIfEmpty()
 
                                    select new GetTestingTemplateForViewDto()
@@ -83,7 +83,7 @@ namespace ICMSDemo.TestingTemplates
                                            IsActive = o.IsActive
                                        },
                                        DepartmentRiskControlCode = s1 == null ? "" : s1.Code,
-                                       AffectedDepartments = s1 == null ? "Operations" : s1.DepartmentFk.Name,
+                                       AffectedDepartments = s1 == null ? "" : s1.DepartmentFk.Name,
                                        Cascade = s1 == null ? "" : s1.Cascade.ToString()
 
                                    };
@@ -100,7 +100,7 @@ namespace ICMSDemo.TestingTemplates
         {
             var filteredTestingTemplates = _testingTemplateRepository.GetAll()
                         .Include(e => e.DepartmentRiskControlFk)
-                        .Where(x => x.DepartmentRiskControlId == input.Id);
+                        .Where(x => x.ProcessRiskControlId == input.Id);
 
             var testingTemplates = from o in filteredTestingTemplates
                                    select new GetTestingTemplateForViewDto()
@@ -130,7 +130,7 @@ namespace ICMSDemo.TestingTemplates
 
             if (output.TestingTemplate.DepartmentRiskControlId != null)
             {
-                var _lookupDepartmentRiskControl = await _lookup_departmentRiskControlRepository
+                var _lookupDepartmentRiskControl = await _lookup_processRiskControlRepository
                     .GetAll()
                     .Include(x => x.ControlFk)
                     .Include(x => x.DepartmentRiskFk).ThenInclude(x => x.RiskFk)
@@ -215,7 +215,7 @@ namespace ICMSDemo.TestingTemplates
 
             if (output.TestingTemplate.DepartmentRiskControlId != null)
             {
-                var _lookupDepartmentRiskControl = await _lookup_departmentRiskControlRepository.FirstOrDefaultAsync((int)output.TestingTemplate.DepartmentRiskControlId);
+                var _lookupDepartmentRiskControl = await _lookup_processRiskControlRepository.FirstOrDefaultAsync((int)output.TestingTemplate.DepartmentRiskControlId);
                 output.DepartmentRiskControlCode = _lookupDepartmentRiskControl.Code.ToString();
             }
 
@@ -243,7 +243,7 @@ namespace ICMSDemo.TestingTemplates
 
             var testingTemplate = ObjectMapper.Map<TestingTemplate>(input);
             testingTemplate.Code = "TT-" + previousCount.ToString();
-
+            testingTemplate.ProcessRiskControlId = input.DepartmentRiskControlId;
 
             if (AbpSession.TenantId != null)
             {
@@ -288,7 +288,7 @@ namespace ICMSDemo.TestingTemplates
                         .WhereIf(!string.IsNullOrWhiteSpace(input.DepartmentRiskControlCodeFilter), e => e.DepartmentRiskControlFk != null && e.DepartmentRiskControlFk.Code == input.DepartmentRiskControlCodeFilter);
 
             var query = (from o in filteredTestingTemplates
-                         join o1 in _lookup_departmentRiskControlRepository.GetAll() on o.DepartmentRiskControlId equals o1.Id into j1
+                         join o1 in _lookup_processRiskControlRepository.GetAll() on o.ProcessRiskControlId equals o1.Id into j1
                          from s1 in j1.DefaultIfEmpty()
 
                          select new GetTestingTemplateForViewDto()
@@ -315,7 +315,7 @@ namespace ICMSDemo.TestingTemplates
         [AbpAuthorize(AppPermissions.Pages_TestingTemplates)]
         public async Task<PagedResultDto<TestingTemplateDepartmentRiskControlLookupTableDto>> GetAllDepartmentRiskControlForLookupTable(Dtos.GetAllForLookupTableInput input)
         {
-            var query = _lookup_departmentRiskControlRepository.GetAll().WhereIf(
+            var query = _lookup_processRiskControlRepository.GetAll().WhereIf(
                    !string.IsNullOrWhiteSpace(input.Filter),
                   e => e.Code.ToString().Contains(input.Filter)
                );

@@ -98,13 +98,14 @@ namespace ICMSDemo.DepartmentRisks
                 codes.Add(previousCode);
             }
 
-           var departments =  await _lookup_departmentRepository.GetAllListAsync(x => codes.Any(e => e == x.Code));
+        //   var departments =  await _lookup_departmentRepository.GetAllListAsync(x => codes.Any(e => e == x.Code));
 
 
             var filteredDepartmentRisks = from o in _departmentRiskRepository
                                           .GetAll()
                                           .Include(e => e.RiskFk)
                                           .Include(x => x.DepartmentFk)
+                                         
                                           .Where(x => x.DepartmentId == input.DepartmentId || (x.DepartmentId != input.DepartmentId && x.Cascade))
                                           select new GetDepartmentRiskForViewDto()
                                           {
@@ -124,10 +125,7 @@ namespace ICMSDemo.DepartmentRisks
                                           } ;
             
 
-            //var pagedAndFilteredDepartmentRisks = filteredDepartmentRisks
-            //    .PageBy(input);
 
-          //  var totalCount = await filteredDepartmentRisks.CountAsync();
 
             var lists = await filteredDepartmentRisks.ToListAsync();
 

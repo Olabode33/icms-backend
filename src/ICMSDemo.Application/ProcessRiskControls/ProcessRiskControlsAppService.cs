@@ -147,7 +147,7 @@ namespace ICMSDemo.ProcessRiskControls
         {
             var filteredTestingTemplates = _testingTemplateRepository.GetAll()
                         .Include(e => e.DepartmentRiskControlFk)
-                        .Where(x => x.DepartmentRiskControlId == input);
+                        .Where(x => x.ProcessRiskControlId == input);
 
             var testingTemplates = from o in filteredTestingTemplates
                                    select new TestingTemplates.Dtos.GetTestingTemplateForViewDto()

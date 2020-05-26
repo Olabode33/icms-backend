@@ -3,6 +3,7 @@ using Abp.Domain.Entities.Auditing;
 using Abp.Organizations;
 using ICMSDemo.Authorization.Users;
 using ICMSDemo.ExceptionIncidents;
+using ICMSDemo.Projects;
 using ICMSDemo.TestingTemplates;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,11 @@ namespace ICMSDemo.WorkingPapers
     {
         public int TenantId { get; set; }
         public long OrganizationUnitId { get; set; }
-     
+
+        public int? ProjectId { get; set; }
+
+        public Project Project { get; set; }
+
         public string Code { get; set; }
         public string Comment { get; set; }
 

@@ -1,18 +1,11 @@
-﻿using ICMSDemo;
-using ICMSDemo.ProcessRisks;
-using Abp.Organizations;
-using ICMSDemo.Controls;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using ICMSDemo.ProcessRisks;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities.Auditing;
-using Abp.Domain.Entities;
 using ICMSDemo.Processes;
 using ICMSDemo.DepartmentRiskControls;
 
 namespace ICMSDemo.ProcessRiskControls
 {
-	//[Table("ProcessRiskControls")]
+    //[Table("ProcessRiskControls")]
     public class ProcessRiskControl : DepartmentRiskControl
 	{
 		public virtual int? ProcessRiskId { get; set; }

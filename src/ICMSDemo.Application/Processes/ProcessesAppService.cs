@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using ICMSDemo.ProcessRisks;
 using ICMSDemo.ProcessRiskControls;
 using ICMSDemo.Organizations.Dto;
+using Abp.Collections.Extensions;
 
 namespace ICMSDemo.Processes
 {
@@ -49,10 +50,31 @@ namespace ICMSDemo.Processes
 
         public async Task<ListResultDto<OrganizationUnitDto>> GetProcesses(EntityDto<long?> input)
         {
+            var allProcesses = await _processRepository.GetAllIncluding(x => x.DepartmentFk).ToListAsync();
 
-            var processes = await _processRepository.GetAll()
-                                                    .Include(x => x.DepartmentFk)
-                                                    .WhereIf(input.Id != null && input.Id > 0, x => x.DepartmentId == (long)input.Id || (x.DepartmentId != input.Id && x.Casade)).ToListAsync();
+            var processes = allProcesses.WhereIf(input.Id != null && input.Id > 0, x => x.DepartmentId == (long)input.Id || (x.DepartmentId != input.Id && x.Casade)).ToList();
+
+            List<Process> newProcesses = new List<Process>();
+
+            if (input.Id != null && input.Id > 0)
+            {
+                foreach (var p in processes)
+                {
+                    var newProcess = allProcesses.FirstOrDefault(x => x.ParentId == p.Id);
+
+                    if (newProcess == null)
+                    {
+                        newProcesses.Add(p);
+                    }
+                }
+            }
+            else
+            {
+                newProcesses = processes;
+            }
+
+
+    
 
             var processRiskCounts = await _lookup_processRiskRepository.GetAll()
                 .GroupBy(x => x.ProcessId)
@@ -70,7 +92,7 @@ namespace ICMSDemo.Processes
                     count = groupedRoles.Count()
                 }).ToDictionaryAsync(x => x.processId, y => y.count);
 
-            var processsList = processes.Select(ou =>
+            var processsList = newProcesses.Select(ou =>
                                 {
                                     var organizationUnitDto = ObjectMapper.Map<OrganizationUnitDto>(ou);
                                     organizationUnitDto.MemberCount = processRiskCounts.ContainsKey(ou.Id) ? processRiskCounts[ou.Id] : 0;

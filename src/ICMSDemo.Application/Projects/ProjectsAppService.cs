@@ -22,6 +22,8 @@ using ICMSDemo.Departments;
 using Abp.Timing;
 using ICMSDemo.Authorization.Users;
 using Abp.UI;
+using Stripe;
+using ICMSDemo.Projects.Events;
 
 namespace ICMSDemo.Projects
 {
@@ -192,6 +194,12 @@ namespace ICMSDemo.Projects
             }
 
 
+            if (input.ScopeEndDate.Value <= input.ScopeStartDate.Value)
+            {
+                throw new UserFriendlyException("The review Period end date has to be after the Period start date!");
+            }
+
+
             if (input.ScopeId == null)
             {
                 throw new UserFriendlyException("You must select a scope of review!");
@@ -214,10 +222,24 @@ namespace ICMSDemo.Projects
          }
 
         [AbpAuthorize(AppPermissions.Pages_Projects_Edit)]
-        protected virtual async Task Activate(CreateOrEditProjectDto input)
+        public virtual async Task Activate(EntityDto input)
         {
-            var project = await _projectRepository.FirstOrDefaultAsync((int)input.Id);
-            ObjectMapper.Map(input, project);
+            var project = await _projectRepository.FirstOrDefaultAsync(input.Id);
+
+            if (project == null)
+            {
+                throw new UserFriendlyException("The project with the Id does not exist.");
+            }
+
+            if (project.Commenced)
+            {
+                throw new UserFriendlyException("The project has alreasy been activated for commencement.");
+            }
+
+            project.Commenced = true;
+            project.StartDate = Clock.Now.Date;
+
+            await EventBus.TriggerAsync(new ProjectActivatedEventData() { EventSource = project, EventTime = Clock.Now, TenantId = project.TenantId, Project = project });
         }
 
 

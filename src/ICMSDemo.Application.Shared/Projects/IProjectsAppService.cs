@@ -22,7 +22,9 @@ namespace ICMSDemo.Projects
 
 		Task<FileDto> GetProjectsToExcel(GetAllProjectsForExcelInput input);
 
-		
+		Task Activate(EntityDto input);
+
+
 		Task<PagedResultDto<ProjectOrganizationUnitLookupTableDto>> GetAllOrganizationUnitForLookupTable(GetAllForLookupTableInput input);
 
 		Task<PagedResultDto<ProjectOrganizationUnitLookupTableDto>> GetAllProcesses(GetAllForLookupTableInput input);
