@@ -12,6 +12,9 @@
 
 		public string UserName2 { get; set;}
 
-
+		public double CompletionLevel { get; set; }
+		public string OuCode { get; set; }
+		public Frequency? Frequency { get; set; }
+		public int? SampleSize { get; set; }
     }
 }
