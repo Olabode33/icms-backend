@@ -201,8 +201,9 @@ namespace ICMSDemo.WorkingPaperNews
             {
                 throw new UserFriendlyException("There is no testing template for this document.");
             }
-            
-            
+            var testingTemplate = await _lookup_testingTemplateRepository.FirstOrDefaultAsync((int)input.TestingTemplateId);
+
+
             var workingPaperNew = new WorkingPaper();
 
             workingPaperNew.Comment = input.Comment;
@@ -217,7 +218,7 @@ namespace ICMSDemo.WorkingPaperNews
             workingPaperNew.CompletedById = AbpSession.UserId;
             workingPaperNew.CompletionDate = DateTime.Now;
             workingPaperNew.DueDate = DateTime.Now.AddDays(1);
-            workingPaperNew.TaskStatus = TaskStatus.PendingReview;
+            workingPaperNew.TaskStatus = input.Attributes.Length >= testingTemplate.SampleSize ? TaskStatus.PendingReview : TaskStatus.Open;
             workingPaperNew.TaskDate = DateTime.Now;
 
             var id = await _workingPaperNewRepository.InsertAndGetIdAsync(workingPaperNew);
@@ -241,6 +242,9 @@ namespace ICMSDemo.WorkingPaperNews
                 throw new UserFriendlyException("There is no testing template for this document.");
             }
 
+            var testingTemplate = await _lookup_testingTemplateRepository.FirstOrDefaultAsync((int)workingPaperNew.TestingTemplateId);
+
+            input.TaskStatus = input.Attributes.Length == testingTemplate.SampleSize ? TaskStatus.PendingReview : TaskStatus.Open;
             input.Score = await SaveWorkingPaperDetails(input.Attributes, testingTemplateAttributes, workingPaperNew.Id);
             input.CompletionDate = DateTime.Now;
 
