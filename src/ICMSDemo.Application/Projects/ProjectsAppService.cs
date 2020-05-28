@@ -233,7 +233,7 @@ namespace ICMSDemo.Projects
 
             if (project.Commenced)
             {
-                throw new UserFriendlyException("The project has alreasy been activated for commencement.");
+                throw new UserFriendlyException("The project has already been activated for commencement.");
             }
 
             project.Commenced = true;

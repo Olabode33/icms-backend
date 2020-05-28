@@ -16,5 +16,6 @@
 		public string OuCode { get; set; }
 		public Frequency? Frequency { get; set; }
 		public int? SampleSize { get; set; }
+		public string TestingTemplateName { get; set; }
     }
 }

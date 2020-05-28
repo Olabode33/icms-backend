@@ -50,7 +50,6 @@ namespace ICMSDemo.WorkingPaperNews
 
             var filteredWorkingPaperNews = _workingPaperNewRepository.GetAll()
                         .Include(e => e.TestingTemplate)
-
                         .Include(e => e.CompletedBy)
                         .Include(e => e.ReviewedBy)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Code.Contains(input.Filter) || e.Comment.Contains(input.Filter))
@@ -65,7 +64,8 @@ namespace ICMSDemo.WorkingPaperNews
                         .WhereIf(!string.IsNullOrWhiteSpace(input.TestingTemplateCodeFilter), e => e.TestingTemplate != null && e.TestingTemplate.Code == input.TestingTemplateCodeFilter)
                         //.WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayNameFilter), e => e.OrganizationUnitFk != null && e.OrganizationUnitFk.DisplayName == input.OrganizationUnitDisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.CompletedById != null && e.CompletedBy.Name == input.UserNameFilter)
-                        .WhereIf(!string.IsNullOrWhiteSpace(input.UserName2Filter), e => e.ReviewedById != null && e.ReviewedBy.Name == input.UserName2Filter);
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.UserName2Filter), e => e.ReviewedById != null && e.ReviewedBy.Name == input.UserName2Filter)
+                        .WhereIf(input.ProjectId != null && input.ProjectId > 0, e => e.ProjectId == input.ProjectId);
 
             var pagedAndFilteredWorkingPaperNews = filteredWorkingPaperNews
                 .OrderBy(input.Sorting ?? "id asc")
@@ -101,7 +101,10 @@ namespace ICMSDemo.WorkingPaperNews
                                        TestingTemplateCode = s1 == null ? "" : s1.Code.ToString(),
                                        OrganizationUnitDisplayName = s2 == null ? "" : s2.DisplayName.ToString(),
                                        UserName = s3 == null ? "" : s3.FullName.ToString(),
-                                       UserName2 = s4 == null ? "" : s4.Name.ToString()
+                                       UserName2 = s4 == null ? "" : s4.Name.ToString(),
+                                       Frequency = s1 == null ? (Frequency?)null : s1.Frequency,
+                                       SampleSize = s1 == null ? 0 : s1.SampleSize,
+                                       TestingTemplateName = s1 == null ? "" : s1.Title,
                                    };
 
             var totalCount = await filteredWorkingPaperNews.CountAsync();

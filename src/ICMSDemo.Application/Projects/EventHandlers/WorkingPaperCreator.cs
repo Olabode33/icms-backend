@@ -47,11 +47,11 @@ namespace ICMSDemo.Projects.EventHandlers
             {
                 if (eventData.Project.ReviewType == ReviewType.Department)
                 {
-                    AsyncHelper.RunSync(() => DepartmentScope(eventData.Project.ScopeId.Value, eventData.Project.Cascade));
+                    AsyncHelper.RunSync(() => DepartmentScope(eventData.Project.ScopeId.Value, eventData.Project.Cascade, eventData.Project.Id));
                 }
                 else
                 {
-                    AsyncHelper.RunSync(() => ProcessScope(eventData.Project.ScopeId.Value, eventData.Project.Cascade));
+                    AsyncHelper.RunSync(() => ProcessScope(eventData.Project.ScopeId.Value, eventData.Project.Cascade, eventData.Project.Id));
                 }
             }
 
@@ -59,7 +59,7 @@ namespace ICMSDemo.Projects.EventHandlers
 
 
 
-        public async Task DepartmentScope(long departmentId, bool cascade)
+        public async Task DepartmentScope(long departmentId, bool cascade, int projectId)
         {
             var allDepartments = await _departmentRepository.GetAllListAsync();
 
@@ -124,7 +124,7 @@ namespace ICMSDemo.Projects.EventHandlers
                         foreach (var tt in relevantTestingTemplates)
                         {
                             var workingPaperNew = new WorkingPaper();
-
+                            workingPaperNew.ProjectId = projectId;
                             workingPaperNew.OrganizationUnitId = d.Id;
                             workingPaperNew.TestingTemplateId = tt.Id;
                             workingPaperNew.TenantId = tt.TenantId;
@@ -142,7 +142,7 @@ namespace ICMSDemo.Projects.EventHandlers
         }
 
 
-        public async Task ProcessScope(long processId, bool cascade)
+        public async Task ProcessScope(long processId, bool cascade, int projectId)
         {
             var allDepartments = await _departmentRepository.GetAllListAsync();
 
@@ -182,11 +182,12 @@ namespace ICMSDemo.Projects.EventHandlers
                     {
 
                         var workingPaperNew = new WorkingPaper();
-
+                        workingPaperNew.ProjectId = projectId;
                         workingPaperNew.OrganizationUnitId = dept.Id;
                         workingPaperNew.TestingTemplateId = tt.Id;
                         workingPaperNew.TenantId = tt.TenantId;
-                        workingPaperNew.Code = DateTime.Now.ToString("yyMMdd") + "-" + Guid.NewGuid().ToString().ToUpper().Substring(1, 8);
+                        workingPaperNew.TaskDate = Abp.Timing.Clock.Now;
+                        workingPaperNew.Code = DateTime.Now.ToString("yyMMdd") + "-" + Guid.NewGuid().ToString().ToUpper().Substring(1, 7);
                         await _workingPaperRepository.InsertAsync(workingPaperNew);
                     }
 
