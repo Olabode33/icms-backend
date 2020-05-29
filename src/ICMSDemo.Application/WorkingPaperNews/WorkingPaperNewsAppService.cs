@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using ICMSDemo.WorkingPapers;
 using ICMSDemo.Departments;
 using Abp.UI;
+using ICMSDemo.ProcessRiskControls;
 
 namespace ICMSDemo.WorkingPaperNews
 {
@@ -29,12 +30,16 @@ namespace ICMSDemo.WorkingPaperNews
         private readonly IRepository<TestingAttrribute, int> _lookup_testingAttributeRepository;
         private readonly IRepository<Department, long> _lookup_organizationUnitRepository;
         private readonly IRepository<User, long> _lookup_userRepository;
+        private readonly IRepository<ProcessRiskControl, int> _lookup_processRiskControlRepository;
 
 
         public WorkingPaperNewsAppService(IRepository<WorkingPaper, Guid> workingPaperNewRepository,
             IRepository<TestingAttrribute, int> lookup_testingAttributeRepository,
             IRepository<WorkingPaperDetail> workingPaperDetailsRepository,
-            IRepository<TestingTemplate, int> lookup_testingTemplateRepository, IRepository<Department, long> lookup_organizationUnitRepository, IRepository<User, long> lookup_userRepository)
+            IRepository<TestingTemplate, int> lookup_testingTemplateRepository, 
+            IRepository<Department, long> lookup_organizationUnitRepository, 
+            IRepository<User, long> lookup_userRepository, 
+            IRepository<ProcessRiskControl, int> lookup_processRiskControlRepository)
         {
             _workingPaperNewRepository = workingPaperNewRepository;
             _lookup_testingTemplateRepository = lookup_testingTemplateRepository;
@@ -42,6 +47,7 @@ namespace ICMSDemo.WorkingPaperNews
             _lookup_userRepository = lookup_userRepository;
             _lookup_testingAttributeRepository = lookup_testingAttributeRepository;
             _workingPaperDetailsRepository = workingPaperDetailsRepository;
+            _lookup_processRiskControlRepository = lookup_processRiskControlRepository;
         }
 
         public async Task<PagedResultDto<GetWorkingPaperNewForViewDto>> GetAll(GetAllWorkingPaperNewsInput input)
@@ -139,10 +145,19 @@ namespace ICMSDemo.WorkingPaperNews
             if (output.WorkingPaperNew.TestingTemplateId != null)
             {
                 var _lookupTestingTemplate = await _lookup_testingTemplateRepository.FirstOrDefaultAsync((int)output.WorkingPaperNew.TestingTemplateId);
+                var _lookupProcessRiskControl = await _lookup_processRiskControlRepository
+                                                           .GetAll()
+                                                           .Include(x => x.ControlFk)
+                                                           .Include(x => x.ProcessRiskFk).ThenInclude(x => x.RiskFk)
+                                                           .Include(x => x.ProcessRiskFk).ThenInclude(x => x.ProcessFk)
+                                                           .FirstOrDefaultAsync(x => x.Id == (int)_lookupTestingTemplate.ProcessRiskControlId);
+
                 output.TestingTemplateCode = _lookupTestingTemplate.Code.ToString();
                 output.TestingTemplate = new TestingTemplates.Dtos.GetTestingTemplateForViewDto()
                 {
-                    TestingTemplate = ObjectMapper.Map<TestingTemplates.Dtos.TestingTemplateDto>(_lookupTestingTemplate)
+                    TestingTemplate = ObjectMapper.Map<TestingTemplates.Dtos.TestingTemplateDto>(_lookupTestingTemplate),
+                    Risk = ObjectMapper.Map<Risks.Dtos.RiskDto>(_lookupProcessRiskControl.ProcessRiskFk.RiskFk),
+                    Control = ObjectMapper.Map<Controls.Dtos.ControlDto>(_lookupProcessRiskControl.ControlFk)
                 };
             }
 

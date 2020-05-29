@@ -89,7 +89,9 @@ namespace ICMSDemo
             configuration.CreateMap<CreateOrEditExceptionIncidentDto, ExceptionIncident>().ReverseMap();
             configuration.CreateMap<ExceptionIncidentDto, ExceptionIncident>().ReverseMap();
             configuration.CreateMap<CreateOrEditTestingTemplateDto, TestingTemplate>().ReverseMap();
-            configuration.CreateMap<TestingTemplateDto, TestingTemplate>().ReverseMap();
+            configuration.CreateMap<TestingTemplateDto, TestingTemplate>()
+                         .ForMember(e => e.ProcessRiskControlId, opt => opt.MapFrom(dto => dto.DepartmentRiskControlId))
+                         .ReverseMap();
             configuration.CreateMap<CreateOrEditDepartmentRiskControlDto, DepartmentRiskControl>().ReverseMap();
             configuration.CreateMap<DepartmentRiskControlDto, DepartmentRiskControl>().ReverseMap();
             configuration.CreateMap<CreateOrEditDepartmentRiskDto, DepartmentRisk>().ReverseMap();
