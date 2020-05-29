@@ -13,6 +13,10 @@ namespace ICMSDemo.Projects.Dtos
 
 		public string OrganizationUnitDisplayName2 { get; set;}
 
-        public PagedResultDto<GetWorkingPaperNewForViewDto> WorkingPapers { get; set; }
+        public double CompletionLevel { get; set; }
+        public int OpenWorkingPapers { get; set; }
+        public double OpenTaskPercent { get; set; }
+        public int PendingReviews { get; set; }
+        public double PendingReviewsPercent { get; set; }
     }
 }

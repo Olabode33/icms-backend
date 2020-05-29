@@ -54,4 +54,9 @@ namespace ICMSDemo.WorkingPaperNews.Dtos
 		public Guid? WorkingPaperId { get; set; }
     }
 
+	public class AssignWorkingPaperNewDto : EntityDto<Guid>
+	{
+		public long UserId { get; set; }
+	}
+
 }

@@ -254,7 +254,6 @@ namespace ICMSDemo.WorkingPaperNews
             ObjectMapper.Map(input, workingPaperNew);
         }
 
-
         private async Task<decimal> SaveWorkingPaperDetails(CreateOrEditTestingAttributeDto[] input, List<TestingAttrribute> testingAttrributes, Guid workingPaperId)
         {
             decimal totalNumber = 0.00M;
@@ -298,6 +297,13 @@ namespace ICMSDemo.WorkingPaperNews
         public async Task Delete(EntityDto<Guid> input)
         {
             await _workingPaperNewRepository.DeleteAsync(input.Id);
+        }
+
+        public async Task AssignToUser(AssignWorkingPaperNewDto input)
+        {
+            var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync((Guid)input.Id);
+            workingPaperNew.CompletedById = input.UserId;
+            await _workingPaperNewRepository.UpdateAsync(workingPaperNew);
         }
 
         [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews)]
@@ -382,7 +388,7 @@ namespace ICMSDemo.WorkingPaperNews
                 lookupTableDtoList.Add(new WorkingPaperNewUserLookupTableDto
                 {
                     Id = user.Id,
-                    DisplayName = user.Name?.ToString()
+                    DisplayName = user.FullName?.ToString()
                 });
             }
 

@@ -24,6 +24,7 @@ using ICMSDemo.Authorization.Users;
 using Abp.UI;
 using Stripe;
 using ICMSDemo.Projects.Events;
+using ICMSDemo.WorkingPapers;
 
 namespace ICMSDemo.Projects
 {
@@ -35,15 +36,22 @@ namespace ICMSDemo.Projects
 		 private readonly IRepository<Process,long> _lookup_processRepository;
 		 private readonly IRepository<Department,long> _lookup_departmentRepository;
 		 private readonly IRepository<OrganizationUnit,long> _lookup_OURepository;
+		 private readonly IRepository<WorkingPaper, Guid> _lookup_workingPaperRepository;
 		 
 
-		  public ProjectsAppService(IRepository<Project> projectRepository, IRepository<OrganizationUnit, long> lookup_OURepository, IProjectsExcelExporter projectsExcelExporter , IRepository<Department, long> lookup_departmentRepository, IRepository<Process, long> lookup_processRepository) 
+		  public ProjectsAppService(
+              IRepository<Project> projectRepository, IRepository<OrganizationUnit, long> 
+              lookup_OURepository, IProjectsExcelExporter projectsExcelExporter , 
+              IRepository<Department, long> lookup_departmentRepository, 
+              IRepository<Process, long> lookup_processRepository,
+              IRepository<WorkingPaper, Guid> lookup_workingPaperRepository) 
 		  {
 			_projectRepository = projectRepository;
 			_projectsExcelExporter = projectsExcelExporter;
             _lookup_departmentRepository = lookup_departmentRepository;
             _lookup_processRepository = lookup_processRepository;
             _lookup_OURepository = lookup_OURepository;
+            _lookup_workingPaperRepository = lookup_workingPaperRepository;
           }
 
 		 public async Task<PagedResultDto<GetProjectForViewDto>> GetAll(GetAllProjectsInput input)
@@ -161,6 +169,15 @@ namespace ICMSDemo.Projects
                     output.OrganizationUnitDisplayName2 = output.Project.Cascade ? string.Format("{0} and its sub-processes.", _lookupOrganizationUnit.DisplayName) : _lookupOrganizationUnit.DisplayName;
                 }
             }
+
+            output.OpenWorkingPapers = await _lookup_workingPaperRepository.GetAll().Where(x => x.ProjectId == input.Id).CountAsync(x => x.TaskStatus == TaskStatus.Open);
+            output.PendingReviews = await _lookup_workingPaperRepository.GetAll().Where(x => x.ProjectId == input.Id).CountAsync(x => x.TaskStatus == TaskStatus.PendingReview);
+
+            var workingPaperCount = await _lookup_workingPaperRepository.GetAll().Where(x => x.ProjectId == input.Id).CountAsync();
+
+            output.OpenTaskPercent = (double)output.OpenWorkingPapers / (double)workingPaperCount;
+            output.PendingReviewsPercent = (double)output.PendingReviews / (double)workingPaperCount;
+            output.CompletionLevel = 1 - (output.OpenTaskPercent + output.PendingReviewsPercent); 
 
             return output;
          }
