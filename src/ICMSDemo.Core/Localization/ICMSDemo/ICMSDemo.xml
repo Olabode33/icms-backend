@@ -1,6 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="Projects">Projects</text>
+  <texts>
+    <text name="DepartmentRatingHistory">Department rating history</text>
+    <text name="DepartmentRating">Department rating</text>
+    <text name="ICMSDemo.DepartmentRatingHistory.DepartmentRating">DepartmentRating</text>
+    <text name="RatingDate">Rating date</text>
+    <text name="ChangeType">Change type</text>
+    <text name="DepartmentRatingHistoryHeaderInfo">Department rating history header info</text>
+    <text name="CreateNewDepartmentRating">Create new department rating</text>
+    <text name="EditDepartmentRating">Edit department rating</text>
+    <text name="DeleteDepartmentRating">Delete department rating</text>
+    <text name="RatingName">Rating name</text>
+    <text name="PickRating">Pick rating</text>
+    <text name="RatingDateRange">Rating date range</text>
+    <text name="Ratings">Ratings</text>
+    <text name="Rating">Rating</text>
+    <text name="ICMSDemo.Ratings.Rating">Rating</text>
+    <text name="LowerBoundary">Lower boundary</text>
+    <text name="UpperBoundary">Upper boundary</text>
+    <text name="RatingsHeaderInfo">Ratings header info</text>
+    <text name="CreateNewRating">Create new rating</text>
+    <text name="EditRating">Edit rating</text>
+    <text name="DeleteRating">Delete rating</text>
+    <text name="Projects">Projects</text>
     <text name="Project">Project</text>
     <text name="ICMSDemo.Projects.Project">Project</text>
     <text name="StartDate">Start date</text>

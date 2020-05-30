@@ -1,4 +1,6 @@
-﻿using ICMSDemo.Projects;
+﻿using ICMSDemo.DepartmentRatingHistory;
+using ICMSDemo.Ratings;
+using ICMSDemo.Projects;
 using ICMSDemo.ProcessRiskControls;
 using ICMSDemo.ProcessRisks;
 using ICMSDemo.Processes;
@@ -31,6 +33,10 @@ namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<DepartmentRating> DepartmentRatingHistory { get; set; }
+
+        public virtual DbSet<Rating> Ratings { get; set; }
+
         public virtual DbSet<Project> Projects { get; set; }
 
         public virtual DbSet<ProcessRiskControl> ProcessRiskControls { get; set; }
@@ -108,7 +114,17 @@ namespace ICMSDemo.EntityFrameworkCore
            
            
            
-            modelBuilder.Entity<Project>(p =>
+           
+           
+            modelBuilder.Entity<DepartmentRating>(d =>
+            {
+                d.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<Rating>(r =>
+            {
+                r.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<Project>(p =>
             {
                 p.HasIndex(e => new { e.TenantId });
             });

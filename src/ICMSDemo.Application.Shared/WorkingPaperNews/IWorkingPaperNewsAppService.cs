@@ -17,7 +17,10 @@ namespace ICMSDemo.WorkingPaperNews
 
 		Task Delete(EntityDto<Guid> input);
 
-		
+		Task ApproveWorkPaper(EntityDto<Guid> input);
+
+
+
 		Task<PagedResultDto<WorkingPaperNewTestingTemplateLookupTableDto>> GetAllTestingTemplateForLookupTable(GetAllForLookupTableInput input);
 		
 		Task<PagedResultDto<WorkingPaperNewOrganizationUnitLookupTableDto>> GetAllOrganizationUnitForLookupTable(GetAllForLookupTableInput input);

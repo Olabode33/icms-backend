@@ -6,6 +6,16 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_DepartmentRatingHistory = "Pages.DepartmentRatingHistory";
+        public const string Pages_DepartmentRatingHistory_Create = "Pages.DepartmentRatingHistory.Create";
+        public const string Pages_DepartmentRatingHistory_Edit = "Pages.DepartmentRatingHistory.Edit";
+        public const string Pages_DepartmentRatingHistory_Delete = "Pages.DepartmentRatingHistory.Delete";
+
+        public const string Pages_Ratings = "Pages.Ratings";
+        public const string Pages_Ratings_Create = "Pages.Ratings.Create";
+        public const string Pages_Ratings_Edit = "Pages.Ratings.Edit";
+        public const string Pages_Ratings_Delete = "Pages.Ratings.Delete";
+
         public const string Pages_Projects = "Pages.Projects";
         public const string Pages_Projects_Create = "Pages.Projects.Create";
         public const string Pages_Projects_Edit = "Pages.Projects.Edit";

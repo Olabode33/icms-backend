@@ -30,6 +30,20 @@ namespace ICMSDemo.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var departmentRatingHistory = pages.CreateChildPermission(AppPermissions.Pages_DepartmentRatingHistory, L("DepartmentRatingHistory"), multiTenancySides: MultiTenancySides.Tenant);
+            departmentRatingHistory.CreateChildPermission(AppPermissions.Pages_DepartmentRatingHistory_Create, L("CreateNewDepartmentRating"), multiTenancySides: MultiTenancySides.Tenant);
+            departmentRatingHistory.CreateChildPermission(AppPermissions.Pages_DepartmentRatingHistory_Edit, L("EditDepartmentRating"), multiTenancySides: MultiTenancySides.Tenant);
+            departmentRatingHistory.CreateChildPermission(AppPermissions.Pages_DepartmentRatingHistory_Delete, L("DeleteDepartmentRating"), multiTenancySides: MultiTenancySides.Tenant);
+
+
+
+            var ratings = pages.CreateChildPermission(AppPermissions.Pages_Ratings, L("Ratings"), multiTenancySides: MultiTenancySides.Tenant);
+            ratings.CreateChildPermission(AppPermissions.Pages_Ratings_Create, L("CreateNewRating"), multiTenancySides: MultiTenancySides.Tenant);
+            ratings.CreateChildPermission(AppPermissions.Pages_Ratings_Edit, L("EditRating"), multiTenancySides: MultiTenancySides.Tenant);
+            ratings.CreateChildPermission(AppPermissions.Pages_Ratings_Delete, L("DeleteRating"), multiTenancySides: MultiTenancySides.Tenant);
+
+
+
             var projects = pages.CreateChildPermission(AppPermissions.Pages_Projects, L("Projects"), multiTenancySides: MultiTenancySides.Tenant);
             projects.CreateChildPermission(AppPermissions.Pages_Projects_Create, L("CreateNewProject"), multiTenancySides: MultiTenancySides.Tenant);
             projects.CreateChildPermission(AppPermissions.Pages_Projects_Edit, L("EditProject"), multiTenancySides: MultiTenancySides.Tenant);

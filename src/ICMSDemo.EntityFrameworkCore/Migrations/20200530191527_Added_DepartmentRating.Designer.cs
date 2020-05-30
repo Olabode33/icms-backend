@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200530191527_Added_DepartmentRating")]
+    partial class Added_DepartmentRating
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2186,6 +2188,9 @@ namespace ICMSDemo.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<decimal>("LowerBoundary")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Name")
                         .IsRequired()

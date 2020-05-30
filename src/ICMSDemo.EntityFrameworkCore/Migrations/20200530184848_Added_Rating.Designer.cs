@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200530184848_Added_Rating")]
+    partial class Added_Rating
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1486,45 +1488,6 @@ namespace ICMSDemo.Migrations
                     b.ToTable("DataLists");
                 });
 
-            modelBuilder.Entity("ICMSDemo.DepartmentRatingHistory.DepartmentRating", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ChangeType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("OrganizationUnitId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("RatingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("RatingId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganizationUnitId");
-
-                    b.HasIndex("RatingId");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("DepartmentRatingHistory");
-                });
-
             modelBuilder.Entity("ICMSDemo.DepartmentRiskControls.DepartmentRiskControl", b =>
                 {
                     b.Property<int>("Id")
@@ -2187,6 +2150,9 @@ namespace ICMSDemo.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<decimal>("LowerBoundary")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2815,17 +2781,6 @@ namespace ICMSDemo.Migrations
                     b.HasOne("ICMSDemo.Authorization.Users.User", "LastModifierUser")
                         .WithMany()
                         .HasForeignKey("LastModifierUserId");
-                });
-
-            modelBuilder.Entity("ICMSDemo.DepartmentRatingHistory.DepartmentRating", b =>
-                {
-                    b.HasOne("Abp.Organizations.OrganizationUnit", "OrganizationUnitFk")
-                        .WithMany()
-                        .HasForeignKey("OrganizationUnitId");
-
-                    b.HasOne("ICMSDemo.Ratings.Rating", "RatingFk")
-                        .WithMany()
-                        .HasForeignKey("RatingId");
                 });
 
             modelBuilder.Entity("ICMSDemo.DepartmentRiskControls.DepartmentRiskControl", b =>

@@ -19,6 +19,7 @@ using ICMSDemo.Departments;
 using Abp.UI;
 using ICMSDemo.Projects;
 using Abp.Authorization.Users;
+using Abp.Timing;
 
 namespace ICMSDemo.WorkingPaperNews
 {
@@ -250,8 +251,9 @@ namespace ICMSDemo.WorkingPaperNews
         protected virtual async Task Update(CreateOrEditWorkingPaperNewDto input)
         {
             var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync((Guid)input.Id);
+            var previousState = workingPaperNew.TaskStatus;
 
-            var testingTemplate = await _lookup_testingTemplateRepository.FirstOrDefaultAsync((int)input.TestingTemplateId);
+            //var testingTemplate = await _lookup_testingTemplateRepository.FirstOrDefaultAsync((int)input.TestingTemplateId);
 
 
             var testingTemplateAttributes = await _lookup_testingAttributeRepository.GetAllListAsync(x => x.TestingTemplateId == input.TestingTemplateId);
@@ -261,14 +263,28 @@ namespace ICMSDemo.WorkingPaperNews
                 throw new UserFriendlyException("There is no testing template for this document.");
             }
 
-            input.TaskStatus = input.Attributes.Length == testingTemplate.SampleSize ? TaskStatus.PendingReview : TaskStatus.Open;
             input.Score = await SaveWorkingPaperDetails(input.Attributes, testingTemplateAttributes, workingPaperNew.Id);
-            input.CompletionDate = DateTime.Now;
             
+            if (previousState == TaskStatus.Open && input.TaskStatus == TaskStatus.PendingReview)
+            {
+                input.CompletionDate = DateTime.Now;
+                input.CompletedUserId = AbpSession.UserId;
+
+               var newAssignee =  await _lookup_ouRoleRepository.FirstOrDefaultAsync(x => x.DepartmentRole == DepartmentRole.ControlHead && x.OrganizationUnitId == workingPaperNew.OrganizationUnitId);
+                workingPaperNew.AssignedToId = newAssignee.UserId;
+            }
+        
+           
             ObjectMapper.Map(input, workingPaperNew);
+        }
 
-            workingPaperNew.CompletedById = AbpSession.UserId;
 
+        public async Task ApproveWorkPaper(EntityDto<Guid> input)
+        {
+            var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync((Guid)input.Id);
+            workingPaperNew.ReviewedById = AbpSession.UserId;
+            workingPaperNew.ReviewedDate = Clock.Now;
+            await _workingPaperNewRepository.UpdateAsync(workingPaperNew);
         }
 
         private async Task<decimal> SaveWorkingPaperDetails(CreateOrEditTestingAttributeDto[] input, List<TestingAttrribute> testingAttrributes, Guid workingPaperId)

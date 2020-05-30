@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200530203424_Removed_LowerBoundFrom_Tating")]
+    partial class Removed_LowerBoundFrom_Tating
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
