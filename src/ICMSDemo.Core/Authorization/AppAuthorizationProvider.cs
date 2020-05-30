@@ -37,17 +37,17 @@ namespace ICMSDemo.Authorization
 
 
 
-            var processRiskControls = pages.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls, L("ProcessRiskControls"));
-            processRiskControls.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls_Create, L("CreateNewProcessRiskControl"));
-            processRiskControls.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls_Edit, L("EditProcessRiskControl"));
-            processRiskControls.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls_Delete, L("DeleteProcessRiskControl"));
+            //var processRiskControls = pages.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls, L("ProcessRiskControls"));
+            //processRiskControls.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls_Create, L("CreateNewProcessRiskControl"));
+            //processRiskControls.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls_Edit, L("EditProcessRiskControl"));
+            //processRiskControls.CreateChildPermission(AppPermissions.Pages_ProcessRiskControls_Delete, L("DeleteProcessRiskControl"));
 
 
 
-            var processRisks = pages.CreateChildPermission(AppPermissions.Pages_ProcessRisks, L("ProcessRisks"));
-            processRisks.CreateChildPermission(AppPermissions.Pages_ProcessRisks_Create, L("CreateNewProcessRisk"));
-            processRisks.CreateChildPermission(AppPermissions.Pages_ProcessRisks_Edit, L("EditProcessRisk"));
-            processRisks.CreateChildPermission(AppPermissions.Pages_ProcessRisks_Delete, L("DeleteProcessRisk"));
+            //var processRisks = pages.CreateChildPermission(AppPermissions.Pages_ProcessRisks, L("ProcessRisks"));
+            //processRisks.CreateChildPermission(AppPermissions.Pages_ProcessRisks_Create, L("CreateNewProcessRisk"));
+            //processRisks.CreateChildPermission(AppPermissions.Pages_ProcessRisks_Edit, L("EditProcessRisk"));
+            //processRisks.CreateChildPermission(AppPermissions.Pages_ProcessRisks_Delete, L("DeleteProcessRisk"));
 
 
 
@@ -59,8 +59,9 @@ namespace ICMSDemo.Authorization
 
 
             var workingPaperNews = pages.CreateChildPermission(AppPermissions.Pages_WorkingPaperNews, L("WorkingPaperNews"), multiTenancySides: MultiTenancySides.Tenant);
-            workingPaperNews.CreateChildPermission(AppPermissions.Pages_WorkingPaperNews_Create, L("CreateNewWorkingPaperNew"), multiTenancySides: MultiTenancySides.Tenant);
-            workingPaperNews.CreateChildPermission(AppPermissions.Pages_WorkingPaperNews_Edit, L("EditWorkingPaperNew"), multiTenancySides: MultiTenancySides.Tenant);
+           // workingPaperNews.CreateChildPermission(AppPermissions.Pages_WorkingPaperNews_Create, L("CreateNewWorkingPaperNew"), multiTenancySides: MultiTenancySides.Tenant);
+            workingPaperNews.CreateChildPermission(AppPermissions.Pages_WorkingPaperNews_Update, L("UpdateWorkingPaperNew"), multiTenancySides: MultiTenancySides.Tenant);
+            workingPaperNews.CreateChildPermission(AppPermissions.Pages_WorkingPaperNews_Review, L("ReviewWorkingPaper"), multiTenancySides: MultiTenancySides.Tenant);
             workingPaperNews.CreateChildPermission(AppPermissions.Pages_WorkingPaperNews_Delete, L("DeleteWorkingPaperNew"), multiTenancySides: MultiTenancySides.Tenant);
 
 
@@ -82,17 +83,17 @@ namespace ICMSDemo.Authorization
 
 
 
-            var departmentRiskControls = pages.CreateChildPermission(AppPermissions.Pages_DepartmentRiskControls, L("DepartmentRiskControls"), multiTenancySides: MultiTenancySides.Tenant);
-            departmentRiskControls.CreateChildPermission(AppPermissions.Pages_DepartmentRiskControls_Create, L("CreateNewDepartmentRiskControl"), multiTenancySides: MultiTenancySides.Tenant);
-            departmentRiskControls.CreateChildPermission(AppPermissions.Pages_DepartmentRiskControls_Edit, L("EditDepartmentRiskControl"), multiTenancySides: MultiTenancySides.Tenant);
-            departmentRiskControls.CreateChildPermission(AppPermissions.Pages_DepartmentRiskControls_Delete, L("DeleteDepartmentRiskControl"), multiTenancySides: MultiTenancySides.Tenant);
+            //var departmentRiskControls = pages.CreateChildPermission(AppPermissions.Pages_DepartmentRiskControls, L("DepartmentRiskControls"), multiTenancySides: MultiTenancySides.Tenant);
+            //departmentRiskControls.CreateChildPermission(AppPermissions.Pages_DepartmentRiskControls_Create, L("CreateNewDepartmentRiskControl"), multiTenancySides: MultiTenancySides.Tenant);
+            //departmentRiskControls.CreateChildPermission(AppPermissions.Pages_DepartmentRiskControls_Edit, L("EditDepartmentRiskControl"), multiTenancySides: MultiTenancySides.Tenant);
+            //departmentRiskControls.CreateChildPermission(AppPermissions.Pages_DepartmentRiskControls_Delete, L("DeleteDepartmentRiskControl"), multiTenancySides: MultiTenancySides.Tenant);
 
 
 
-            var departmentRisks = pages.CreateChildPermission(AppPermissions.Pages_DepartmentRisks, L("DepartmentRisks"), multiTenancySides: MultiTenancySides.Tenant);
-            departmentRisks.CreateChildPermission(AppPermissions.Pages_DepartmentRisks_Create, L("CreateNewDepartmentRisk"), multiTenancySides: MultiTenancySides.Tenant);
-            departmentRisks.CreateChildPermission(AppPermissions.Pages_DepartmentRisks_Edit, L("EditDepartmentRisk"), multiTenancySides: MultiTenancySides.Tenant);
-            departmentRisks.CreateChildPermission(AppPermissions.Pages_DepartmentRisks_Delete, L("DeleteDepartmentRisk"), multiTenancySides: MultiTenancySides.Tenant);
+            //var departmentRisks = pages.CreateChildPermission(AppPermissions.Pages_DepartmentRisks, L("DepartmentRisks"), multiTenancySides: MultiTenancySides.Tenant);
+            //departmentRisks.CreateChildPermission(AppPermissions.Pages_DepartmentRisks_Create, L("CreateNewDepartmentRisk"), multiTenancySides: MultiTenancySides.Tenant);
+            //departmentRisks.CreateChildPermission(AppPermissions.Pages_DepartmentRisks_Edit, L("EditDepartmentRisk"), multiTenancySides: MultiTenancySides.Tenant);
+            //departmentRisks.CreateChildPermission(AppPermissions.Pages_DepartmentRisks_Delete, L("DeleteDepartmentRisk"), multiTenancySides: MultiTenancySides.Tenant);
 
 
 
@@ -103,17 +104,17 @@ namespace ICMSDemo.Authorization
 
 
 
-            var dataLists = pages.CreateChildPermission(AppPermissions.Pages_DataLists, L("DataLists"), multiTenancySides: MultiTenancySides.Tenant);
-            dataLists.CreateChildPermission(AppPermissions.Pages_DataLists_Create, L("CreateNewDataList"), multiTenancySides: MultiTenancySides.Tenant);
-            dataLists.CreateChildPermission(AppPermissions.Pages_DataLists_Edit, L("EditDataList"), multiTenancySides: MultiTenancySides.Tenant);
-            dataLists.CreateChildPermission(AppPermissions.Pages_DataLists_Delete, L("DeleteDataList"), multiTenancySides: MultiTenancySides.Tenant);
+            //var dataLists = pages.CreateChildPermission(AppPermissions.Pages_DataLists, L("DataLists"), multiTenancySides: MultiTenancySides.Tenant);
+            //dataLists.CreateChildPermission(AppPermissions.Pages_DataLists_Create, L("CreateNewDataList"), multiTenancySides: MultiTenancySides.Tenant);
+            //dataLists.CreateChildPermission(AppPermissions.Pages_DataLists_Edit, L("EditDataList"), multiTenancySides: MultiTenancySides.Tenant);
+            //dataLists.CreateChildPermission(AppPermissions.Pages_DataLists_Delete, L("DeleteDataList"), multiTenancySides: MultiTenancySides.Tenant);
 
 
 
-            var exceptionTypeColumns = pages.CreateChildPermission(AppPermissions.Pages_ExceptionTypeColumns, L("ExceptionTypeColumns"), multiTenancySides: MultiTenancySides.Tenant);
-            exceptionTypeColumns.CreateChildPermission(AppPermissions.Pages_ExceptionTypeColumns_Create, L("CreateNewExceptionTypeColumn"), multiTenancySides: MultiTenancySides.Tenant);
-            exceptionTypeColumns.CreateChildPermission(AppPermissions.Pages_ExceptionTypeColumns_Edit, L("EditExceptionTypeColumn"), multiTenancySides: MultiTenancySides.Tenant);
-            exceptionTypeColumns.CreateChildPermission(AppPermissions.Pages_ExceptionTypeColumns_Delete, L("DeleteExceptionTypeColumn"), multiTenancySides: MultiTenancySides.Tenant);
+            //var exceptionTypeColumns = pages.CreateChildPermission(AppPermissions.Pages_ExceptionTypeColumns, L("ExceptionTypeColumns"), multiTenancySides: MultiTenancySides.Tenant);
+            //exceptionTypeColumns.CreateChildPermission(AppPermissions.Pages_ExceptionTypeColumns_Create, L("CreateNewExceptionTypeColumn"), multiTenancySides: MultiTenancySides.Tenant);
+            //exceptionTypeColumns.CreateChildPermission(AppPermissions.Pages_ExceptionTypeColumns_Edit, L("EditExceptionTypeColumn"), multiTenancySides: MultiTenancySides.Tenant);
+            //exceptionTypeColumns.CreateChildPermission(AppPermissions.Pages_ExceptionTypeColumns_Delete, L("DeleteExceptionTypeColumn"), multiTenancySides: MultiTenancySides.Tenant);
 
 
 
@@ -137,7 +138,7 @@ namespace ICMSDemo.Authorization
             risks.CreateChildPermission(AppPermissions.Pages_Risks_Delete, L("DeleteRisk"), multiTenancySides: MultiTenancySides.Tenant);
 
 
-            pages.CreateChildPermission(AppPermissions.Pages_DemoUiComponents, L("DemoUiComponents"));
+            //pages.CreateChildPermission(AppPermissions.Pages_DemoUiComponents, L("DemoUiComponents"));
 
             var administration = pages.CreateChildPermission(AppPermissions.Pages_Administration, L("Administration"));
 

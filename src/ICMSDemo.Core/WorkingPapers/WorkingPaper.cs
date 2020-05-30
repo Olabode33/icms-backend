@@ -49,7 +49,8 @@ namespace ICMSDemo.WorkingPapers
         public TaskStatus TaskStatus { get; set; }
 
         public decimal Score { set; get; }
-
+        public long? AssignedToId { get; set; }
+        public User AssignedTo { get; set; }
     }
 
 
@@ -61,7 +62,7 @@ namespace ICMSDemo.WorkingPapers
         [ForeignKey("WorkingPaperId")]
         public WorkingPaper WorkinPaperFK { get; set; }
 
-        public int MyProperty { get; set; }
+        public Guid Attachment { get; set; }
         public int Score { get; set; }
         public int Weight { get; set; }
       

@@ -20,7 +20,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ICMSDemo.ExceptionTypeColumns
 {
-	[AbpAuthorize(AppPermissions.Pages_ExceptionTypeColumns)]
+	[AbpAuthorize]
     public class ExceptionTypeColumnsAppService : ICMSDemoAppServiceBase, IExceptionTypeColumnsAppService
     {
 		 private readonly IRepository<ExceptionTypeColumn> _exceptionTypeColumnRepository;
@@ -96,7 +96,7 @@ namespace ICMSDemo.ExceptionTypeColumns
             return output;
          }
 		 
-		 [AbpAuthorize(AppPermissions.Pages_ExceptionTypeColumns_Edit)]
+		// [AbpAuthorize(AppPermissions.Pages_ExceptionTypeColumns_Edit)]
 		 public async Task<GetExceptionTypeColumnForEditOutput> GetExceptionTypeColumnForEdit(EntityDto input)
          {
             var exceptionTypeColumn = await _exceptionTypeColumnRepository.FirstOrDefaultAsync(input.Id);
@@ -122,7 +122,7 @@ namespace ICMSDemo.ExceptionTypeColumns
 			}
          }
 
-		 [AbpAuthorize(AppPermissions.Pages_ExceptionTypeColumns_Create)]
+		// [AbpAuthorize(AppPermissions.Pages_ExceptionTypeColumns_Create)]
 		 protected virtual async Task Create(CreateOrEditExceptionTypeColumnDto input)
          {
             var exceptionTypeColumn = ObjectMapper.Map<ExceptionTypeColumn>(input);
@@ -137,14 +137,14 @@ namespace ICMSDemo.ExceptionTypeColumns
             await _exceptionTypeColumnRepository.InsertAsync(exceptionTypeColumn);
          }
 
-		 [AbpAuthorize(AppPermissions.Pages_ExceptionTypeColumns_Edit)]
+		// [AbpAuthorize(AppPermissions.Pages_ExceptionTypeColumns_Edit)]
 		 protected virtual async Task Update(CreateOrEditExceptionTypeColumnDto input)
          {
             var exceptionTypeColumn = await _exceptionTypeColumnRepository.FirstOrDefaultAsync((int)input.Id);
              ObjectMapper.Map(input, exceptionTypeColumn);
          }
 
-		 [AbpAuthorize(AppPermissions.Pages_ExceptionTypeColumns_Delete)]
+		// [AbpAuthorize(AppPermissions.Pages_ExceptionTypeColumns_Delete)]
          public async Task Delete(EntityDto input)
          {
             await _exceptionTypeColumnRepository.DeleteAsync(input.Id);
@@ -191,7 +191,7 @@ namespace ICMSDemo.ExceptionTypeColumns
 
 
 
-		[AbpAuthorize(AppPermissions.Pages_ExceptionTypeColumns)]
+		//[AbpAuthorize(AppPermissions.Pages_ExceptionTypeColumns)]
          public async Task<PagedResultDto<ExceptionTypeColumnExceptionTypeLookupTableDto>> GetAllExceptionTypeForLookupTable(GetAllForLookupTableInput input)
          {
              var query = _lookup_exceptionTypeRepository.GetAll().WhereIf(

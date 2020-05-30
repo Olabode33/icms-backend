@@ -40,9 +40,11 @@
     <text name="DeleteProcess">Delete process</text>
 
     
-    <text name="WorkingPaperNews">Working paper news</text>
+    <text name="WorkingPaperNews">Working Papers</text>
+    <text name="ReviewWorkingPaper">Review Working Paper</text>
+    <text name="UpdateWorkingPaperNew">Update Working Paper</text>
 
-    <text name="WorkingPaperNew">Working paper new</text>
+    <text name="WorkingPaperNew">Working Paper</text>
     <text name="Comment">Comment</text>
     <text name="TaskDate">Task date</text>
     <text name="DueDate">Due date</text>
@@ -50,10 +52,8 @@
     <text name="Score">Score</text>
     <text name="ReviewDate">Review date</text>
     <text name="CompletionDate">Completion date</text>
-    <text name="WorkingPaperNewsHeaderInfo">Working paper news header info</text>
-    <text name="CreateNewWorkingPaperNew">Create new working paper new</text>
-    <text name="EditWorkingPaperNew">Edit working paper new</text>
-    <text name="DeleteWorkingPaperNew">Delete working paper new</text>
+    <text name="WorkingPaperNewsHeaderInfo">Manage Working Papers on this menu.</text>
+    <text name="DeleteWorkingPaperNew">Delete Working Paper</text>
     <text name="TaskDateRange">Task date range</text>
     <text name="DueDateRange">Due date range</text>
     <text name="ReviewDateRange">Review date range</text>

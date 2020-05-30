@@ -21,7 +21,7 @@ using Abp.Organizations;
 
 namespace ICMSDemo.DepartmentRisks
 {
-	[AbpAuthorize(AppPermissions.Pages_DepartmentRisks)]
+	[AbpAuthorize]
     public class DepartmentRisksAppService : ICMSDemoAppServiceBase, IDepartmentRisksAppService
     {
 		 private readonly IRepository<DepartmentRisk> _departmentRiskRepository;
@@ -162,7 +162,7 @@ namespace ICMSDemo.DepartmentRisks
             return output;
          }
 		 
-		 [AbpAuthorize(AppPermissions.Pages_DepartmentRisks_Edit)]
+		// [AbpAuthorize(AppPermissions.Pages_DepartmentRisks_Edit)]
 		 public async Task<GetDepartmentRiskForEditOutput> GetDepartmentRiskForEdit(EntityDto input)
          {
             var departmentRisk = await _departmentRiskRepository.FirstOrDefaultAsync(input.Id);
@@ -194,7 +194,7 @@ namespace ICMSDemo.DepartmentRisks
 			}
          }
 
-		 [AbpAuthorize(AppPermissions.Pages_DepartmentRisks_Create)]
+		// [AbpAuthorize(AppPermissions.Pages_DepartmentRisks_Create)]
 		 protected virtual async Task Create(CreateOrEditDepartmentRiskDto input)
          {
             var departmentRisk = ObjectMapper.Map<DepartmentRisk>(input);
@@ -211,14 +211,14 @@ namespace ICMSDemo.DepartmentRisks
             await _departmentRiskRepository.InsertAsync(departmentRisk);
          }
 
-		 [AbpAuthorize(AppPermissions.Pages_DepartmentRisks_Edit)]
+		// [AbpAuthorize(AppPermissions.Pages_DepartmentRisks_Edit)]
 		 protected virtual async Task Update(CreateOrEditDepartmentRiskDto input)
          {
             var departmentRisk = await _departmentRiskRepository.FirstOrDefaultAsync((int)input.Id);
              ObjectMapper.Map(input, departmentRisk);
          }
 
-		 [AbpAuthorize(AppPermissions.Pages_DepartmentRisks_Delete)]
+		// [AbpAuthorize(AppPermissions.Pages_DepartmentRisks_Delete)]
          public async Task Delete(EntityDto input)
          {
             await _departmentRiskRepository.DeleteAsync(input.Id);
@@ -261,7 +261,7 @@ namespace ICMSDemo.DepartmentRisks
 
 
 
-		[AbpAuthorize(AppPermissions.Pages_DepartmentRisks)]
+		//[AbpAuthorize(AppPermissions.Pages_DepartmentRisks)]
          public async Task<PagedResultDto<DepartmentRiskDepartmentLookupTableDto>> GetAllDepartmentForLookupTable(GetAllForLookupTableInput input)
          {
              var query = _lookup_departmentRepository.GetAll().WhereIf(
@@ -290,7 +290,7 @@ namespace ICMSDemo.DepartmentRisks
             );
          }
 
-		[AbpAuthorize(AppPermissions.Pages_DepartmentRisks)]
+		//[AbpAuthorize(AppPermissions.Pages_DepartmentRisks)]
          public async Task<PagedResultDto<DepartmentRiskRiskLookupTableDto>> GetAllRiskForLookupTable(GetAllForLookupTableInput input)
          {
              var query = _lookup_riskRepository.GetAll().WhereIf(

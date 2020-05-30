@@ -52,6 +52,7 @@ namespace ICMSDemo.WorkingPaperNews.Dtos
 		public int? TestingAttrributeId { get; set; }
         public int Sequence { get; set; }
 		public Guid? WorkingPaperId { get; set; }
+        public string SampleIdentifier { get; set; }
     }
 
 	public class AssignWorkingPaperNewDto : EntityDto<Guid>

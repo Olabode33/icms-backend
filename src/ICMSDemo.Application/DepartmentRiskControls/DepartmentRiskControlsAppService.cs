@@ -22,7 +22,7 @@ using ICMSDemo.Departments;
 
 namespace ICMSDemo.DepartmentRiskControls
 {
-    [AbpAuthorize(AppPermissions.Pages_DepartmentRiskControls)]
+    [AbpAuthorize]
     public class DepartmentRiskControlsAppService : ICMSDemoAppServiceBase, IDepartmentRiskControlsAppService
     {
         private readonly IRepository<DepartmentRiskControl> _departmentRiskControlRepository;
@@ -160,7 +160,7 @@ namespace ICMSDemo.DepartmentRiskControls
             return output;
         }
 
-        [AbpAuthorize(AppPermissions.Pages_DepartmentRiskControls_Edit)]
+       // [AbpAuthorize(AppPermissions.Pages_DepartmentRiskControls_Edit)]
         public async Task<GetDepartmentRiskControlForEditOutput> GetDepartmentRiskControlForEdit(EntityDto input)
         {
             var departmentRiskControl = await _departmentRiskControlRepository.FirstOrDefaultAsync(input.Id);
@@ -194,7 +194,7 @@ namespace ICMSDemo.DepartmentRiskControls
             }
         }
 
-        [AbpAuthorize(AppPermissions.Pages_DepartmentRiskControls_Create)]
+       // [AbpAuthorize(AppPermissions.Pages_DepartmentRiskControls_Create)]
         protected virtual async Task Create(CreateOrEditDepartmentRiskControlDto input)
         {
             var departmentRiskControl = ObjectMapper.Map<DepartmentRiskControl>(input);
@@ -209,14 +209,14 @@ namespace ICMSDemo.DepartmentRiskControls
             await _departmentRiskControlRepository.InsertAsync(departmentRiskControl);
         }
 
-        [AbpAuthorize(AppPermissions.Pages_DepartmentRiskControls_Edit)]
+       // [AbpAuthorize(AppPermissions.Pages_DepartmentRiskControls_Edit)]
         protected virtual async Task Update(CreateOrEditDepartmentRiskControlDto input)
         {
             var departmentRiskControl = await _departmentRiskControlRepository.FirstOrDefaultAsync((int)input.Id);
             ObjectMapper.Map(input, departmentRiskControl);
         }
 
-        [AbpAuthorize(AppPermissions.Pages_DepartmentRiskControls_Delete)]
+      //  [AbpAuthorize(AppPermissions.Pages_DepartmentRiskControls_Delete)]
         public async Task Delete(EntityDto input)
         {
             await _departmentRiskControlRepository.DeleteAsync(input.Id);
@@ -262,7 +262,7 @@ namespace ICMSDemo.DepartmentRiskControls
 
 
 
-        [AbpAuthorize(AppPermissions.Pages_DepartmentRiskControls)]
+        //[AbpAuthorize(AppPermissions.Pages_DepartmentRiskControls)]
         public async Task<PagedResultDto<DepartmentRiskControlDepartmentRiskLookupTableDto>> GetAllDepartmentRiskForLookupTable(GetAllForLookupTableInput input)
         {
             var query = _lookup_departmentRiskRepository.GetAll().
@@ -294,7 +294,7 @@ namespace ICMSDemo.DepartmentRiskControls
             );
         }
 
-        [AbpAuthorize(AppPermissions.Pages_DepartmentRiskControls)]
+       // [AbpAuthorize(AppPermissions.Pages_DepartmentRiskControls)]
         public async Task<PagedResultDto<DepartmentRiskControlControlLookupTableDto>> GetAllControlForLookupTable(GetAllForLookupTableInput input)
         {
             var query = _lookup_controlRepository.GetAll().WhereIf(

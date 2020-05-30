@@ -8,7 +8,7 @@ using ICMSDemo.DemoUiComponents.Dto;
 
 namespace ICMSDemo.DemoUiComponents
 {
-    [AbpAuthorize(AppPermissions.Pages_DemoUiComponents)]
+   // [AbpAuthorize(AppPermissions.Pages_DemoUiComponents)]
     public class DemoUiComponentsAppService : ICMSDemoAppServiceBase, IDemoUiComponentsAppService
     {
         #region date & time pickers

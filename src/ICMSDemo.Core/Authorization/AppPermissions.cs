@@ -11,15 +11,15 @@
         public const string Pages_Projects_Edit = "Pages.Projects.Edit";
         public const string Pages_Projects_Delete = "Pages.Projects.Delete";
 
-        public const string Pages_ProcessRiskControls = "Pages.ProcessRiskControls";
-        public const string Pages_ProcessRiskControls_Create = "Pages.ProcessRiskControls.Create";
-        public const string Pages_ProcessRiskControls_Edit = "Pages.ProcessRiskControls.Edit";
-        public const string Pages_ProcessRiskControls_Delete = "Pages.ProcessRiskControls.Delete";
+        //public const string Pages_ProcessRiskControls = "Pages.ProcessRiskControls";
+        //public const string Pages_ProcessRiskControls_Create = "Pages.ProcessRiskControls.Create";
+        //public const string Pages_ProcessRiskControls_Edit = "Pages.ProcessRiskControls.Edit";
+        //public const string Pages_ProcessRiskControls_Delete = "Pages.ProcessRiskControls.Delete";
 
-        public const string Pages_ProcessRisks = "Pages.ProcessRisks";
-        public const string Pages_ProcessRisks_Create = "Pages.ProcessRisks.Create";
-        public const string Pages_ProcessRisks_Edit = "Pages.ProcessRisks.Edit";
-        public const string Pages_ProcessRisks_Delete = "Pages.ProcessRisks.Delete";
+        //public const string Pages_ProcessRisks = "Pages.ProcessRisks";
+        //public const string Pages_ProcessRisks_Create = "Pages.ProcessRisks.Create";
+        //public const string Pages_ProcessRisks_Edit = "Pages.ProcessRisks.Edit";
+        //public const string Pages_ProcessRisks_Delete = "Pages.ProcessRisks.Delete";
 
         public const string Pages_Processes = "Pages.Processes";
         public const string Pages_Processes_Create = "Pages.Processes.Create";
@@ -27,8 +27,9 @@
         public const string Pages_Processes_Delete = "Pages.Processes.Delete";
 
         public const string Pages_WorkingPaperNews = "Pages.WorkingPaperNews";
-        public const string Pages_WorkingPaperNews_Create = "Pages.WorkingPaperNews.Create";
-        public const string Pages_WorkingPaperNews_Edit = "Pages.WorkingPaperNews.Edit";
+       // public const string Pages_WorkingPaperNews_Create = "Pages.WorkingPaperNews.Create";
+        public const string Pages_WorkingPaperNews_Review = "Pages.WorkingPaperNews.Review";
+        public const string Pages_WorkingPaperNews_Update = "Pages.WorkingPaperNews.Update";
         public const string Pages_WorkingPaperNews_Delete = "Pages.WorkingPaperNews.Delete";
 
         public const string HomePage = "Pages.HomePage";
@@ -43,30 +44,30 @@
         public const string Pages_TestingTemplates_Edit = "Pages.TestingTemplates.Edit";
         public const string Pages_TestingTemplates_Delete = "Pages.TestingTemplates.Delete";
 
-        public const string Pages_DepartmentRiskControls = "Pages.DepartmentRiskControls";
-        public const string Pages_DepartmentRiskControls_Create = "Pages.DepartmentRiskControls.Create";
-        public const string Pages_DepartmentRiskControls_Edit = "Pages.DepartmentRiskControls.Edit";
-        public const string Pages_DepartmentRiskControls_Delete = "Pages.DepartmentRiskControls.Delete";
+        //public const string Pages_DepartmentRiskControls = "Pages.DepartmentRiskControls";
+        //public const string Pages_DepartmentRiskControls_Create = "Pages.DepartmentRiskControls.Create";
+        //public const string Pages_DepartmentRiskControls_Edit = "Pages.DepartmentRiskControls.Edit";
+        //public const string Pages_DepartmentRiskControls_Delete = "Pages.DepartmentRiskControls.Delete";
 
-        public const string Pages_DepartmentRisks = "Pages.DepartmentRisks";
-        public const string Pages_DepartmentRisks_Create = "Pages.DepartmentRisks.Create";
-        public const string Pages_DepartmentRisks_Edit = "Pages.DepartmentRisks.Edit";
-        public const string Pages_DepartmentRisks_Delete = "Pages.DepartmentRisks.Delete";
+        //public const string Pages_DepartmentRisks = "Pages.DepartmentRisks";
+        //public const string Pages_DepartmentRisks_Create = "Pages.DepartmentRisks.Create";
+        //public const string Pages_DepartmentRisks_Edit = "Pages.DepartmentRisks.Edit";
+        //public const string Pages_DepartmentRisks_Delete = "Pages.DepartmentRisks.Delete";
 
         public const string Pages_Departments = "Pages.Departments";
         public const string Pages_Departments_Create = "Pages.Departments.Create";
         public const string Pages_Departments_Edit = "Pages.Departments.Edit";
         public const string Pages_Departments_Delete = "Pages.Departments.Delete";
 
-        public const string Pages_DataLists = "Pages.DataLists";
-        public const string Pages_DataLists_Create = "Pages.DataLists.Create";
-        public const string Pages_DataLists_Edit = "Pages.DataLists.Edit";
-        public const string Pages_DataLists_Delete = "Pages.DataLists.Delete";
+        //public const string Pages_DataLists = "Pages.DataLists";
+        //public const string Pages_DataLists_Create = "Pages.DataLists.Create";
+        //public const string Pages_DataLists_Edit = "Pages.DataLists.Edit";
+        //public const string Pages_DataLists_Delete = "Pages.DataLists.Delete";
 
-        public const string Pages_ExceptionTypeColumns = "Pages.ExceptionTypeColumns";
-        public const string Pages_ExceptionTypeColumns_Create = "Pages.ExceptionTypeColumns.Create";
-        public const string Pages_ExceptionTypeColumns_Edit = "Pages.ExceptionTypeColumns.Edit";
-        public const string Pages_ExceptionTypeColumns_Delete = "Pages.ExceptionTypeColumns.Delete";
+        //public const string Pages_ExceptionTypeColumns = "Pages.ExceptionTypeColumns";
+        //public const string Pages_ExceptionTypeColumns_Create = "Pages.ExceptionTypeColumns.Create";
+        //public const string Pages_ExceptionTypeColumns_Edit = "Pages.ExceptionTypeColumns.Edit";
+        //public const string Pages_ExceptionTypeColumns_Delete = "Pages.ExceptionTypeColumns.Delete";
 
         public const string Pages_ExceptionTypes = "Pages.ExceptionTypes";
         public const string Pages_ExceptionTypes_Create = "Pages.ExceptionTypes.Create";
@@ -87,7 +88,7 @@
 
         public const string Pages = "Pages";
 
-        public const string Pages_DemoUiComponents= "Pages.DemoUiComponents";
+     //   public const string Pages_DemoUiComponents= "Pages.DemoUiComponents";
         public const string Pages_Administration = "Pages.Administration";
 
         public const string Pages_Administration_Roles = "Pages.Administration.Roles";

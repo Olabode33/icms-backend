@@ -21,7 +21,7 @@ using ICMSDemo.Processes;
 
 namespace ICMSDemo.ProcessRisks
 {
-    [AbpAuthorize(AppPermissions.Pages_ProcessRisks)]
+    [AbpAuthorize]
     public class ProcessRisksAppService : ICMSDemoAppServiceBase, IProcessRisksAppService
     {
         private readonly IRepository<ProcessRisk> _processRiskRepository;
@@ -159,7 +159,7 @@ namespace ICMSDemo.ProcessRisks
             return output;
         }
 
-        [AbpAuthorize(AppPermissions.Pages_ProcessRisks_Edit)]
+       // [AbpAuthorize(AppPermissions.Pages_ProcessRisks_Edit)]
         public async Task<GetProcessRiskForEditOutput> GetProcessRiskForEdit(EntityDto input)
         {
             var processRisk = await _processRiskRepository.FirstOrDefaultAsync(input.Id);
@@ -193,7 +193,7 @@ namespace ICMSDemo.ProcessRisks
             }
         }
 
-        [AbpAuthorize(AppPermissions.Pages_ProcessRisks_Create)]
+       // [AbpAuthorize(AppPermissions.Pages_ProcessRisks_Create)]
         protected virtual async Task Create(CreateOrEditProcessRiskDto input)
         {
             var processRisk = ObjectMapper.Map<ProcessRisk>(input);
@@ -210,14 +210,14 @@ namespace ICMSDemo.ProcessRisks
             await _processRiskRepository.InsertAsync(processRisk);
         }
 
-        [AbpAuthorize(AppPermissions.Pages_ProcessRisks_Edit)]
+       // [AbpAuthorize(AppPermissions.Pages_ProcessRisks_Edit)]
         protected virtual async Task Update(CreateOrEditProcessRiskDto input)
         {
             var processRisk = await _processRiskRepository.FirstOrDefaultAsync((int)input.Id);
             ObjectMapper.Map(input, processRisk);
         }
 
-        [AbpAuthorize(AppPermissions.Pages_ProcessRisks_Delete)]
+       // [AbpAuthorize(AppPermissions.Pages_ProcessRisks_Delete)]
         public async Task Delete(EntityDto input)
         {
             await _processRiskRepository.DeleteAsync(input.Id);
@@ -262,7 +262,7 @@ namespace ICMSDemo.ProcessRisks
 
 
 
-        [AbpAuthorize(AppPermissions.Pages_ProcessRisks)]
+       // [AbpAuthorize(AppPermissions.Pages_ProcessRisks)]
         public async Task<PagedResultDto<ProcessRiskOrganizationUnitLookupTableDto>> GetAllOrganizationUnitForLookupTable(GetAllForLookupTableInput input)
         {
             var query = _lookup_processRepository.GetAll().WhereIf(
@@ -292,7 +292,7 @@ namespace ICMSDemo.ProcessRisks
             );
         }
 
-        [AbpAuthorize(AppPermissions.Pages_ProcessRisks)]
+        //[AbpAuthorize(AppPermissions.Pages_ProcessRisks)]
         public async Task<PagedResultDto<ProcessRiskRiskLookupTableDto>> GetAllRiskForLookupTable(GetAllForLookupTableInput input)
         {
             var query = _lookup_riskRepository.GetAll().WhereIf(

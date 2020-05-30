@@ -209,7 +209,11 @@ namespace ICMSDemo.Departments
                                             UserId = uo.UserId,
                                             TenantId = AbpSession.TenantId
                                         });
-                unitOrganizationRoles = await query.ToListAsync();
+              var  unitOrganizationRolesCo = await query.ToListAsync();
+
+                if (unitOrganizationRolesCo.Count != 0)
+                unitOrganizationRoles.AddRange(unitOrganizationRolesCo);
+
             }
 
 

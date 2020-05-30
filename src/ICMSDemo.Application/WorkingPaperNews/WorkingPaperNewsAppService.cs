@@ -17,7 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using ICMSDemo.WorkingPapers;
 using ICMSDemo.Departments;
 using Abp.UI;
-using ICMSDemo.ProcessRiskControls;
+using ICMSDemo.Projects;
 
 namespace ICMSDemo.WorkingPaperNews
 {
@@ -30,24 +30,21 @@ namespace ICMSDemo.WorkingPaperNews
         private readonly IRepository<TestingAttrribute, int> _lookup_testingAttributeRepository;
         private readonly IRepository<Department, long> _lookup_organizationUnitRepository;
         private readonly IRepository<User, long> _lookup_userRepository;
-        private readonly IRepository<ProcessRiskControl, int> _lookup_processRiskControlRepository;
+        private readonly IRepository<Project> _lookup_projectRepository;
 
 
         public WorkingPaperNewsAppService(IRepository<WorkingPaper, Guid> workingPaperNewRepository,
             IRepository<TestingAttrribute, int> lookup_testingAttributeRepository,
-            IRepository<WorkingPaperDetail> workingPaperDetailsRepository,
-            IRepository<TestingTemplate, int> lookup_testingTemplateRepository, 
-            IRepository<Department, long> lookup_organizationUnitRepository, 
-            IRepository<User, long> lookup_userRepository, 
-            IRepository<ProcessRiskControl, int> lookup_processRiskControlRepository)
+            IRepository<WorkingPaperDetail> workingPaperDetailsRepository, IRepository<Project> lookup_projectRepository,
+            IRepository<TestingTemplate, int> lookup_testingTemplateRepository, IRepository<Department, long> lookup_organizationUnitRepository, IRepository<User, long> lookup_userRepository)
         {
             _workingPaperNewRepository = workingPaperNewRepository;
             _lookup_testingTemplateRepository = lookup_testingTemplateRepository;
+            _lookup_projectRepository = lookup_projectRepository;
             _lookup_organizationUnitRepository = lookup_organizationUnitRepository;
             _lookup_userRepository = lookup_userRepository;
             _lookup_testingAttributeRepository = lookup_testingAttributeRepository;
             _workingPaperDetailsRepository = workingPaperDetailsRepository;
-            _lookup_processRiskControlRepository = lookup_processRiskControlRepository;
         }
 
         public async Task<PagedResultDto<GetWorkingPaperNewForViewDto>> GetAll(GetAllWorkingPaperNewsInput input)
@@ -87,8 +84,12 @@ namespace ICMSDemo.WorkingPaperNews
                                    join o3 in _lookup_userRepository.GetAll() on o.CompletedById equals o3.Id into j3
                                    from s3 in j3.DefaultIfEmpty()
 
-                                   join o4 in _lookup_userRepository.GetAll() on o.ReviewedById equals o4.Id into j4
+                      
+                                   join o4 in _lookup_userRepository.GetAll() on o.AssignedToId equals o4.Id into j4
                                    from s4 in j4.DefaultIfEmpty()
+
+                                   join o5 in _lookup_projectRepository.GetAll() on o.ProjectId equals o5.Id into j5
+                                   from s5 in j5.DefaultIfEmpty()
 
                                    select new GetWorkingPaperNewForViewDto()
                                    {
@@ -98,6 +99,7 @@ namespace ICMSDemo.WorkingPaperNews
                                            Comment = o.Comment,
                                            TaskDate = o.TaskDate,
                                            DueDate = o.DueDate,
+                                           ProjectId = o.ProjectId,
                                            TaskStatus = o.TaskStatus,
                                            Score = o.Score,
                                            ReviewedDate = o.ReviewedDate,
@@ -111,6 +113,7 @@ namespace ICMSDemo.WorkingPaperNews
                                        Frequency = s1 == null ? (Frequency?)null : s1.Frequency,
                                        SampleSize = s1 == null ? 0 : s1.SampleSize,
                                        TestingTemplateName = s1 == null ? "" : s1.Title,
+                                       ProjectName = s5 == null ? "" : s5.Title
                                    };
 
             var totalCount = await filteredWorkingPaperNews.CountAsync();
@@ -121,7 +124,7 @@ namespace ICMSDemo.WorkingPaperNews
             );
         }
 
-        [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews_Edit)]
+        [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews_Update)]
         public async Task<GetWorkingPaperNewForEditOutput> GetWorkingPaperNewForEdit(EntityDto<Guid> input)
         {
             var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync(input.Id);
@@ -145,19 +148,10 @@ namespace ICMSDemo.WorkingPaperNews
             if (output.WorkingPaperNew.TestingTemplateId != null)
             {
                 var _lookupTestingTemplate = await _lookup_testingTemplateRepository.FirstOrDefaultAsync((int)output.WorkingPaperNew.TestingTemplateId);
-                var _lookupProcessRiskControl = await _lookup_processRiskControlRepository
-                                                           .GetAll()
-                                                           .Include(x => x.ControlFk)
-                                                           .Include(x => x.ProcessRiskFk).ThenInclude(x => x.RiskFk)
-                                                           .Include(x => x.ProcessRiskFk).ThenInclude(x => x.ProcessFk)
-                                                           .FirstOrDefaultAsync(x => x.Id == (int)_lookupTestingTemplate.ProcessRiskControlId);
-
                 output.TestingTemplateCode = _lookupTestingTemplate.Code.ToString();
                 output.TestingTemplate = new TestingTemplates.Dtos.GetTestingTemplateForViewDto()
                 {
-                    TestingTemplate = ObjectMapper.Map<TestingTemplates.Dtos.TestingTemplateDto>(_lookupTestingTemplate),
-                    Risk = ObjectMapper.Map<Risks.Dtos.RiskDto>(_lookupProcessRiskControl.ProcessRiskFk.RiskFk),
-                    Control = ObjectMapper.Map<Controls.Dtos.ControlDto>(_lookupProcessRiskControl.ControlFk)
+                    TestingTemplate = ObjectMapper.Map<TestingTemplates.Dtos.TestingTemplateDto>(_lookupTestingTemplate)
                 };
             }
 
@@ -210,7 +204,7 @@ namespace ICMSDemo.WorkingPaperNews
             }
         }
 
-        [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews_Create)]
+
         protected virtual async Task Create(CreateOrEditWorkingPaperNewDto input)
         {
             var testingTemplateAttributes = await _lookup_testingAttributeRepository.GetAllListAsync(x => x.TestingTemplateId == input.TestingTemplateId);
@@ -248,10 +242,13 @@ namespace ICMSDemo.WorkingPaperNews
             await _workingPaperNewRepository.UpdateAsync(workingPaperNew);
         }
 
-        [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews_Edit)]
+        [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews_Update)]
         protected virtual async Task Update(CreateOrEditWorkingPaperNewDto input)
         {
             var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync((Guid)input.Id);
+
+            var testingTemplate = await _lookup_testingTemplateRepository.FirstOrDefaultAsync((int)input.TestingTemplateId);
+
 
             var testingTemplateAttributes = await _lookup_testingAttributeRepository.GetAllListAsync(x => x.TestingTemplateId == input.TestingTemplateId);
 
@@ -260,13 +257,14 @@ namespace ICMSDemo.WorkingPaperNews
                 throw new UserFriendlyException("There is no testing template for this document.");
             }
 
-            var testingTemplate = await _lookup_testingTemplateRepository.FirstOrDefaultAsync((int)workingPaperNew.TestingTemplateId);
-
             input.TaskStatus = input.Attributes.Length == testingTemplate.SampleSize ? TaskStatus.PendingReview : TaskStatus.Open;
             input.Score = await SaveWorkingPaperDetails(input.Attributes, testingTemplateAttributes, workingPaperNew.Id);
             input.CompletionDate = DateTime.Now;
-
+            
             ObjectMapper.Map(input, workingPaperNew);
+
+            workingPaperNew.CompletedById = AbpSession.UserId;
+
         }
 
         private async Task<decimal> SaveWorkingPaperDetails(CreateOrEditTestingAttributeDto[] input, List<TestingAttrribute> testingAttrributes, Guid workingPaperId)
@@ -291,6 +289,9 @@ namespace ICMSDemo.WorkingPaperNews
                     Sequence = item.Sequence,
                     TestingAttrributeId = item.TestingAttrributeId,
                     Result = item.Result,
+                     Comments = item.Comments,
+                      
+                    Identifier = item.SampleIdentifier,
                     TenantId = (int)AbpSession.TenantId,
                     Weight = testingTemplateAttribute.Weight,
                     Score = item.Result ? testingTemplateAttribute.Weight : 0

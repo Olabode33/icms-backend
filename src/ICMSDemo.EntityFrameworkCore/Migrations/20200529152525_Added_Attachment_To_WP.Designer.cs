@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200529152525_Added_Attachment_To_WP")]
+    partial class Added_Attachment_To_WP
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2277,9 +2279,6 @@ namespace ICMSDemo.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<long?>("AssignedToId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
 
@@ -2344,8 +2343,6 @@ namespace ICMSDemo.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AssignedToId");
 
                     b.HasIndex("CompletedById");
 
@@ -2874,10 +2871,6 @@ namespace ICMSDemo.Migrations
 
             modelBuilder.Entity("ICMSDemo.WorkingPapers.WorkingPaper", b =>
                 {
-                    b.HasOne("ICMSDemo.Authorization.Users.User", "AssignedTo")
-                        .WithMany()
-                        .HasForeignKey("AssignedToId");
-
                     b.HasOne("ICMSDemo.Authorization.Users.User", "CompletedBy")
                         .WithMany()
                         .HasForeignKey("CompletedById");

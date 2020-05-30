@@ -17,5 +17,6 @@
 		public Frequency? Frequency { get; set; }
 		public int? SampleSize { get; set; }
 		public string TestingTemplateName { get; set; }
+        public string ProjectName { get; set; }
     }
 }

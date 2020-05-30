@@ -1,4 +1,5 @@
-﻿using Abp.Dependency;
+﻿using Abp.Authorization.Users;
+using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Events.Bus.Handlers;
@@ -27,8 +28,11 @@ namespace ICMSDemo.Projects.EventHandlers
         private readonly IRepository<ProcessRisk> _processRiskRepository;
         private readonly IRepository<TestingTemplate> _testingTemplateRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<UnitOrganizationRole, long> _unitOrganizationRoleRepository;
 
-        public WorkingPaperCreator(IRepository<WorkingPaper, Guid> workingPaperRepository, IRepository<Department, long> departmentRepository, IRepository<Process, long> processRepository, IRepository<ProcessRiskControl> processRiskControlRepository, IRepository<ProcessRisk> processRiskRepository, IRepository<TestingTemplate> testingTemplateRepository, IUnitOfWork unitOfWork)
+        public WorkingPaperCreator(IRepository<WorkingPaper, Guid> workingPaperRepository,
+            IRepository<UnitOrganizationRole, long> unitOrganizationRoleRepository,
+            IRepository<Department, long> departmentRepository, IRepository<Process, long> processRepository, IRepository<ProcessRiskControl> processRiskControlRepository, IRepository<ProcessRisk> processRiskRepository, IRepository<TestingTemplate> testingTemplateRepository, IUnitOfWork unitOfWork)
         {
             _workingPaperRepository = workingPaperRepository;
             _departmentRepository = departmentRepository;
@@ -37,6 +41,7 @@ namespace ICMSDemo.Projects.EventHandlers
             _processRiskRepository = processRiskRepository;
             _testingTemplateRepository = testingTemplateRepository;
             _unitOfWork = unitOfWork;
+            _unitOrganizationRoleRepository = unitOrganizationRoleRepository;
         }
 
         [UnitOfWork]
@@ -47,11 +52,11 @@ namespace ICMSDemo.Projects.EventHandlers
             {
                 if (eventData.Project.ReviewType == ReviewType.Department)
                 {
-                    AsyncHelper.RunSync(() => DepartmentScope(eventData.Project.ScopeId.Value, eventData.Project.Cascade, eventData.Project.Id));
+                    AsyncHelper.RunSync(() => DepartmentScope(eventData.Project.ScopeId.Value, eventData.Project.Cascade, eventData.Project));
                 }
                 else
                 {
-                    AsyncHelper.RunSync(() => ProcessScope(eventData.Project.ScopeId.Value, eventData.Project.Cascade, eventData.Project.Id));
+                    AsyncHelper.RunSync(() => ProcessScope(eventData.Project.ScopeId.Value, eventData.Project.Cascade, eventData.Project));
                 }
             }
 
@@ -59,7 +64,7 @@ namespace ICMSDemo.Projects.EventHandlers
 
 
 
-        public async Task DepartmentScope(long departmentId, bool cascade, int projectId)
+        public async Task DepartmentScope(long departmentId, bool cascade, Project project)
         {
             var allDepartments = await _departmentRepository.GetAllListAsync();
 
@@ -93,7 +98,7 @@ namespace ICMSDemo.Projects.EventHandlers
                 allMyDepartments.Add(department);
             }
 
-
+            //Get the ID of the current department and all the parents
             var departments =  allDepartments.Where(x => codes.Any(e => e == x.Code)).Select(x => x.Id).ToList();
 
             
@@ -102,47 +107,61 @@ namespace ICMSDemo.Projects.EventHandlers
             var allProcessRisks = await _processRiskRepository.GetAllListAsync();
             var allProcessRiskControls = await _processRiskControlRepository.GetAllListAsync();
             var allTestingTemplates = await _testingTemplateRepository.GetAllListAsync(x => x.IsActive);
+            var allUserRolesInDepartments = await _unitOrganizationRoleRepository.GetAllListAsync();
 
-            foreach (var dept in departments)
-            {
-                //Get Processes
-                var allPossibleProcesses = allProcesses.Where(x => x.DepartmentId.Value == dept || (x.DepartmentId.Value != dept && x.Casade)).ToList();
-                var relevantProcesses = allPossibleProcesses.Where(x => departments.Any(y => y == x.DepartmentId)).ToList();
-
-                var relevantProcessRisk = allProcessRisks.Where(x => relevantProcesses.Any(y => y.Id == x.ProcessId)).ToList();
-
-                var relevantProcessRiskControl = allProcessRiskControls.Where(x => relevantProcessRisk.Any(y => y.Id == x.ProcessRiskId)).ToList();
-
-                var relevantTestingTemplates = allTestingTemplates.Where(x => relevantProcessRiskControl.Any(y => y.Id == x.ProcessRiskControlId)).ToList();
+            //    foreach (var dept in departments)
+            //  {
 
 
+            //Get All Processes for that department or for those that are cascaded
+            var allPossibleProcesses = allProcesses.Where(x => x.DepartmentId.Value == departmentId || (x.DepartmentId.Value != departmentId && x.Casade)).ToList();
 
-                foreach (var d in allMyDepartments)
+            // Get all processes that belong to the department or that have been inherited
+            var relevantProcesses = allPossibleProcesses.Where(x => departments.Any(y => y == x.DepartmentId)).ToList();
+
+            var relevantProcessRisk = allProcessRisks.Where(x => relevantProcesses.Any(y => y.Id == x.ProcessId)).ToList();
+
+            var relevantProcessRiskControl = allProcessRiskControls.Where(x => relevantProcessRisk.Any(y => y.Id == x.ProcessRiskId)).ToList();
+
+            var relevantTestingTemplates = allTestingTemplates.Where(x => relevantProcessRiskControl.Any(y => y.Id == x.ProcessRiskControlId)).ToList();
+
+
+            foreach (var d in allMyDepartments)
                 {
-                    if (!d.IsAbstract)
+
+                if (!d.IsAbstract)
                     {
+                        var controlHeadInDepartment = allUserRolesInDepartments.FirstOrDefault(x => x.OrganizationUnitId == d.Id && x.DepartmentRole == DepartmentRole.ControlHead);
+
                         foreach (var tt in relevantTestingTemplates)
                         {
                             var workingPaperNew = new WorkingPaper();
-                            workingPaperNew.ProjectId = projectId;
+                            workingPaperNew.ProjectId = project.Id;
                             workingPaperNew.OrganizationUnitId = d.Id;
                             workingPaperNew.TestingTemplateId = tt.Id;
                             workingPaperNew.TenantId = tt.TenantId;
                             workingPaperNew.TaskDate = Abp.Timing.Clock.Now;
+                            workingPaperNew.DueDate = project.BudgetedEndDate;
                             workingPaperNew.Code = DateTime.Now.ToString("ddMMyy") + "-" + Guid.NewGuid().ToString().ToUpper().Substring(1, 7);
+                           
+                            if (controlHeadInDepartment != null)
+                            {
+                                workingPaperNew.AssignedToId = controlHeadInDepartment.UserId;
+                            }
+                   
                             await _workingPaperRepository.InsertAsync(workingPaperNew);
                         }
 
                     }
                 }
 
-            }
+           
 
 
         }
 
 
-        public async Task ProcessScope(long processId, bool cascade, int projectId)
+        public async Task ProcessScope(long processId, bool cascade, Project project)
         {
             var allDepartments = await _departmentRepository.GetAllListAsync();
 
@@ -182,9 +201,11 @@ namespace ICMSDemo.Projects.EventHandlers
                     {
 
                         var workingPaperNew = new WorkingPaper();
-                        workingPaperNew.ProjectId = projectId;
+                        workingPaperNew.ProjectId = project.Id;
                         workingPaperNew.OrganizationUnitId = dept.Id;
                         workingPaperNew.TestingTemplateId = tt.Id;
+                        workingPaperNew.DueDate = project.BudgetedEndDate;
+                        
                         workingPaperNew.TenantId = tt.TenantId;
                         workingPaperNew.TaskDate = Abp.Timing.Clock.Now;
                         workingPaperNew.Code = DateTime.Now.ToString("yyMMdd") + "-" + Guid.NewGuid().ToString().ToUpper().Substring(1, 7);

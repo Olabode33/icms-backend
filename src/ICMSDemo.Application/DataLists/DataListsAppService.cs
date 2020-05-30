@@ -1,24 +1,18 @@
-﻿
-
-using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Linq.Dynamic.Core;
 using Abp.Linq.Extensions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using ICMSDemo.DataLists.Exporting;
 using ICMSDemo.DataLists.Dtos;
 using ICMSDemo.Dto;
 using Abp.Application.Services.Dto;
-using ICMSDemo.Authorization;
-using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace ICMSDemo.DataLists
 {
-	[AbpAuthorize(AppPermissions.Pages_DataLists)]
+    [AbpAuthorize]
     public class DataListsAppService : ICMSDemoAppServiceBase, IDataListsAppService
     {
 		 private readonly IRepository<DataList> _dataListRepository;
@@ -70,7 +64,7 @@ namespace ICMSDemo.DataLists
             return output;
          }
 		 
-		 [AbpAuthorize(AppPermissions.Pages_DataLists_Edit)]
+		// [AbpAuthorize(AppPermissions.Pages_DataLists_Edit)]
 		 public async Task<GetDataListForEditOutput> GetDataListForEdit(EntityDto input)
          {
             var dataList = await _dataListRepository.FirstOrDefaultAsync(input.Id);
@@ -90,7 +84,7 @@ namespace ICMSDemo.DataLists
 			}
          }
 
-		 [AbpAuthorize(AppPermissions.Pages_DataLists_Create)]
+		// [AbpAuthorize(AppPermissions.Pages_DataLists_Create)]
 		 protected virtual async Task Create(CreateOrEditDataListDto input)
          {
             var dataList = ObjectMapper.Map<DataList>(input);
@@ -105,14 +99,14 @@ namespace ICMSDemo.DataLists
             await _dataListRepository.InsertAsync(dataList);
          }
 
-		 [AbpAuthorize(AppPermissions.Pages_DataLists_Edit)]
+		// [AbpAuthorize(AppPermissions.Pages_DataLists_Edit)]
 		 protected virtual async Task Update(CreateOrEditDataListDto input)
          {
             var dataList = await _dataListRepository.FirstOrDefaultAsync((int)input.Id);
              ObjectMapper.Map(input, dataList);
          }
 
-		 [AbpAuthorize(AppPermissions.Pages_DataLists_Delete)]
+		// [AbpAuthorize(AppPermissions.Pages_DataLists_Delete)]
          public async Task Delete(EntityDto input)
          {
             await _dataListRepository.DeleteAsync(input.Id);
