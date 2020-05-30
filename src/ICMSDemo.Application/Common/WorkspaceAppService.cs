@@ -15,9 +15,11 @@ using Microsoft.EntityFrameworkCore;
 using Abp.Application.Services.Dto;
 using ICMSDemo.ExceptionIncidents.Dtos;
 using ICMSDemo.WorkingPaperNews.Dtos;
+using Abp.Authorization;
 
 namespace ICMSDemo.Common
 {
+    [AbpAuthorize]
     public class WorkspaceAppService : ICMSDemoAppServiceBase
     {
         private readonly IRepository<ExceptionIncident> _exceptionIncidentRepository;
@@ -103,19 +105,19 @@ namespace ICMSDemo.Common
 
         public async Task<ListResultDto<GetWorkingPaperNewForViewDto>> GetWorkingPapers()
         {
-            var departments = await UserManager.GetOrganizationUnitsAsync(await UserManager.GetUserByIdAsync((long)AbpSession.UserId));
+            //var departments = await UserManager.GetOrganizationUnitsAsync(await UserManager.GetUserByIdAsync((long)AbpSession.UserId));
 
-            string previousCode = string.Empty;
-            List<string> codes = new List<string>();
+            //string previousCode = string.Empty;
+            //List<string> codes = new List<string>();
 
-            List<Department> allDepartments = await _lookup_organizationUnitRepository.GetAllListAsync();
+            //List<Department> allDepartments = await _lookup_organizationUnitRepository.GetAllListAsync();
 
-            foreach (var item in departments)
-            {
-                var departmentCode = await OrganizationUnitManager.GetCodeAsync(item.Id);
-                var childrenDept = allDepartments.Where(x => x.Code.StartsWith(item.Code)).Select(x => x.Code).ToList();
-                codes.AddRange(childrenDept);
-            }
+            //foreach (var item in departments)
+            //{
+            //    var departmentCode = await OrganizationUnitManager.GetCodeAsync(item.Id);
+            //    var childrenDept = allDepartments.Where(x => x.Code.StartsWith(item.Code)).Select(x => x.Code).ToList();
+            //    codes.AddRange(childrenDept);
+            //}
 
             var workingPaperDetail = await _workingPaperDetailRepository.GetAll().Where(x => x.WorkingPaperId != null)
                 .GroupBy(x => x.WorkingPaperId)
@@ -129,7 +131,7 @@ namespace ICMSDemo.Common
                                                                    .Include(e => e.TestingTemplate)
                                                                    .Include(e => e.ReviewedBy)
                                                                    .Include(e => e.CompletedBy)
-
+                                                                    .Where(x => x.AssignedToId == AbpSession.UserId)
                                   join ou in _lookup_organizationUnitRepository.GetAll() on w.OrganizationUnitId equals ou.Id into ou1
                                   from ou2 in ou1.DefaultIfEmpty()
 
@@ -158,13 +160,13 @@ namespace ICMSDemo.Common
                                   };
 
             var workingPapers = await workingPaperNew.ToListAsync();
-            var totalCount = 0;
+            var totalCount = workingPapers.Count();
 
-            if (codes.Count > 0)
-            {
-                workingPapers = workingPapers.Where(x => codes.Any(e => e == x.OuCode)).ToList();
-                totalCount = workingPapers.Count();
-            }
+            //if (codes.Count > 0)
+            //{
+            //    workingPapers = workingPapers.Where(x => codes.Any(e => e == x.OuCode)).ToList();
+            //    totalCount = workingPapers.Count();
+            //}
 
             var output = workingPapers.Take(10).ToList();
 
