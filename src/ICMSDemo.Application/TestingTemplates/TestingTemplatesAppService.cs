@@ -25,7 +25,7 @@ using ICMSDemo.ProcessRiskControls;
 
 namespace ICMSDemo.TestingTemplates
 {
-    [AbpAuthorize(AppPermissions.Pages_TestingTemplates)]
+  
     public class TestingTemplatesAppService : ICMSDemoAppServiceBase, ITestingTemplatesAppService
     {
         private readonly IRepository<TestingTemplate> _testingTemplateRepository;
@@ -51,6 +51,7 @@ namespace ICMSDemo.TestingTemplates
             _exceptionTypesRepository = exceptionTypesRepository;
         }
 
+        [AbpAuthorize(AppPermissions.Pages_TestingTemplates)]
         public async Task<PagedResultDto<GetTestingTemplateForViewDto>> GetAll(GetAllTestingTemplatesInput input)
         {
             var frequencyFilter = (Frequency)input.FrequencyFilter;

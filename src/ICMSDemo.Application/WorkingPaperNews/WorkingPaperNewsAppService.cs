@@ -18,6 +18,7 @@ using ICMSDemo.WorkingPapers;
 using ICMSDemo.Departments;
 using Abp.UI;
 using ICMSDemo.Projects;
+using Abp.Authorization.Users;
 
 namespace ICMSDemo.WorkingPaperNews
 {
@@ -31,10 +32,12 @@ namespace ICMSDemo.WorkingPaperNews
         private readonly IRepository<Department, long> _lookup_organizationUnitRepository;
         private readonly IRepository<User, long> _lookup_userRepository;
         private readonly IRepository<Project> _lookup_projectRepository;
+        private readonly IRepository<UnitOrganizationRole,long> _lookup_ouRoleRepository;
+
 
 
         public WorkingPaperNewsAppService(IRepository<WorkingPaper, Guid> workingPaperNewRepository,
-            IRepository<TestingAttrribute, int> lookup_testingAttributeRepository,
+            IRepository<TestingAttrribute, int> lookup_testingAttributeRepository, IRepository<UnitOrganizationRole, long> lookup_ouRoleRepository,
             IRepository<WorkingPaperDetail> workingPaperDetailsRepository, IRepository<Project> lookup_projectRepository,
             IRepository<TestingTemplate, int> lookup_testingTemplateRepository, IRepository<Department, long> lookup_organizationUnitRepository, IRepository<User, long> lookup_userRepository)
         {
@@ -45,6 +48,7 @@ namespace ICMSDemo.WorkingPaperNews
             _lookup_userRepository = lookup_userRepository;
             _lookup_testingAttributeRepository = lookup_testingAttributeRepository;
             _workingPaperDetailsRepository = workingPaperDetailsRepository;
+            _lookup_ouRoleRepository = lookup_ouRoleRepository;
         }
 
         public async Task<PagedResultDto<GetWorkingPaperNewForViewDto>> GetAll(GetAllWorkingPaperNewsInput input)
@@ -318,7 +322,7 @@ namespace ICMSDemo.WorkingPaperNews
         public async Task AssignToUser(AssignWorkingPaperNewDto input)
         {
             var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync((Guid)input.Id);
-            workingPaperNew.CompletedById = input.UserId;
+            workingPaperNew.AssignedToId = input.UserId;
             await _workingPaperNewRepository.UpdateAsync(workingPaperNew);
         }
 
@@ -387,30 +391,40 @@ namespace ICMSDemo.WorkingPaperNews
         [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews)]
         public async Task<PagedResultDto<WorkingPaperNewUserLookupTableDto>> GetAllUserForLookupTable(GetAllForLookupTableInput input)
         {
-            var query = _lookup_userRepository.GetAll().WhereIf(
-                   !string.IsNullOrWhiteSpace(input.Filter),
-                  e => e.Name.ToString().Contains(input.Filter)
-               );
+           var user = await  UserManager.Users.FirstOrDefaultAsync(x => x.Id == AbpSession.UserId.Value);
 
-            var totalCount = await query.CountAsync();
+            var organizationUnits = await UserManager.GetOrganizationUnitsAsync(user);
 
-            var userList = await query
-                .PageBy(input)
-                .ToListAsync();
+            var organizationUnitsIdLists = organizationUnits.Select(x => x.Id).ToList();
 
-            var lookupTableDtoList = new List<WorkingPaperNewUserLookupTableDto>();
-            foreach (var user in userList)
+            var userUnitsQuery = from o in _lookup_ouRoleRepository.GetAll()
+                   
+                                 .Where(x => x.DepartmentRole == DepartmentRole.ControlTeamMember && organizationUnitsIdLists.Any(y => y == x.OrganizationUnitId))
+                            join u in _lookup_userRepository.GetAll() on o.UserId equals u.Id
+                            select new WorkingPaperNewUserLookupTableDto
+                            {
+                                Id = u.Id,
+                                 DisplayName = u.FullName
+                            };
+
+
+            var userInMyUnits = await userUnitsQuery.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => e.DisplayName.Contains(input.Filter)).ToListAsync();
+         
+
+
+            List <WorkingPaperNewUserLookupTableDto> output = new List<WorkingPaperNewUserLookupTableDto>();
+
+            foreach (var u in userInMyUnits)
             {
-                lookupTableDtoList.Add(new WorkingPaperNewUserLookupTableDto
-                {
-                    Id = user.Id,
-                    DisplayName = user.FullName?.ToString()
-                });
+                if (output.Count(x => x.Id == u.Id) == 0)
+                     output.Add(u);
             }
 
+            var totalCount = output.Count();
+          
             return new PagedResultDto<WorkingPaperNewUserLookupTableDto>(
                 totalCount,
-                lookupTableDtoList
+                output.Skip(input.SkipCount).Take(input.MaxResultCount).ToList()
             );
         }
 

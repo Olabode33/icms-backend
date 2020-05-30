@@ -142,7 +142,7 @@ namespace ICMSDemo.Projects
             return output;
          }
 		 
-		 [AbpAuthorize(AppPermissions.Pages_Projects_Edit)]
+		// [AbpAuthorize(AppPermissions.Pages_Projects_Edit)]
 		 public async Task<GetProjectForEditOutput> GetProjectForEdit(EntityDto input)
          {
             var project = await _projectRepository.FirstOrDefaultAsync(input.Id);
