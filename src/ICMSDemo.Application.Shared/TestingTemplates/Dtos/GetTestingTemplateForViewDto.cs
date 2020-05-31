@@ -20,5 +20,8 @@ namespace ICMSDemo.TestingTemplates.Dtos
         public string ExceptionTypeName { get; set; }
         public string EntityType { get; set; }
         public string OuDisplayName { get; set; }
+        public string ProcessDescription { get; set; }
+        public string ProcessOwner { get; set; }
+        public string ProcessDepartment { get; set; }
     }
 }

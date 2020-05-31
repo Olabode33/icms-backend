@@ -74,11 +74,7 @@ namespace ICMSDemo.ExceptionIncidents
                 var departmentCode = await OrganizationUnitManager.GetCodeAsync(item.Id);
                 var childrenDept = allDepartments.Where(x => x.Code.StartsWith(item.Code)).Select(x => x.Code).ToList();
                 codes.AddRange(childrenDept);
-            }
-
- 
-
-           
+            }         
 
 
             var statusFilter = (Status)input.StatusFilter;

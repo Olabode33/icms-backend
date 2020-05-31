@@ -71,7 +71,8 @@ namespace ICMSDemo.Projects
 						.WhereIf(input.MaxBudgetedEndDateFilter != null, e => e.BudgetedEndDate <= input.MaxBudgetedEndDateFilter)
 						.WhereIf(!string.IsNullOrWhiteSpace(input.TitleFilter),  e => e.Title == input.TitleFilter)
 						.WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayNameFilter), e => e.ControlUnitFk != null && e.ControlUnitFk.DisplayName == input.OrganizationUnitDisplayNameFilter)
-						.WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayName2Filter), e => e.ScopeFk != null && e.ScopeFk.DisplayName == input.OrganizationUnitDisplayName2Filter);
+						.WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayName2Filter), e => e.ScopeFk != null && e.ScopeFk.DisplayName == input.OrganizationUnitDisplayName2Filter)
+                        .WhereIf(input.CommencedFilter, e => e.Commenced == input.CommencedFilter);
 
 			var pagedAndFilteredProjects = filteredProjects
                 .OrderBy(input.Sorting ?? "id asc")

@@ -144,13 +144,17 @@ namespace ICMSDemo.TestingTemplates
                                                            .GetAll()
                                                            .Include(x => x.ControlFk)
                                                            .Include(x => x.ProcessRiskFk).ThenInclude(x => x.RiskFk)
-                                                           .Include(x => x.ProcessRiskFk).ThenInclude(x => x.ProcessFk)
+                                                           .Include(x => x.ProcessRiskFk).ThenInclude(x => x.ProcessFk).ThenInclude(x => x.DepartmentFk)
+                                                           .Include(x => x.ProcessRiskFk).ThenInclude(x => x.ProcessFk).ThenInclude(x => x.OwnerFk)
                                                            .FirstOrDefaultAsync(x => x.Id == (int)output.TestingTemplate.DepartmentRiskControlId);
 
                     output.Risk = ObjectMapper.Map<RiskDto>(_lookupProcessRiskControl.ProcessRiskFk.RiskFk);
                     output.Control = ObjectMapper.Map<ControlDto>(_lookupProcessRiskControl.ControlFk);
                     output.EntityType = "Process";
                     output.OuDisplayName = _lookupProcessRiskControl.ProcessRiskFk.ProcessFk.Name;
+                    output.ProcessDescription = _lookupProcessRiskControl.ProcessRiskFk.ProcessFk.Description;
+                    output.ProcessDepartment = _lookupProcessRiskControl.ProcessRiskFk.ProcessFk.DepartmentFk == null ? "" : _lookupProcessRiskControl.ProcessRiskFk.ProcessFk.DepartmentFk.DisplayName;
+                    output.ProcessOwner = _lookupProcessRiskControl.ProcessRiskFk.ProcessFk.OwnerFk == null ? "" : _lookupProcessRiskControl.ProcessRiskFk.ProcessFk.OwnerFk.FullName;
                 } else
                 {
                     output.Risk = ObjectMapper.Map<RiskDto>(_lookupDepartmentRiskControl.DepartmentRiskFk.RiskFk);
