@@ -284,6 +284,7 @@ namespace ICMSDemo.WorkingPaperNews
             var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync((Guid)input.Id);
             workingPaperNew.ReviewedById = AbpSession.UserId;
             workingPaperNew.ReviewedDate = Clock.Now;
+            workingPaperNew.TaskStatus = TaskStatus.Approved;
             await _workingPaperNewRepository.UpdateAsync(workingPaperNew);
         }
 
