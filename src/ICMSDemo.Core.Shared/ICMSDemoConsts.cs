@@ -51,6 +51,6 @@
 
     public enum TaskStatus
     {
-       Open, PendingReview, Rejected, Approved 
+       Open, PendingReview, Rejected, Approved, Draft 
     }
 }
