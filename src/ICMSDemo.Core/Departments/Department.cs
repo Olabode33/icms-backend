@@ -8,6 +8,7 @@ using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
 using Abp.Auditing;
 using Abp.Authorization.Users;
+using ICMSDemo.Ratings;
 
 namespace ICMSDemo.Departments
 {
@@ -41,6 +42,13 @@ namespace ICMSDemo.Departments
 
 		[ForeignKey("SupervisingUnitId")]
 		public OrganizationUnit SupervisingUnit { get; set; }
+
+
+		public int? RatingId { set; get; }
+
+		public Rating Rating { set; get; }
+
+	
 	}
 
 

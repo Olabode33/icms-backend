@@ -109,12 +109,15 @@ namespace ICMSDemo.WorkingPaperNews
                                            Score = o.Score,
                                            ReviewedDate = o.ReviewedDate,
                                            CompletionDate = o.CompletionDate,
-                                           Id = o.Id
+                                           Id = o.Id,
+                                           AssigneeId = o.AssignedToId,
+                                           ReviewedUserId = o.ReviewedById,
+                                           CompletedUserId = o.CompletedById
                                        },
                                        TestingTemplateCode = s1 == null ? "" : s1.Code.ToString(),
                                        OrganizationUnitDisplayName = s2 == null ? "" : s2.DisplayName.ToString(),
-                                       UserName = s3 == null ? "" : s3.FullName.ToString(),
-                                       UserName2 = s4 == null ? "" : s4.Name.ToString(),
+                                       AssignedTo = s4 == null ? "" : s4.FullName.ToString(),
+                                       CompletedBy = s3 == null ? "" : s3.Name.ToString(),
                                        Frequency = s1 == null ? (Frequency?)null : s1.Frequency,
                                        SampleSize = s1 == null ? 0 : s1.SampleSize,
                                        TestingTemplateName = s1 == null ? "" : s1.Title,
@@ -146,6 +149,7 @@ namespace ICMSDemo.WorkingPaperNews
                 ReviewedUserId = workingPaperNew.ReviewedById,
                 Score = workingPaperNew.Score,
                 TaskDate = workingPaperNew.TaskDate,
+                 AssignedToId = workingPaperNew.AssignedToId,
                 TaskStatus = workingPaperNew.TaskStatus,
                 TestingTemplateId = workingPaperNew.TestingTemplateId
             } };
@@ -169,13 +173,19 @@ namespace ICMSDemo.WorkingPaperNews
             if (output.WorkingPaperNew.CompletedUserId != null)
             {
                 var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)output.WorkingPaperNew.CompletedUserId);
-                output.UserName = _lookupUser.FullName.ToString();
+                output.CompletedBy = _lookupUser.FullName.ToString();
             }
 
             if (output.WorkingPaperNew.ReviewedUserId != null)
             {
                 var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)output.WorkingPaperNew.ReviewedUserId);
-                output.UserName2 = _lookupUser.FullName.ToString();
+                output.ReviewedBy = _lookupUser.FullName.ToString();
+            }
+
+            if (output.WorkingPaperNew.AssignedToId != null)
+            {
+                var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)output.WorkingPaperNew.AssignedToId);
+                output.AssignedTo = _lookupUser.FullName.ToString();
             }
 
             //Get working paper details 
@@ -253,8 +263,6 @@ namespace ICMSDemo.WorkingPaperNews
             var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync((Guid)input.Id);
             var previousState = workingPaperNew.TaskStatus;
 
-            //var testingTemplate = await _lookup_testingTemplateRepository.FirstOrDefaultAsync((int)input.TestingTemplateId);
-
 
             var testingTemplateAttributes = await _lookup_testingAttributeRepository.GetAllListAsync(x => x.TestingTemplateId == input.TestingTemplateId);
 
@@ -265,27 +273,40 @@ namespace ICMSDemo.WorkingPaperNews
 
             input.Score = await SaveWorkingPaperDetails(input.Attributes, testingTemplateAttributes, workingPaperNew.Id);
             
-            if (previousState == TaskStatus.Open && input.TaskStatus == TaskStatus.PendingReview)
-            {
-                input.CompletionDate = DateTime.Now;
-                input.CompletedUserId = AbpSession.UserId;
-
-               var newAssignee =  await _lookup_ouRoleRepository.FirstOrDefaultAsync(x => x.DepartmentRole == DepartmentRole.ControlHead && x.OrganizationUnitId == workingPaperNew.OrganizationUnitId);
-                workingPaperNew.AssignedToId = newAssignee.UserId;
-            }
-        
            
             ObjectMapper.Map(input, workingPaperNew);
+
+            if (previousState == TaskStatus.Open && input.TaskStatus == TaskStatus.PendingReview)
+            {
+                workingPaperNew.CompletionDate = DateTime.Now;
+                workingPaperNew.CompletedById = AbpSession.UserId;
+
+                var newAssignee = await _lookup_ouRoleRepository.FirstOrDefaultAsync(x => x.DepartmentRole == DepartmentRole.ControlHead && x.OrganizationUnitId == workingPaperNew.OrganizationUnitId);
+                workingPaperNew.AssignedToId = newAssignee.UserId;
+            }
         }
 
 
         public async Task ApproveWorkPaper(EntityDto<Guid> input)
-        {
+        {       
             var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync((Guid)input.Id);
             workingPaperNew.ReviewedById = AbpSession.UserId;
             workingPaperNew.ReviewedDate = Clock.Now;
             workingPaperNew.TaskStatus = TaskStatus.Approved;
             await _workingPaperNewRepository.UpdateAsync(workingPaperNew);
+
+            await CurrentUnitOfWork.SaveChangesAsync();
+
+            Project project = await  _lookup_projectRepository.FirstOrDefaultAsync(workingPaperNew.ProjectId.Value);
+
+            var allCompletedWorkingPapers = await _workingPaperNewRepository.CountAsync(x => x.ProjectId == project.Id && x.TaskStatus == TaskStatus.Approved);
+            var allWorkingPapers = await _workingPaperNewRepository.CountAsync(x => x.ProjectId == project.Id);
+
+            var progress = ((double)allCompletedWorkingPapers / (double)allWorkingPapers) * 100.00;
+
+            project.Progress = Convert.ToDecimal(progress);
+
+            await _lookup_projectRepository.UpdateAsync(project);
         }
 
         private async Task<decimal> SaveWorkingPaperDetails(CreateOrEditTestingAttributeDto[] input, List<TestingAttrribute> testingAttrributes, Guid workingPaperId)
@@ -341,6 +362,8 @@ namespace ICMSDemo.WorkingPaperNews
             var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync((Guid)input.Id);
             workingPaperNew.AssignedToId = input.UserId;
             await _workingPaperNewRepository.UpdateAsync(workingPaperNew);
+
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews)]

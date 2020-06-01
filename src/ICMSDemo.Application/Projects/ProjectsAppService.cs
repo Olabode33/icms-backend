@@ -26,10 +26,12 @@ using Stripe;
 using ICMSDemo.Projects.Events;
 using ICMSDemo.WorkingPapers;
 using ICMSDemo.ExceptionIncidents;
+using ICMSDemo.Ratings;
+using ICMSDemo.DepartmentRatingHistory;
 
 namespace ICMSDemo.Projects
 {
-	[AbpAuthorize(AppPermissions.Pages_Projects)]
+    [AbpAuthorize]
     public class ProjectsAppService : ICMSDemoAppServiceBase, IProjectsAppService
     {
 		 private readonly IRepository<Project> _projectRepository;
@@ -39,11 +41,15 @@ namespace ICMSDemo.Projects
 		 private readonly IRepository<OrganizationUnit,long> _lookup_OURepository;
 		 private readonly IRepository<WorkingPaper, Guid> _lookup_workingPaperRepository;
 		 private readonly IRepository<ExceptionIncident> _lookup_exceptionsRepository;
+		 private readonly IRepository<Rating> _lookup_ratingRepository;
+		 private readonly IRepository<DepartmentRating> _lookup_deptRatingRepository;
 		 
 
 		  public ProjectsAppService(
-              IRepository<Project> projectRepository, IRepository<OrganizationUnit, long> 
-              lookup_OURepository, IProjectsExcelExporter projectsExcelExporter , 
+              IRepository<Project> projectRepository, IRepository<OrganizationUnit, long> lookup_OURepository,
+               IRepository<DepartmentRating> lookup_deptRatingRepository,
+               IRepository<Rating> lookup_ratingRepository,
+               IProjectsExcelExporter projectsExcelExporter , 
               IRepository<Department, long> lookup_departmentRepository, 
               IRepository<Process, long> lookup_processRepository,
               IRepository<WorkingPaper, Guid> lookup_workingPaperRepository,
@@ -56,6 +62,8 @@ namespace ICMSDemo.Projects
             _lookup_OURepository = lookup_OURepository;
             _lookup_workingPaperRepository = lookup_workingPaperRepository;
             _lookup_exceptionsRepository = lookup_exceptionsRepository;
+            _lookup_ratingRepository = lookup_ratingRepository;
+            _lookup_deptRatingRepository = lookup_deptRatingRepository;
           }
 
 		 public async Task<PagedResultDto<GetProjectForViewDto>> GetAll(GetAllProjectsInput input)
@@ -180,10 +188,10 @@ namespace ICMSDemo.Projects
 
             var workingPaperCount = await _lookup_workingPaperRepository.GetAll().Where(x => x.ProjectId == input.Id).CountAsync();
 
-            output.OpenTaskPercent = (double)output.OpenWorkingPapers / (double)workingPaperCount;
-            output.PendingReviewsPercent = (double)output.PendingReviews / (double)workingPaperCount;
+            output.OpenTaskPercent = workingPaperCount == 0 ? 0 : (double)output.OpenWorkingPapers / (double)workingPaperCount;
+            output.PendingReviewsPercent = workingPaperCount == 0 ? 0 : (double)output.PendingReviews / (double)workingPaperCount;
             output.CompletedTaskCount = workingPaperCount - (output.OpenWorkingPapers + output.PendingReviews);
-            output.CompletionLevel = 1 - (output.OpenTaskPercent + output.PendingReviewsPercent);
+            output.CompletionLevel = (double)output.CompletedTaskCount == (double)0 ? 0  : 1 - (output.OpenTaskPercent + output.PendingReviewsPercent);
 
             output.ExceptionsCount = await _lookup_exceptionsRepository.GetAll()
                                                                        .Include(x => x.WorkingPaperFk)
@@ -278,7 +286,58 @@ namespace ICMSDemo.Projects
              ObjectMapper.Map(input, project);
          }
 
-		 [AbpAuthorize(AppPermissions.Pages_Projects_Delete)]
+
+
+        [AbpAuthorize(AppPermissions.Pages_Projects_Edit)]
+        protected virtual async Task CloseProject(EntityDto input)
+        {
+            var project = await _projectRepository.FirstOrDefaultAsync((int)input.Id);
+           
+            if (project.Closed)
+            {
+                throw new UserFriendlyException("This project has been closed already.");
+            }
+
+            project.Closed = true;
+            project.CloseDate = Clock.Now;
+
+
+            //// TODO:Abstract this into a background and hangfire job
+
+           var workingPapers = await  _lookup_workingPaperRepository.GetAllListAsync(x => x.ProjectId == input.Id);
+
+            if (workingPapers.Count(x => x.TaskStatus != TaskStatus.Approved) > 0)
+            {
+                throw new UserFriendlyException("There are un-approved working papers in this project.");
+            }
+
+           var groupedWpByOU =  workingPapers.GroupBy(x => x.OrganizationUnitId);
+
+            var departmentList = groupedWpByOU.Select(x => x.Key).ToList();
+
+            var allDepartments = await _lookup_departmentRepository.GetAllListAsync();
+
+            var relevantDepartments = allDepartments.Where(x => departmentList.Any(y => y == x.Id)).ToList();
+
+            foreach (var dept in groupedWpByOU)
+            {
+                var averageScore = dept.Average(x => x.Score);
+
+                var department = relevantDepartments.FirstOrDefault(x => x.Id == dept.Key);
+
+               var rating =  await _lookup_ratingRepository.GetAll().Where(x => x.UpperBoundary <= averageScore).OrderBy(x => x.UpperBoundary).FirstOrDefaultAsync();
+
+                department.RatingId = rating.Id;
+
+                await _lookup_deptRatingRepository.InsertAsync(new DepartmentRating { OrganizationUnitId = department.Id, RatingDate = Clock.Now, TenantId = department.TenantId.Value, ChangeType = "Automated", Comment = "This rating was auto-generated after the completion of a project", RatingId = rating.Id });
+            }
+
+        }
+
+
+
+
+        [AbpAuthorize(AppPermissions.Pages_Projects_Delete)]
          public async Task Delete(EntityDto input)
          {
             await _projectRepository.DeleteAsync(input.Id);
@@ -334,7 +393,7 @@ namespace ICMSDemo.Projects
 
 
 
-		[AbpAuthorize(AppPermissions.Pages_Projects)]
+		//[AbpAuthorize(AppPermissions.Pages_Projects)]
          public async Task<PagedResultDto<ProjectOrganizationUnitLookupTableDto>> GetAllOrganizationUnitForLookupTable(GetAllForLookupTableInput input)
          {
              var query = _lookup_departmentRepository.GetAll().WhereIf(
@@ -364,7 +423,7 @@ namespace ICMSDemo.Projects
          }
 
 
-        [AbpAuthorize(AppPermissions.Pages_Projects)]
+      //  [AbpAuthorize(AppPermissions.Pages_Projects)]
         public async Task<PagedResultDto<ProjectOrganizationUnitLookupTableDto>> GetAllProcesses(GetAllForLookupTableInput input)
         {
             var query = _lookup_processRepository.GetAll().WhereIf(
