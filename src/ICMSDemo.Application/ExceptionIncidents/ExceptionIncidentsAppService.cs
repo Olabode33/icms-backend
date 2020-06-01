@@ -323,7 +323,7 @@ namespace ICMSDemo.ExceptionIncidents
             description = description.Length > 30 ? description.Substring(0, 30) : description;
             description = $"Exception [{description}] has been raise and requires your attention";
 
-            await _notificationPublisher.PublishAsync("New Exception", new ExceptionNotificationData(exceptionIncident.RaisedByFk.Name, description), userIds: new[] { new UserIdentifier(exceptionIncident.CausedByFk.TenantId, exceptionIncident.CausedByFk.Id) });
+            await _notificationPublisher.PublishAsync("New Exception", new ExceptionNotificationData("User", description), userIds: new[] { new UserIdentifier(exceptionIncident.TenantId, exceptionIncident.CausedById.Value) });
 
 
             if (input.IncidentColumns != null)
@@ -367,7 +367,7 @@ namespace ICMSDemo.ExceptionIncidents
             description = description.Length > 30 ? description.Substring(0, 30) : description;
             description = $"Exception [{description}] has been resolved. you can either close or reject";
 
-            await _notificationPublisher.PublishAsync("Exception Resolution", new ExceptionNotificationData(exceptionIncident.CausedByFk.Name,description ), userIds: new[] { new UserIdentifier(exceptionIncident.RaisedByFk.TenantId, exceptionIncident.RaisedByFk.Id)  });
+            await _notificationPublisher.PublishAsync("Exception Resolution", new ExceptionNotificationData("User", description ), userIds: new[] { new UserIdentifier(exceptionIncident.TenantId, exceptionIncident.RaisedById.Value)  });
 
         }
 
@@ -393,7 +393,7 @@ namespace ICMSDemo.ExceptionIncidents
             description = description.Length > 30 ? description.Substring(0, 30) : description;
             description = $"Exception [{description}] has been closed";
 
-            await _notificationPublisher.PublishAsync("Exception has been closed", new ExceptionNotificationData(exceptionIncident.RaisedByFk.Name, description), userIds: new[] { new UserIdentifier(exceptionIncident.CausedByFk.TenantId, exceptionIncident.CausedByFk.Id) });
+            await _notificationPublisher.PublishAsync("Exception has been closed", new ExceptionNotificationData("User", description), userIds: new[] { new UserIdentifier(exceptionIncident.TenantId, exceptionIncident.CausedById.Value) });
 
         }
 
