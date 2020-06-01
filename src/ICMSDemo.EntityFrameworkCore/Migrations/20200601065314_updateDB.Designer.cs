@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200601065314_updateDB")]
+    partial class updateDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1496,9 +1498,6 @@ namespace ICMSDemo.Migrations
                     b.Property<string>("ChangeType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -1647,9 +1646,6 @@ namespace ICMSDemo.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ExceptionIncidentAttachments")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ExceptionTypeId")
@@ -2107,12 +2103,6 @@ namespace ICMSDemo.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("Cascade")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("CloseDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Closed")
                         .HasColumnType("bit");
 
                     b.Property<string>("Code")
@@ -2628,9 +2618,6 @@ namespace ICMSDemo.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RatingId")
-                        .HasColumnType("int");
-
                     b.Property<long?>("SupervisingUnitId")
                         .HasColumnType("bigint");
 
@@ -2638,8 +2625,6 @@ namespace ICMSDemo.Migrations
                         .HasColumnType("bigint");
 
                     b.HasIndex("ControlTeamId");
-
-                    b.HasIndex("RatingId");
 
                     b.HasIndex("SupervisingUnitId");
 
@@ -3060,10 +3045,6 @@ namespace ICMSDemo.Migrations
                     b.HasOne("Abp.Organizations.OrganizationUnit", "ControlTeamFk")
                         .WithMany()
                         .HasForeignKey("ControlTeamId");
-
-                    b.HasOne("ICMSDemo.Ratings.Rating", "Rating")
-                        .WithMany()
-                        .HasForeignKey("RatingId");
 
                     b.HasOne("Abp.Organizations.OrganizationUnit", "SupervisingUnit")
                         .WithMany()

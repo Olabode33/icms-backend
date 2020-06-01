@@ -38,6 +38,7 @@ namespace ICMSDemo.ExceptionIncidents
 		
 		public virtual string RaisedByClosureComments { get; set; }
 		
+        public virtual string ExceptionIncidentAttachments { get; set; }
 
 		public virtual int? ExceptionTypeId { get; set; }
 		
