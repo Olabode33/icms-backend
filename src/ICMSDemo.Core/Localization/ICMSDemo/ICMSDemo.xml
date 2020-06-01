@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="LibraryControls">Library controls</text>
+  <texts>
+    <text name="ITDependent">IT Dependent</text>
+    <text name="PendingReview">Pending Review</text>        <text name="LibraryControls">Library controls</text>
     <text name="LibraryControl">Library control</text>
     <text name="ICMSDemo.LibraryControls.LibraryControl">LibraryControl</text>
     <text name="ControlPoint">Control point</text>
