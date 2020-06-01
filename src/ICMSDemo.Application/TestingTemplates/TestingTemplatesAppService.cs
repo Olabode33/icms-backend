@@ -85,8 +85,8 @@ namespace ICMSDemo.TestingTemplates
                                        },
                                        DepartmentRiskControlCode = s1 == null ? "" : s1.Code,
                                        AffectedDepartments = s1 == null ? "" : s1.DepartmentFk.Name,
-                                       Cascade = s1 == null ? "" : s1.Cascade.ToString()
-
+                                       Cascade = s1 == null ? "" : s1.Cascade.ToString(),
+                                       OuDisplayName = s1 == null && s1.ProcessFk == null ? "" : s1.ProcessFk.Name
                                    };
 
             var totalCount = await filteredTestingTemplates.CountAsync();
