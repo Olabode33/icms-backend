@@ -102,8 +102,12 @@ namespace ICMSDemo
             configuration.CreateMap<CreateOrEditProcessDto, Process>().ReverseMap();
             configuration.CreateMap<ProcessDto, Process>().ReverseMap();
    
-            configuration.CreateMap<CreateOrEditExceptionIncidentDto, ExceptionIncident>().ReverseMap();
-            configuration.CreateMap<ExceptionIncidentDto, ExceptionIncident>().ReverseMap();
+            configuration.CreateMap<CreateOrEditExceptionIncidentDto, ExceptionIncident>()
+                         .ForMember(e => e.WorkingPaperFkId, opt => opt.MapFrom(dto => dto.WorkingPaperId))
+                         .ReverseMap();
+            configuration.CreateMap<ExceptionIncidentDto, ExceptionIncident>()
+                         .ForMember(e => e.WorkingPaperFkId, opt => opt.MapFrom(dto => dto.WorkingPaperId))
+                         .ReverseMap();
             configuration.CreateMap<CreateOrEditTestingTemplateDto, TestingTemplate>()
                          .ForMember(e => e.ProcessRiskControlId, opt => opt.MapFrom(dto => dto.DepartmentRiskControlId))
                          .ReverseMap();
