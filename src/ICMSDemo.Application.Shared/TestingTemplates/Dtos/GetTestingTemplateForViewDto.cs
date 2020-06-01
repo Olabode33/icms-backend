@@ -23,5 +23,6 @@ namespace ICMSDemo.TestingTemplates.Dtos
         public string ProcessDescription { get; set; }
         public string ProcessOwner { get; set; }
         public string ProcessDepartment { get; set; }
+        public string ProcessName { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace ICMSDemo.Departments
 
 		Task<FileDto> GetDepartmentsToExcel(GetAllDepartmentsForExcelInput input);
 
-		
+		Task<PagedResultDto<GetDepartmentForViewDto>> GetAllForRating(GetAllDepartmentsForRatingInput input);
 		Task<PagedResultDto<DepartmentUserLookupTableDto>> GetAllUserForLookupTable(GetAllForLookupTableInput input);
 		
 		Task<PagedResultDto<DepartmentOrganizationUnitLookupTableDto>> GetAllOrganizationUnitForLookupTable(GetAllForLookupTableInput input);

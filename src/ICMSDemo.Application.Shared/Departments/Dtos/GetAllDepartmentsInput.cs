@@ -20,4 +20,10 @@ namespace ICMSDemo.Departments.Dtos
 
 		 
     }
-}
+
+	public class GetAllDepartmentsForRatingInput : PagedAndSortedResultRequestDto
+	{
+		public string Filter { get; set; }
+		public int RatingFilter { get; set; }
+	}
+	}
