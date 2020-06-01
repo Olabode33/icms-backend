@@ -3,6 +3,8 @@
 using System;
 using Abp.Application.Services.Dto;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ICMSDemo.ExceptionIncidents.Dtos
 {
@@ -20,6 +22,8 @@ namespace ICMSDemo.ExceptionIncidents.Dtos
 
         public CreateOrEditExceptionIncidentColumnDto[] IncidentColumns { set; get; }
 
+        public List<ExceptionIncidentAttachment> ExceptionIncidentAttachment { get; set; }
+
         public virtual Status Status { get; set; }
 
         public virtual DateTime? ClosureDate { get; set; }
@@ -29,6 +33,7 @@ namespace ICMSDemo.ExceptionIncidents.Dtos
         public virtual DateTime? ResolutionDate { get; set; }
 
         public virtual string ResolutionComments { get; set; }
+        
 
     }
 

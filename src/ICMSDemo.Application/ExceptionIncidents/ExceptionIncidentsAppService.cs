@@ -21,6 +21,7 @@ using ICMSDemo.WorkingPapers;
 using ICMSDemo.Departments;
 using ICMSDemo.ExceptionTypeColumns;
 using Abp.UI;
+using System.Text.Json;
 
 namespace ICMSDemo.ExceptionIncidents
 {
@@ -147,7 +148,15 @@ namespace ICMSDemo.ExceptionIncidents
         {
             var exceptionIncident = await _exceptionIncidentRepository.GetAsync(id);
 
+            var attachments = new List<ExceptionIncidentAttachment>();
+            if (!string.IsNullOrEmpty(exceptionIncident.ExceptionIncidentAttachments) && exceptionIncident.ExceptionIncidentAttachments != "[]")
+            {
+                attachments = JsonSerializer.Deserialize<List<ExceptionIncidentAttachment>>(exceptionIncident.ExceptionIncidentAttachments);
+            }
+
             var output = new GetExceptionIncidentForViewDto { ExceptionIncident = ObjectMapper.Map<ExceptionIncidentDto>(exceptionIncident) };
+
+            output.ExceptionIncidentAttachment = attachments;
 
             if (output.ExceptionIncident.ExceptionTypeId != null)
             {
@@ -181,7 +190,13 @@ namespace ICMSDemo.ExceptionIncidents
         {
             var exceptionIncident = await _exceptionIncidentRepository.FirstOrDefaultAsync(input.Id);
 
-            await ExceptionRoleTest(exceptionIncident);
+            var attachments = new List<ExceptionIncidentAttachment>();
+            if (!string.IsNullOrEmpty(exceptionIncident.ExceptionIncidentAttachments) && exceptionIncident.ExceptionIncidentAttachments!="[]")
+            {
+                attachments = JsonSerializer.Deserialize<List<ExceptionIncidentAttachment>>(exceptionIncident.ExceptionIncidentAttachments);
+            }
+            
+            // await ExceptionRoleTest(exceptionIncident);
 
             var output = new GetExceptionIncidentForEditOutput { ExceptionIncident = ObjectMapper.Map<CreateOrEditExceptionIncidentDto>(exceptionIncident) };
 
@@ -225,6 +240,7 @@ namespace ICMSDemo.ExceptionIncidents
             }
 
             output.ExceptionIncident.IncidentColumns = outputIncidents.ToArray();
+            output.ExceptionIncidentAttachment = attachments;
 
             return output;
         }
@@ -294,6 +310,8 @@ namespace ICMSDemo.ExceptionIncidents
             exceptionIncident.RaisedById = AbpSession.UserId;
             exceptionIncident.Date = DateTime.Now;
             exceptionIncident.Status = Status.Open;
+
+            exceptionIncident.ExceptionIncidentAttachments = JsonSerializer.Serialize(input.ExceptionIncidentAttachment);
 
             var id = await _exceptionIncidentRepository.InsertAndGetIdAsync(exceptionIncident);
 
