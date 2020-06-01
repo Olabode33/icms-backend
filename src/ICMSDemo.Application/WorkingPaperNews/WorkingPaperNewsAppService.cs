@@ -169,13 +169,13 @@ namespace ICMSDemo.WorkingPaperNews
             if (output.WorkingPaperNew.CompletedUserId != null)
             {
                 var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)output.WorkingPaperNew.CompletedUserId);
-                output.UserName = _lookupUser.Name.ToString();
+                output.UserName = _lookupUser.FullName.ToString();
             }
 
             if (output.WorkingPaperNew.ReviewedUserId != null)
             {
                 var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)output.WorkingPaperNew.ReviewedUserId);
-                output.UserName2 = _lookupUser.Name.ToString();
+                output.UserName2 = _lookupUser.FullName.ToString();
             }
 
             //Get working paper details 
@@ -284,6 +284,7 @@ namespace ICMSDemo.WorkingPaperNews
             var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync((Guid)input.Id);
             workingPaperNew.ReviewedById = AbpSession.UserId;
             workingPaperNew.ReviewedDate = Clock.Now;
+            workingPaperNew.TaskStatus = TaskStatus.Approved;
             await _workingPaperNewRepository.UpdateAsync(workingPaperNew);
         }
 
