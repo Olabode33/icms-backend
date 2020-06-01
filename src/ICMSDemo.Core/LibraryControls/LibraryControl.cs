@@ -22,13 +22,14 @@ namespace ICMSDemo.LibraryControls
 		
 		public virtual string Risk { get; set; }
 		
-		public virtual string ControlType { get; set; }
+		public virtual string ControlLevel { get; set; }
 		
 		public virtual string ControlPoint { get; set; }
 		
 		public virtual string Frequency { get; set; }
 		
 		public virtual string InformationProcessingObjectives { get; set; }
+		public virtual string ControlType { get; set; }
 		
 
     }
