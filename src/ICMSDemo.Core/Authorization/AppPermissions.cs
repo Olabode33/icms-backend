@@ -6,6 +6,16 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_LibraryControls = "Pages.LibraryControls";
+        public const string Pages_LibraryControls_Create = "Pages.LibraryControls.Create";
+        public const string Pages_LibraryControls_Edit = "Pages.LibraryControls.Edit";
+        public const string Pages_LibraryControls_Delete = "Pages.LibraryControls.Delete";
+
+        public const string Pages_LibraryRisks = "Pages.LibraryRisks";
+        public const string Pages_LibraryRisks_Create = "Pages.LibraryRisks.Create";
+        public const string Pages_LibraryRisks_Edit = "Pages.LibraryRisks.Edit";
+        public const string Pages_LibraryRisks_Delete = "Pages.LibraryRisks.Delete";
+
         public const string Pages_DepartmentRatingHistory = "Pages.DepartmentRatingHistory";
         public const string Pages_DepartmentRatingHistory_Create = "Pages.DepartmentRatingHistory.Create";
         public const string Pages_DepartmentRatingHistory_Edit = "Pages.DepartmentRatingHistory.Edit";

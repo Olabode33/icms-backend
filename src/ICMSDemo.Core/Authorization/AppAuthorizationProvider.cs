@@ -30,6 +30,20 @@ namespace ICMSDemo.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var libraryControls = pages.CreateChildPermission(AppPermissions.Pages_LibraryControls, L("LibraryControls"), multiTenancySides: MultiTenancySides.Tenant);
+            libraryControls.CreateChildPermission(AppPermissions.Pages_LibraryControls_Create, L("CreateNewLibraryControl"), multiTenancySides: MultiTenancySides.Tenant);
+            libraryControls.CreateChildPermission(AppPermissions.Pages_LibraryControls_Edit, L("EditLibraryControl"), multiTenancySides: MultiTenancySides.Tenant);
+            libraryControls.CreateChildPermission(AppPermissions.Pages_LibraryControls_Delete, L("DeleteLibraryControl"), multiTenancySides: MultiTenancySides.Tenant);
+
+
+
+            var libraryRisks = pages.CreateChildPermission(AppPermissions.Pages_LibraryRisks, L("LibraryRisks"), multiTenancySides: MultiTenancySides.Tenant);
+            libraryRisks.CreateChildPermission(AppPermissions.Pages_LibraryRisks_Create, L("CreateNewLibraryRisk"), multiTenancySides: MultiTenancySides.Tenant);
+            libraryRisks.CreateChildPermission(AppPermissions.Pages_LibraryRisks_Edit, L("EditLibraryRisk"), multiTenancySides: MultiTenancySides.Tenant);
+            libraryRisks.CreateChildPermission(AppPermissions.Pages_LibraryRisks_Delete, L("DeleteLibraryRisk"), multiTenancySides: MultiTenancySides.Tenant);
+
+
+
             var departmentRatingHistory = pages.CreateChildPermission(AppPermissions.Pages_DepartmentRatingHistory, L("DepartmentRatingHistory"), multiTenancySides: MultiTenancySides.Tenant);
             departmentRatingHistory.CreateChildPermission(AppPermissions.Pages_DepartmentRatingHistory_Create, L("CreateNewDepartmentRating"), multiTenancySides: MultiTenancySides.Tenant);
             departmentRatingHistory.CreateChildPermission(AppPermissions.Pages_DepartmentRatingHistory_Edit, L("EditDepartmentRating"), multiTenancySides: MultiTenancySides.Tenant);

@@ -1,4 +1,6 @@
-﻿using ICMSDemo.DepartmentRatingHistory;
+﻿using ICMSDemo.LibraryControls;
+using ICMSDemo.LibraryRisks;
+using ICMSDemo.DepartmentRatingHistory;
 using ICMSDemo.Ratings;
 using ICMSDemo.Projects;
 using ICMSDemo.ProcessRiskControls;
@@ -33,6 +35,10 @@ namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<LibraryControl> LibraryControls { get; set; }
+
+        public virtual DbSet<LibraryRisk> LibraryRisks { get; set; }
+
         public virtual DbSet<DepartmentRating> DepartmentRatingHistory { get; set; }
 
         public virtual DbSet<Rating> Ratings { get; set; }
@@ -116,7 +122,17 @@ namespace ICMSDemo.EntityFrameworkCore
            
            
            
-            modelBuilder.Entity<DepartmentRating>(d =>
+           
+           
+            modelBuilder.Entity<LibraryControl>(l =>
+            {
+                l.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<LibraryRisk>(l =>
+            {
+                l.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<DepartmentRating>(d =>
             {
                 d.HasIndex(e => new { e.TenantId });
             });
