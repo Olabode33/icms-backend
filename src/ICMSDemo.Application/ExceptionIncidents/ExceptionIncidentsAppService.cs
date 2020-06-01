@@ -22,6 +22,8 @@ using ICMSDemo.Departments;
 using ICMSDemo.ExceptionTypeColumns;
 using Abp.UI;
 using System.Text.Json;
+using Abp.Notifications;
+using Abp;
 
 namespace ICMSDemo.ExceptionIncidents
 {
@@ -39,15 +41,16 @@ namespace ICMSDemo.ExceptionIncidents
         private readonly IRepository<WorkingPaper, Guid> _lookup_workingPaperTemplateRepository;
         private readonly IRepository<Department, long> _lookup_organizationUnitRepository;
 
-
+        private readonly INotificationPublisher _notificationPublisher;
         public ExceptionIncidentsAppService(IRepository<ExceptionIncident> exceptionIncidentRepository,
             IRepository<ExceptionIncidentColumn> exceptionIncidentColumnRepository,
             IRepository<UnitOrganizationRole, long> unitOrganizationRoleRepository,
              IRepository<ExceptionTypeColumn> exceptionTypeColumnColumnRepository,
             IExceptionIncidentsExcelExporter exceptionIncidentsExcelExporter, IRepository<ExceptionType, int> lookup_exceptionTypeRepository, IRepository<User, long> lookup_userRepository,
           IRepository<WorkingPaper, Guid> lookup_workingPaperTemplateRepository,
-            IRepository<Department, long> lookup_organizationUnitRepository)
+            IRepository<Department, long> lookup_organizationUnitRepository, INotificationPublisher notificationPublisher)
         {
+            _notificationPublisher = notificationPublisher;
             _exceptionIncidentRepository = exceptionIncidentRepository;
             _exceptionTypeColumnColumnRepository = exceptionTypeColumnColumnRepository;
             _exceptionIncidentsExcelExporter = exceptionIncidentsExcelExporter;
@@ -240,7 +243,7 @@ namespace ICMSDemo.ExceptionIncidents
             }
 
             output.ExceptionIncident.IncidentColumns = outputIncidents.ToArray();
-            output.ExceptionIncidentAttachment = attachments;
+            output.ExceptionIncident.ExceptionIncidentAttachment = attachments;
 
             return output;
         }
@@ -315,6 +318,14 @@ namespace ICMSDemo.ExceptionIncidents
 
             var id = await _exceptionIncidentRepository.InsertAndGetIdAsync(exceptionIncident);
 
+
+            var description = exceptionIncident.Description ?? "";
+            description = description.Length > 30 ? description.Substring(0, 30) : description;
+            description = $"Exception [{description}] has been raise and requires your attention";
+
+            await _notificationPublisher.PublishAsync("New Exception", new ExceptionNotificationData("User", description), userIds: new[] { new UserIdentifier(exceptionIncident.TenantId, exceptionIncident.CausedById.Value) });
+
+
             if (input.IncidentColumns != null)
             {
                 foreach (var item in input.IncidentColumns)
@@ -340,10 +351,9 @@ namespace ICMSDemo.ExceptionIncidents
         [AbpAuthorize(AppPermissions.Pages_ExceptionIncidents_Edit)]
         public virtual async Task Resolve(CreateOrEditExceptionIncidentDto input)
         {
- 
             var exceptionIncident = await _exceptionIncidentRepository.FirstOrDefaultAsync((int)input.Id);
 
-            if (exceptionIncident.Status != Status.Resolved)
+            if (exceptionIncident.Status != Status.Open)
             {
                 throw new UserFriendlyException("This exception is not open for resolution.");
             }
@@ -351,7 +361,14 @@ namespace ICMSDemo.ExceptionIncidents
             exceptionIncident.ResolutionDate = DateTime.Now;
             exceptionIncident.ResolutionComments = input.ResolutionComments;
             exceptionIncident.Status = Status.Resolved;
- 
+
+
+            var description = exceptionIncident.Description ?? "";
+            description = description.Length > 30 ? description.Substring(0, 30) : description;
+            description = $"Exception [{description}] has been resolved. you can either close or reject";
+
+            await _notificationPublisher.PublishAsync("Exception Resolution", new ExceptionNotificationData("User", description ), userIds: new[] { new UserIdentifier(exceptionIncident.TenantId, exceptionIncident.RaisedById.Value)  });
+
         }
 
 
@@ -370,6 +387,14 @@ namespace ICMSDemo.ExceptionIncidents
             exceptionIncident.Status = Status.Closed;
             exceptionIncident.ClosureComments = input.ClosureComments;
             exceptionIncident.ClosureDate = input.ClosureDate;
+
+
+            var description = exceptionIncident.Description ?? "";
+            description = description.Length > 30 ? description.Substring(0, 30) : description;
+            description = $"Exception [{description}] has been closed";
+
+            await _notificationPublisher.PublishAsync("Exception has been closed", new ExceptionNotificationData("User", description), userIds: new[] { new UserIdentifier(exceptionIncident.TenantId, exceptionIncident.CausedById.Value) });
+
         }
 
 
