@@ -25,7 +25,7 @@ using ICMSDemo.DepartmentRatingHistory.Dtos;
 
 namespace ICMSDemo.Departments
 {
-    [AbpAuthorize(AppPermissions.Pages_Departments)]
+    
     public class DepartmentsAppService : ICMSDemoAppServiceBase, IDepartmentsAppService
     {
         private readonly IRepository<Department, long> _departmentRepository;
@@ -107,6 +107,59 @@ namespace ICMSDemo.Departments
             );
         }
 
+
+        public async Task<PagedResultDto<GetDepartmentForViewDto>> GetAllForRating(GetAllDepartmentsForRatingInput input)
+        {
+
+            var filteredDepartments = _departmentRepository.GetAll().Where(x => !x.IsAbstract && !x.IsControlTeam)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Code.Contains(input.Filter) || e.Name.Contains(input.Filter) || e.Description.Contains(input.Filter))
+                        .WhereIf(input.RatingFilter != -1, e => e.RatingId == input.RatingFilter);
+
+            var pagedAndFilteredDepartments = filteredDepartments
+                .OrderBy(input.Sorting ?? "name asc")
+                .PageBy(input);
+
+            var departments = from o in pagedAndFilteredDepartments
+                              join o1 in _lookup_userRepository.GetAll() on o.SupervisorUserId equals o1.Id into j1
+                              from s1 in j1.DefaultIfEmpty()
+
+
+                              join o3 in _lookup_organizationUnitRepository.GetAll() on o.ControlTeamId equals o3.Id into j3
+                              from s3 in j3.DefaultIfEmpty()
+
+                              join o4 in _lookup_organizationUnitRepository.GetAll() on o.SupervisingUnitId equals o4.Id into j4
+                              from s4 in j4.DefaultIfEmpty()
+
+                              join o5 in _lookupRating.GetAll() on o.RatingId equals o5.Id into j5
+                              from s5 in j5.DefaultIfEmpty()
+
+                              select new GetDepartmentForViewDto()
+                              {
+                                  Department = new DepartmentDto
+                                  {
+                                      Code = o.DepartmentCode,
+                                      Name = o.Name,
+                                       RatingId = o.RatingId,
+                                   
+                                      IsAbstract = o.IsAbstract,
+                                      IsControlTeam = o.IsControlTeam,
+                                      Id = o.Id
+                                  },
+                                  UserName = s1 == null ? "" : s1.FullName.ToString(),
+                                   RatingCode = s5 == null ? "" : s5.Code,
+                                   RatingName = s5 == null ? "" : s5.Name,
+                                  OrganizationUnitDisplayName = s3 == null ? "" : s3.DisplayName.ToString(),
+                                  SupervsingUnitDisplaName = s4 == null ? "" : s4.DisplayName.ToString()
+                              };
+
+            var totalCount = await filteredDepartments.CountAsync();
+
+            return new PagedResultDto<GetDepartmentForViewDto>(
+                totalCount,
+                await departments.ToListAsync()
+            );
+        }
+
         public async Task<GetDepartmentForViewDto> GetDepartmentForView(int id)
         {
             var department = await _departmentRepository.GetAsync(id);
@@ -153,6 +206,7 @@ namespace ICMSDemo.Departments
             var department = await _departmentRepository.FirstOrDefaultAsync(input.Id);
 
             var output = new GetDepartmentForEditOutput { Department = ObjectMapper.Map<CreateOrEditDepartmentDto>(department) };
+            output.Department.Code = department.DepartmentCode;
 
             if (output.Department.SupervisorUserId != null)
             {

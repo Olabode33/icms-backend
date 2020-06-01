@@ -1,4 +1,8 @@
-﻿using ICMSDemo.DepartmentRatingHistory.Dtos;
+﻿using ICMSDemo.LibraryControls.Dtos;
+using ICMSDemo.LibraryControls;
+using ICMSDemo.LibraryRisks.Dtos;
+using ICMSDemo.LibraryRisks;
+using ICMSDemo.DepartmentRatingHistory.Dtos;
 using ICMSDemo.DepartmentRatingHistory;
 using ICMSDemo.Ratings.Dtos;
 using ICMSDemo.Ratings;
@@ -77,6 +81,10 @@ namespace ICMSDemo
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditLibraryControlDto, LibraryControl>().ReverseMap();
+            configuration.CreateMap<LibraryControlDto, LibraryControl>().ReverseMap();
+            configuration.CreateMap<CreateOrEditLibraryRiskDto, LibraryRisk>().ReverseMap();
+            configuration.CreateMap<LibraryRiskDto, LibraryRisk>().ReverseMap();
             configuration.CreateMap<CreateOrEditDepartmentRatingDto, DepartmentRating>().ReverseMap();
             configuration.CreateMap<DepartmentRatingDto, DepartmentRating>().ReverseMap();
             configuration.CreateMap<CreateOrEditRatingDto, Rating>().ReverseMap();

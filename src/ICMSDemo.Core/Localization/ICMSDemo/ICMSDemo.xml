@@ -1,8 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>
-    <text name="ITDependent">IT Dependent</text>
-    <text name="PendingReview">Pending Review</text>
+  <texts>    <text name="LibraryControls">Library controls</text>
+    <text name="LibraryControl">Library control</text>
+    <text name="ICMSDemo.LibraryControls.LibraryControl">LibraryControl</text>
+    <text name="ControlPoint">Control point</text>
+    <text name="InformationProcessingObjectives">Information processing objectives</text>
+    <text name="LibraryControlsHeaderInfo">Library controls header info</text>
+    <text name="CreateNewLibraryControl">Create new library control</text>
+    <text name="EditLibraryControl">Edit library control</text>
+    <text name="DeleteLibraryControl">Delete library control</text>
+    <text name="LibraryRisks">Library risks</text>
+    <text name="LibraryRisk">Library risk</text>
+    <text name="ICMSDemo.LibraryRisks.LibraryRisk">LibraryRisk</text>
+    <text name="SubProcess">Sub process</text>
+    <text name="LibraryRisksHeaderInfo">Library risks header info</text>
+    <text name="CreateNewLibraryRisk">Create new library risk</text>
+    <text name="EditLibraryRisk">Edit library risk</text>
+    <text name="DeleteLibraryRisk">Delete library risk</text>
+
     <text name="DepartmentRatingHistory">Department rating history</text>
     <text name="DepartmentRating">Department rating</text>
     <text name="ICMSDemo.DepartmentRatingHistory.DepartmentRating">DepartmentRating</text>

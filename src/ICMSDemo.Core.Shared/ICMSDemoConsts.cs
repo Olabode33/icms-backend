@@ -53,4 +53,9 @@
     {
        Open, PendingReview, Rejected, Approved, Draft 
     }
+
+    public enum LibraryObjectType
+    {
+        Risk, Control, TestingStrategy
+    }
 }

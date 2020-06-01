@@ -40,7 +40,7 @@ namespace ICMSDemo.Ratings
 						.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false  || e.Name.Contains(input.Filter) || e.Code.Contains(input.Filter) || e.Description.Contains(input.Filter));
 
 			var pagedAndFilteredRatings = filteredRatings
-                .OrderBy(input.Sorting ?? "id asc")
+                .OrderBy(input.Sorting ?? "upperBoundary desc")
                 .PageBy(input);
 
 			var ratings = from o in pagedAndFilteredRatings
