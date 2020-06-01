@@ -289,7 +289,7 @@ namespace ICMSDemo.Projects
 
 
         [AbpAuthorize(AppPermissions.Pages_Projects_Edit)]
-        protected virtual async Task CloseProject(EntityDto input)
+        public virtual async Task CloseProject(EntityDto input)
         {
             var project = await _projectRepository.FirstOrDefaultAsync((int)input.Id);
            
@@ -325,7 +325,7 @@ namespace ICMSDemo.Projects
 
                 var department = relevantDepartments.FirstOrDefault(x => x.Id == dept.Key);
 
-               var rating =  await _lookup_ratingRepository.GetAll().Where(x => x.UpperBoundary <= averageScore).OrderBy(x => x.UpperBoundary).FirstOrDefaultAsync();
+               var rating =  await _lookup_ratingRepository.GetAll().Where(x => x.UpperBoundary > averageScore).OrderBy(x => x.UpperBoundary).FirstOrDefaultAsync();
 
                 department.RatingId = rating.Id;
 

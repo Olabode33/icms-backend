@@ -1,6 +1,7 @@
 ﻿using System;
 using Abp.Application.Services.Dto;
 using System.ComponentModel.DataAnnotations;
+using ICMSDemo.DepartmentRatingHistory.Dtos;
 
 namespace ICMSDemo.Departments.Dtos
 {
@@ -13,7 +14,8 @@ namespace ICMSDemo.Departments.Dtos
 		public string UserName2 { get; set;}
 
 		public string OrganizationUnitDisplayName { get; set;}
-
-
+        public string RatingName { get; set; }
+        public string RatingCode { get; set; }
+        public DepartmentRatingDto[] RatingHistory { get; set; }
     }
 }

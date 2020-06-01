@@ -1,4 +1,6 @@
-﻿namespace ICMSDemo.Departments.Dtos
+﻿using ICMSDemo.DepartmentRatingHistory.Dtos;
+
+namespace ICMSDemo.Departments.Dtos
 {
     public class GetDepartmentForViewDto
     {
@@ -10,5 +12,8 @@
 
 		public string OrganizationUnitDisplayName { get; set;}
         public string SupervsingUnitDisplaName { get; set; }
+        public string RatingName { get; set; }
+        public string RatingCode { get; set; }
+        public DepartmentRatingDto[] RatingHistory { get; set; }
     }
 }
