@@ -29,7 +29,7 @@ using ICMSDemo.ExceptionIncidents;
 
 namespace ICMSDemo.Projects
 {
-	[AbpAuthorize(AppPermissions.Pages_Projects)]
+    [AbpAuthorize]
     public class ProjectsAppService : ICMSDemoAppServiceBase, IProjectsAppService
     {
 		 private readonly IRepository<Project> _projectRepository;
@@ -180,10 +180,10 @@ namespace ICMSDemo.Projects
 
             var workingPaperCount = await _lookup_workingPaperRepository.GetAll().Where(x => x.ProjectId == input.Id).CountAsync();
 
-            output.OpenTaskPercent = (double)output.OpenWorkingPapers / (double)workingPaperCount;
-            output.PendingReviewsPercent = (double)output.PendingReviews / (double)workingPaperCount;
+            output.OpenTaskPercent = workingPaperCount == 0 ? 0 : (double)output.OpenWorkingPapers / (double)workingPaperCount;
+            output.PendingReviewsPercent = workingPaperCount == 0 ? 0 : (double)output.PendingReviews / (double)workingPaperCount;
             output.CompletedTaskCount = workingPaperCount - (output.OpenWorkingPapers + output.PendingReviews);
-            output.CompletionLevel = 1 - (output.OpenTaskPercent + output.PendingReviewsPercent);
+            output.CompletionLevel = (double)output.CompletedTaskCount == (double)0 ? 0  : 1 - (output.OpenTaskPercent + output.PendingReviewsPercent);
 
             output.ExceptionsCount = await _lookup_exceptionsRepository.GetAll()
                                                                        .Include(x => x.WorkingPaperFk)
@@ -334,7 +334,7 @@ namespace ICMSDemo.Projects
 
 
 
-		[AbpAuthorize(AppPermissions.Pages_Projects)]
+		//[AbpAuthorize(AppPermissions.Pages_Projects)]
          public async Task<PagedResultDto<ProjectOrganizationUnitLookupTableDto>> GetAllOrganizationUnitForLookupTable(GetAllForLookupTableInput input)
          {
              var query = _lookup_departmentRepository.GetAll().WhereIf(
@@ -364,7 +364,7 @@ namespace ICMSDemo.Projects
          }
 
 
-        [AbpAuthorize(AppPermissions.Pages_Projects)]
+      //  [AbpAuthorize(AppPermissions.Pages_Projects)]
         public async Task<PagedResultDto<ProjectOrganizationUnitLookupTableDto>> GetAllProcesses(GetAllForLookupTableInput input)
         {
             var query = _lookup_processRepository.GetAll().WhereIf(

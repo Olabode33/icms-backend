@@ -8,9 +8,9 @@
 
 		public string OrganizationUnitDisplayName { get; set;}
 
-		public string UserName { get; set;}
+		public string AssignedTo { get; set;}
 
-		public string UserName2 { get; set;}
+		public string CompletedBy { get; set;}
 
 		public double CompletionLevel { get; set; }
 		public string OuCode { get; set; }
@@ -18,5 +18,6 @@
 		public int? SampleSize { get; set; }
 		public string TestingTemplateName { get; set; }
         public string ProjectName { get; set; }
+        public string ReviewedBy { get; set; }
     }
 }

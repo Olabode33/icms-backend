@@ -16,6 +16,7 @@ using Abp.Application.Services.Dto;
 using ICMSDemo.ExceptionIncidents.Dtos;
 using ICMSDemo.WorkingPaperNews.Dtos;
 using Abp.Authorization;
+using System.Runtime.CompilerServices;
 
 namespace ICMSDemo.Common
 {
@@ -129,9 +130,20 @@ namespace ICMSDemo.Common
 
             var workingPaperNew = from w in _workingPaperRepository.GetAll()
                                                                    .Include(e => e.TestingTemplate)
-                                                                   .Include(e => e.ReviewedBy)
-                                                                   .Include(e => e.CompletedBy)
+                                                                    .Include(e => e.Project)
                                                                     .Where(x => x.AssignedToId == AbpSession.UserId)
+
+                                  join u1 in _lookup_userRepository.GetAll() on w.AssignedToId equals u1.Id into j1
+                                  from s2 in j1.DefaultIfEmpty()
+
+                                  join u2 in _lookup_userRepository.GetAll() on w.CompletedById equals u2.Id into j2
+                                  from s3 in j2.DefaultIfEmpty()
+
+                                  join u3 in _lookup_userRepository.GetAll() on w.ReviewedById equals u3.Id into j3
+                                  from s4 in j3.DefaultIfEmpty()
+                                                               
+                                                                  
+                                                                    
                                   join ou in _lookup_organizationUnitRepository.GetAll() on w.OrganizationUnitId equals ou.Id into ou1
                                   from ou2 in ou1.DefaultIfEmpty()
 
@@ -143,6 +155,10 @@ namespace ICMSDemo.Common
                                           Comment = w.Comment,
                                           TaskDate = w.TaskDate,
                                           DueDate = w.DueDate,
+                                          ProjectId = w.ProjectId,
+                                          OrganizationUnitId = w.OrganizationUnitId,
+                                          CompletedUserId = w.CompletedById,
+                                          AssigneeId = w.AssignedToId,
                                           TaskStatus = w.TaskStatus,
                                           Score = w.Score,
                                           ReviewedDate = w.ReviewedDate,
@@ -151,12 +167,14 @@ namespace ICMSDemo.Common
                                       },
                                       TestingTemplateCode = w.TestingTemplate == null ? "" : w.TestingTemplate.Title.ToString(),
                                       OuCode = ou2 == null ? "" : ou2.Code.ToString(),
+                                      ProjectName = w.Project.Title,
                                       OrganizationUnitDisplayName = ou2 == null ? "" : ou2.DisplayName.ToString(),
-                                      UserName = w.ReviewedBy == null ? "" : w.ReviewedBy.FullName.ToString(),
-                                      UserName2 = w.CompletedBy == null ? "" : w.CompletedBy.FullName.ToString(),
-                                      Frequency = w.TestingTemplate == null ? Frequency.Continuous : w.TestingTemplate.Frequency,
-                                      SampleSize = w.TestingTemplate == null ? 0 : w.TestingTemplate.SampleSize,
-                                      CompletionLevel = workingPaperDetail.ContainsKey(w.Id) && w.TestingTemplate != null && w.TestingTemplate.SampleSize > 0 ? (workingPaperDetail[w.Id] / (double)w.TestingTemplate.SampleSize) : 0
+                                      AssignedTo = w.AssignedToId == null ? "" : s2.FullName,
+                                      CompletedBy = w.CompletedById == null ? "" : s3.FullName,
+                                      ReviewedBy = w.ReviewedById == null ? "" : s4.FullName,
+                                      //Frequency = w.TestingTemplate == null ? Frequency.Continuous : w.TestingTemplate.Frequency,
+                                      //SampleSize = w.TestingTemplate == null ? 0 : w.TestingTemplate.SampleSize
+                                      //CompletionLevel = workingPaperDetail.ContainsKey(w.Id) && w.TestingTemplate != null && w.TestingTemplate.SampleSize > 0 ? (workingPaperDetail[w.Id] / (double)w.TestingTemplate.SampleSize) : 0
                                   };
 
             var workingPapers = await workingPaperNew.ToListAsync();

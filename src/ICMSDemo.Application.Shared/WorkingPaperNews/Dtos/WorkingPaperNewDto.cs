@@ -32,5 +32,6 @@ namespace ICMSDemo.WorkingPaperNews.Dtos
 
 		 		 public long? ReviewedUserId { get; set; }
         public int? ProjectId { get; set; }
+        public long? AssigneeId { get; set; }
     }
 }

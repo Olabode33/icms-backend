@@ -9,6 +9,7 @@ namespace ICMSDemo.Projects.Dtos
     {
 
 		public string Code { get; set; }
+		public bool Commenced { get; set; }
 		
 		
 		public string Description { get; set; }
