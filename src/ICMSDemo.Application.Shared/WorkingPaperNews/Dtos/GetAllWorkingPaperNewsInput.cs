@@ -30,5 +30,6 @@ namespace ICMSDemo.WorkingPaperNews.Dtos
         public string UserName2Filter { get; set; }
 
         public int? ProjectId { get; set; }
+        public int? OrganizationUnitId { get; set; }
     }
 }

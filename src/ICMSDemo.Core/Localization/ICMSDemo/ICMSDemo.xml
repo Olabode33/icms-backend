@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="ITDependent">IT Dependent</text>
+    <text name="PendingReview">Pending Review</text>
     <text name="DepartmentRatingHistory">Department rating history</text>
     <text name="DepartmentRating">Department rating</text>
     <text name="ICMSDemo.DepartmentRatingHistory.DepartmentRating">DepartmentRating</text>

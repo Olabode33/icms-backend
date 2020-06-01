@@ -73,7 +73,8 @@ namespace ICMSDemo.WorkingPaperNews
                         //.WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayNameFilter), e => e.OrganizationUnitFk != null && e.OrganizationUnitFk.DisplayName == input.OrganizationUnitDisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.CompletedById != null && e.CompletedBy.Name == input.UserNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.UserName2Filter), e => e.ReviewedById != null && e.ReviewedBy.Name == input.UserName2Filter)
-                        .WhereIf(input.ProjectId != null && input.ProjectId > 0, e => e.ProjectId == input.ProjectId);
+                        .WhereIf(input.ProjectId != null && input.ProjectId > 0, e => e.ProjectId == input.ProjectId)
+                        .WhereIf(input.OrganizationUnitId != null && input.OrganizationUnitId > 0, e => e.OrganizationUnitId == input.OrganizationUnitId);
 
             var pagedAndFilteredWorkingPaperNews = filteredWorkingPaperNews
                 .OrderBy(input.Sorting ?? "id asc")

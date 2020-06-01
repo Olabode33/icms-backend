@@ -86,7 +86,7 @@ namespace ICMSDemo.ExceptionIncidents
             var filteredExceptionIncidents = _exceptionIncidentRepository.GetAll()
                         .Include(e => e.ExceptionTypeFk)
                         .Include(e => e.RaisedByFk)
-
+                        .Include(e => e.WorkingPaperFk)
                         .Include(e => e.OrganizationUnitFk)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Code.Contains(input.Filter) || e.Description.Contains(input.Filter) || e.ClosureComments.Contains(input.Filter) || e.RaisedByClosureComments.Contains(input.Filter))
                         .WhereIf(input.MinDateFilter != null, e => e.Date >= input.MinDateFilter)
@@ -96,6 +96,8 @@ namespace ICMSDemo.ExceptionIncidents
                         .WhereIf(input.MaxClosureDateFilter != null, e => e.ClosureDate <= input.MaxClosureDateFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.ExceptionTypeNameFilter), e => e.ExceptionTypeFk != null && e.ExceptionTypeFk.Name == input.ExceptionTypeNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.RaisedByFk != null && e.RaisedByFk.Name == input.UserNameFilter)
+                        .WhereIf(input.ProjectId != null && input.ProjectId > 0, e => e.WorkingPaperFk != null && e.WorkingPaperFk.ProjectId == input.ProjectId)
+                        .WhereIf(input.OrganizationUnitId != null && input.OrganizationUnitId > 0, e => e.OrganizationUnitId == input.OrganizationUnitId)
 
                         .WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayNameFilter), e => e.OrganizationUnitFk != null && e.OrganizationUnitFk.DisplayName == input.OrganizationUnitDisplayNameFilter);
 
@@ -141,10 +143,7 @@ namespace ICMSDemo.ExceptionIncidents
 
             var output = exceptions.Skip(input.SkipCount).Take(input.MaxResultCount).ToList();
 
-            return new PagedResultDto<GetExceptionIncidentForViewDto>(
-                totalCount,output
-                 
-            );
+            return new PagedResultDto<GetExceptionIncidentForViewDto>(output.Count(), output);
         }
 
         public async Task<GetExceptionIncidentForViewDto> GetExceptionIncidentForView(int id)
