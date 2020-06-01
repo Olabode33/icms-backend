@@ -19,6 +19,9 @@ using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Abp.Authorization.Users;
+using ICMSDemo.DepartmentRatingHistory;
+using ICMSDemo.Ratings;
+using ICMSDemo.DepartmentRatingHistory.Dtos;
 
 namespace ICMSDemo.Departments
 {
@@ -30,9 +33,13 @@ namespace ICMSDemo.Departments
         private readonly IRepository<User, long> _lookup_userRepository;
         private readonly IRepository<OrganizationUnit, long> _lookup_organizationUnitRepository;
         private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
+        private readonly IRepository<Rating> _lookupRating;
+        private readonly IRepository<DepartmentRating> _lookupDepartmentRating;
 
 
         public DepartmentsAppService(IRepository<Department, long> departmentRepository,
+             IRepository<DepartmentRating> lookupDepartmentRating,
+             IRepository<Rating> lookupRating,
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IDepartmentsExcelExporter departmentsExcelExporter, IRepository<User, long> lookup_userRepository, IRepository<OrganizationUnit, long> lookup_organizationUnitRepository)
         {
@@ -41,8 +48,8 @@ namespace ICMSDemo.Departments
             _lookup_userRepository = lookup_userRepository;
             _lookup_organizationUnitRepository = lookup_organizationUnitRepository;
             _userOrganizationUnitRepository = userOrganizationUnitRepository;
-
-
+            _lookupDepartmentRating = lookupDepartmentRating;
+            _lookupRating = lookupRating;
         }
 
         public async Task<PagedResultDto<GetDepartmentForViewDto>> GetAll(GetAllDepartmentsInput input)
@@ -124,6 +131,19 @@ namespace ICMSDemo.Departments
                 output.OrganizationUnitDisplayName = _lookupOrganizationUnit.DisplayName.ToString();
             }
 
+
+            if (output.Department.RatingId != null)
+            {
+                var rating = await _lookupRating.FirstOrDefaultAsync((int)output.Department.RatingId);
+                output.RatingName = rating.Name;
+                output.RatingCode = rating.Code;
+
+
+                var ratingHistory = await _lookupDepartmentRating.GetAllListAsync(x => x.OrganizationUnitId ==  (int)output.Department.Id);
+                var ratingHistoryDtoList = ObjectMapper.Map<List<DepartmentRatingDto>>(ratingHistory);
+                output.RatingHistory = ratingHistoryDtoList.ToArray();
+            }
+
             return output;
         }
 
@@ -145,6 +165,21 @@ namespace ICMSDemo.Departments
                 var _lookupOrganizationUnit = await _lookup_organizationUnitRepository.FirstOrDefaultAsync((long)output.Department.ControlTeamId);
                 output.OrganizationUnitDisplayName = _lookupOrganizationUnit.DisplayName.ToString();
             }
+
+
+
+            if (department.RatingId != null)
+            {
+                var rating = await _lookupRating.FirstOrDefaultAsync((int)department.RatingId);
+                output.RatingName = rating.Name;
+                output.RatingCode = rating.Code;
+
+
+                var ratingHistory = await _lookupDepartmentRating.GetAllListAsync(x => x.OrganizationUnitId == (int)output.Department.Id);
+                var ratingHistoryDtoList = ObjectMapper.Map<List<DepartmentRatingDto>>(ratingHistory);
+                output.RatingHistory = ratingHistoryDtoList.ToArray();
+            }
+
 
             return output;
         }
@@ -284,7 +319,7 @@ namespace ICMSDemo.Departments
 
 
         [AbpAuthorize(AppPermissions.Pages_Departments)]
-        public async Task<PagedResultDto<DepartmentUserLookupTableDto>> GetAllUserForLookupTable(GetAllForLookupTableInput input)
+        public async Task<PagedResultDto<DepartmentUserLookupTableDto>> GetAllUserForLookupTable(Departments.Dtos.GetAllForLookupTableInput input)
         {
             var query = _lookup_userRepository.GetAll().WhereIf(
                    !string.IsNullOrWhiteSpace(input.Filter),
@@ -314,7 +349,7 @@ namespace ICMSDemo.Departments
         }
 
         [AbpAuthorize(AppPermissions.Pages_Departments)]
-        public async Task<PagedResultDto<DepartmentOrganizationUnitLookupTableDto>> GetAllOrganizationUnitForLookupTable(GetAllForLookupTableInput input)
+        public async Task<PagedResultDto<DepartmentOrganizationUnitLookupTableDto>> GetAllOrganizationUnitForLookupTable(Departments.Dtos.GetAllForLookupTableInput input)
         {
             var query = _departmentRepository.GetAll()
                 .Where(x => x.IsControlTeam)

@@ -23,6 +23,7 @@ namespace ICMSDemo.Departments.Dtos
 		 		 public long? ControlOfficerUserId { get; set; }
 
 		 		 public long? ControlTeamId { get; set; }
+		 		 public int? RatingId { get; set; }
 
 		 
     }

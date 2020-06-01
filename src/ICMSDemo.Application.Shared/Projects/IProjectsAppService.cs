@@ -24,7 +24,7 @@ namespace ICMSDemo.Projects
 
 		Task Activate(EntityDto input);
 
-
+		Task CloseProject(EntityDto input);
 		Task<PagedResultDto<ProjectOrganizationUnitLookupTableDto>> GetAllOrganizationUnitForLookupTable(GetAllForLookupTableInput input);
 
 		Task<PagedResultDto<ProjectOrganizationUnitLookupTableDto>> GetAllProcesses(GetAllForLookupTableInput input);
