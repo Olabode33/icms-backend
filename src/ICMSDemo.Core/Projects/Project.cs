@@ -10,23 +10,26 @@ using Abp.Auditing;
 namespace ICMSDemo.Projects
 {
 	[Table("Projects")]
-    [Audited]
-    public class Project : Entity , IMustHaveTenant
-    {
-	    public int TenantId { get; set; }
-			
+	[Audited]
+	public class Project : Entity, IMustHaveTenant
+	{
+		public int TenantId { get; set; }
+
 
 		public virtual string Code { get; set; }
-		
+
 		public virtual string Description { get; set; }
-		
+
 		public virtual DateTime? StartDate { get; set; }
 		public virtual DateTime? ScopeStartDate { get; set; }
 		public virtual DateTime? ScopeEndDate { get; set; }
 
+		public virtual  bool Closed {set;get;}
 
-		
-		public virtual DateTime? EndDate { get; set; }
+        public DateTime? CloseDate { get; set; }
+
+
+        public virtual DateTime? EndDate { get; set; }
 		
 		public virtual DateTime BudgetedStartDate { get; set; }
 		

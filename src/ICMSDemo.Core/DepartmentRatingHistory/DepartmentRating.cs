@@ -28,6 +28,6 @@ namespace ICMSDemo.DepartmentRatingHistory
 		
         [ForeignKey("RatingId")]
 		public Rating RatingFk { get; set; }
-		
+        public string Comment { get; set; }
     }
 }

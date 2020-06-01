@@ -288,12 +288,25 @@ namespace ICMSDemo.WorkingPaperNews
 
 
         public async Task ApproveWorkPaper(EntityDto<Guid> input)
-        {
+        {       
             var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync((Guid)input.Id);
             workingPaperNew.ReviewedById = AbpSession.UserId;
             workingPaperNew.ReviewedDate = Clock.Now;
             workingPaperNew.TaskStatus = TaskStatus.Approved;
             await _workingPaperNewRepository.UpdateAsync(workingPaperNew);
+
+            await CurrentUnitOfWork.SaveChangesAsync();
+
+            Project project = await  _lookup_projectRepository.FirstOrDefaultAsync(workingPaperNew.ProjectId.Value);
+
+            var allCompletedWorkingPapers = await _workingPaperNewRepository.CountAsync(x => x.ProjectId == project.Id && x.TaskStatus == TaskStatus.Approved);
+            var allWorkingPapers = await _workingPaperNewRepository.CountAsync(x => x.ProjectId == project.Id);
+
+            var progress = ((double)allCompletedWorkingPapers / (double)allWorkingPapers) * 100.00;
+
+            project.Progress = Convert.ToDecimal(progress);
+
+            await _lookup_projectRepository.UpdateAsync(project);
         }
 
         private async Task<decimal> SaveWorkingPaperDetails(CreateOrEditTestingAttributeDto[] input, List<TestingAttrribute> testingAttrributes, Guid workingPaperId)
@@ -349,6 +362,8 @@ namespace ICMSDemo.WorkingPaperNews
             var workingPaperNew = await _workingPaperNewRepository.FirstOrDefaultAsync((Guid)input.Id);
             workingPaperNew.AssignedToId = input.UserId;
             await _workingPaperNewRepository.UpdateAsync(workingPaperNew);
+
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews)]
