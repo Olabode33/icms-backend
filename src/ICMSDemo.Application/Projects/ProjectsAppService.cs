@@ -28,6 +28,7 @@ using ICMSDemo.WorkingPapers;
 using ICMSDemo.ExceptionIncidents;
 using ICMSDemo.Ratings;
 using ICMSDemo.DepartmentRatingHistory;
+using static ICMSDemo.IcmsEnums;
 
 namespace ICMSDemo.Projects
 {
@@ -66,8 +67,11 @@ namespace ICMSDemo.Projects
             _lookup_deptRatingRepository = lookup_deptRatingRepository;
           }
 
-		 public async Task<PagedResultDto<GetProjectForViewDto>> GetAll(GetAllProjectsInput input)
+
+       
+        public async Task<PagedResultDto<GetProjectForViewDto>> GetAll(GetAllProjectsInput input)
          {
+            
 			
 			var filteredProjects = _projectRepository.GetAll()
 						.Include( e => e.ControlUnitFk)
@@ -76,8 +80,8 @@ namespace ICMSDemo.Projects
 						.WhereIf(input.MinStartDateFilter != null, e => e.StartDate >= input.MinStartDateFilter)
 						.WhereIf(input.MaxStartDateFilter != null, e => e.StartDate <= input.MaxStartDateFilter)
 						.WhereIf(input.MinEndDateFilter != null, e => e.EndDate >= input.MinEndDateFilter)
-						.WhereIf(input.MaxEndDateFilter != null, e => e.EndDate <= input.MaxEndDateFilter)
-						.WhereIf(input.MinBudgetedStartDateFilter != null, e => e.BudgetedStartDate >= input.MinBudgetedStartDateFilter)
+                        .WhereIf(input.MaxEndDateFilter != null, e => e.EndDate <= input.MaxEndDateFilter)
+                        .WhereIf(input.MinBudgetedStartDateFilter != null, e => e.BudgetedStartDate >= input.MinBudgetedStartDateFilter)
 						.WhereIf(input.MaxBudgetedStartDateFilter != null, e => e.BudgetedStartDate <= input.MaxBudgetedStartDateFilter)
 						.WhereIf(input.MinBudgetedEndDateFilter != null, e => e.BudgetedEndDate >= input.MinBudgetedEndDateFilter)
 						.WhereIf(input.MaxBudgetedEndDateFilter != null, e => e.BudgetedEndDate <= input.MaxBudgetedEndDateFilter)
@@ -107,6 +111,7 @@ namespace ICMSDemo.Projects
                                 BudgetedStartDate = o.BudgetedStartDate,
                                 BudgetedEndDate = o.BudgetedEndDate,
                                 Title = o.Title,
+                                ProjectOwner =o.ProjectOwner,
                                 Progress = o.Progress,
                                 ReviewType = o.ReviewType,
                                 Commenced = o.Commenced, 

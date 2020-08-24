@@ -1,6 +1,7 @@
 ﻿
 using System;
 using Abp.Application.Services.Dto;
+using static ICMSDemo.IcmsEnums;
 
 namespace ICMSDemo.Projects.Dtos
 {
@@ -34,5 +35,6 @@ namespace ICMSDemo.Projects.Dtos
 
 		 		 public long? ScopeId { get; set; }
         public bool Commenced { get; set; }
+        public ProjectOwner? ProjectOwner { get; set; }
     }
 }

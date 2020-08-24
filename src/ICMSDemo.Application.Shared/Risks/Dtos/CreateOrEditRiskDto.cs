@@ -17,8 +17,11 @@ namespace ICMSDemo.Risks.Dtos
 		
 		
 		public Severity Severity { get; set; }
-		
-		
+
+        public int? Likelyhood { get; set; }
+
+        public int? Impact { get; set; }
+
 
     }
 }

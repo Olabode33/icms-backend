@@ -51,6 +51,8 @@ namespace ICMSDemo.Risks
                                 Name = o.Name,
                                 Description = o.Description,
                                 Severity = o.Severity,
+                                Impact =o.Impact,
+                                Likelyhood =o.Likelyhood,
                                 Id = o.Id
 							}
 						};
