@@ -2,6 +2,7 @@
 using System;
 using Abp.Application.Services.Dto;
 using System.ComponentModel.DataAnnotations;
+using static ICMSDemo.IcmsEnums;
 
 namespace ICMSDemo.Projects.Dtos
 {
@@ -39,7 +40,8 @@ namespace ICMSDemo.Projects.Dtos
 		 public long? ControlUnitId { get; set; }
 		 
 		 		 public long? ScopeId { get; set; }
-		 
-		 
-    }
+
+
+		public ProjectOwner? ProjectOwner { get; set; }
+	}
 }

@@ -61,31 +61,34 @@ namespace ICMSDemo.ProcessRisks
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-            var processRisks = from o in pagedAndFilteredProcessRisks
-                               join o1 in _lookup_processRepository.GetAll() on o.ProcessId equals o1.Id into j1
-                               from s1 in j1.DefaultIfEmpty()
+            var processRisks = await (from o in pagedAndFilteredProcessRisks
+                                       join o1 in _lookup_processRepository.GetAll() on o.ProcessId equals o1.Id into j1
+                                       from s1 in j1.DefaultIfEmpty()
 
-                               join o2 in _lookup_riskRepository.GetAll() on o.RiskId equals o2.Id into j2
-                               from s2 in j2.DefaultIfEmpty()
+                                       join o2 in _lookup_riskRepository.GetAll() on o.RiskId equals o2.Id into j2
+                                       from s2 in j2.DefaultIfEmpty()
 
-                               select new GetProcessRiskForViewDto()
-                               {
-                                   ProcessRisk = new ProcessRiskDto
-                                   {
-                                       Code = o.Code,
-                                       Comments = o.Comments,
-                                       Cascade = o.Cascade,
-                                       Id = o.Id
-                                   },
-                                   ProcessName = s1 == null ? "" : s1.DisplayName.ToString(),
-                                   RiskName = s2 == null ? "" : s2.Name.ToString()
-                               };
+                                       select new GetProcessRiskForViewDto()
+                                       {
+                                           ProcessRisk = ObjectMapper.Map<ProcessRiskDto>(o),
+                                           Inherited = o.ProcessId == input.ProcessId ? false : true,
+                                           ProcessName = o.ProcessFk == null ? "" : o.ProcessFk.Name.ToString(),
+                                           RiskName = o.RiskFk == null ? "" : o.RiskFk.Name.ToString(),
+                                           Severity = o.RiskFk == null ? "" : o.RiskFk.Severity.ToString(),
+                                           ProcessCode = o.ProcessFk == null ? "" : o.ProcessFk.Code
+                                       }).ToListAsync();
 
             var totalCount = await filteredProcessRisks.CountAsync();
 
+            foreach (var item in processRisks)
+            {
+                item.InherentRiskScore = (item.ProcessRisk.Impact ?? 0) * (item.ProcessRisk.Likelyhood ?? 0);
+                item.ResidualRiskScore = CalculateResidualRiskScore(item.ProcessRisk);
+            }
+
             return new PagedResultDto<GetProcessRiskForViewDto>(
                 totalCount,
-                await processRisks.ToListAsync()
+                processRisks
             );
         }
 
