@@ -4,6 +4,6 @@
     {
 		public ControlDto Control { get; set; }
 
-
+        public string ControlOwnerName { get; set; }
     }
 }

@@ -8,6 +8,7 @@ namespace ICMSDemo.Controls.Dtos
     {
 		public CreateOrEditControlDto Control { get; set; }
 
+        public string ControlOwnerName { get; set; }
 
     }
 }

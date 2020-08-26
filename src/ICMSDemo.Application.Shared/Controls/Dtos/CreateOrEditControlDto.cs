@@ -21,8 +21,10 @@ namespace ICMSDemo.Controls.Dtos
 		
 		
 		public Frequency Frequency { get; set; }
-		
-		
 
-    }
+		public string ControlPoint { get; set; }
+		public string ControlObjective { get; set; }
+		public long? ControlOwnerId { get; set; }
+
+	}
 }

@@ -16,5 +16,9 @@ namespace ICMSDemo.DepartmentRisks.Dtos
         public int? RiskId { get; set; }
 
         public bool Cascade { set; get; }
+
+        public int? Likelyhood { get; set; }
+
+        public int? Impact { get; set; }
     }
 }

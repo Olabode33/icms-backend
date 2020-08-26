@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    
+    <text name="Likelihood_1">Very Low</text>
+    <text name="Likelihood_2">Low</text>
+    <text name="Likelihood_3">Medium</text>
+    <text name="Likelihood_4">High</text>
+    <text name="Likelihood_5">Very High</text>
+    <text name="Impact_1">Very Low</text>
+    <text name="Impact_2">Low</text>
+    <text name="Impact_3">Medium</text>
+    <text name="Impact_4">High</text>
+    <text name="Impact_5">Very High</text>
+    
     <text name="ITDependent">IT Dependent</text>
     <text name="PendingReview">Pending Review</text>        <text name="LibraryControls">Library controls</text>
     <text name="LibraryControl">Library control</text>

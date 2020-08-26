@@ -20,7 +20,10 @@ namespace ICMSDemo.ProcessRisks.Dtos
 		 public long ProcessId { get; set; }
 		 
 		 		 public int RiskId { get; set; }
-		 
-		 
-    }
+
+		public int? Likelyhood { get; set; }
+
+		public int? Impact { get; set; }
+
+	}
 }

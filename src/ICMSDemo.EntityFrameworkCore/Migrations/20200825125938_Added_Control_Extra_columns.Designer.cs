@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200825125938_Added_Control_Extra_columns")]
+    partial class Added_Control_Extra_columns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2789,12 +2791,6 @@ namespace ICMSDemo.Migrations
                 {
                     b.HasBaseType("ICMSDemo.DepartmentRiskControls.DepartmentRiskControl");
 
-                    b.Property<double?>("Impact")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("Likelyhood")
-                        .HasColumnType("float");
-
                     b.Property<long?>("ProcessId")
                         .HasColumnType("bigint");
 
@@ -2813,12 +2809,6 @@ namespace ICMSDemo.Migrations
             modelBuilder.Entity("ICMSDemo.ProcessRisks.ProcessRisk", b =>
                 {
                     b.HasBaseType("ICMSDemo.DepartmentRisks.DepartmentRisk");
-
-                    b.Property<int?>("Impact")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Likelyhood")
-                        .HasColumnType("int");
 
                     b.Property<long>("ProcessId")
                         .HasColumnType("bigint");

@@ -30,6 +30,6 @@ namespace ICMSDemo.DepartmentRisks
 		public Risk RiskFk { get; set; }
 
 		public bool Cascade { set; get; }
-		
-    }
+
+	}
 }
