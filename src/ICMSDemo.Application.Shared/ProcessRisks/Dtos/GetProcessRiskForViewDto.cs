@@ -10,5 +10,12 @@
         public string ProcessCode { get; set; }
         public double InherentRiskScore { get; set; }
         public double ResidualRiskScore { get; set; }
+        public bool OverControlled { get; set; }
+    }
+
+    public class ResidualRiskScoreComponents
+    {
+        public double ResidualRiskScore { get; set; }
+        public bool OverControlled { get; set; }
     }
 }

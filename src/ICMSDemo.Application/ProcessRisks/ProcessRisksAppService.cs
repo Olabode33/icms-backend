@@ -82,8 +82,10 @@ namespace ICMSDemo.ProcessRisks
 
             foreach (var item in processRisks)
             {
+                var residualRisk = CalculateResidualRiskScore(item.ProcessRisk);
                 item.InherentRiskScore = (item.ProcessRisk.Impact ?? 0) * (item.ProcessRisk.Likelyhood ?? 0);
-                item.ResidualRiskScore = CalculateResidualRiskScore(item.ProcessRisk);
+                item.ResidualRiskScore = residualRisk.ResidualRiskScore;
+                item.OverControlled = residualRisk.OverControlled;
             }
 
             return new PagedResultDto<GetProcessRiskForViewDto>(
@@ -142,15 +144,17 @@ namespace ICMSDemo.ProcessRisks
 
             foreach (var item in lists)
             {
-                item.InherentRiskScore = (item.ProcessRisk.Impact??0) * (item.ProcessRisk.Likelyhood??0);
-                item.ResidualRiskScore = CalculateResidualRiskScore(item.ProcessRisk);
+                var residualRisk = CalculateResidualRiskScore(item.ProcessRisk);
+                item.InherentRiskScore = (item.ProcessRisk.Impact ?? 0) * (item.ProcessRisk.Likelyhood ?? 0);
+                item.ResidualRiskScore = residualRisk.ResidualRiskScore;
+                item.OverControlled = residualRisk.OverControlled;
             }
 
             return new ListResultDto<GetProcessRiskForViewDto>(lists);
         }
 
 
-        public double CalculateResidualRiskScore(ProcessRiskDto processRisk)
+        public ResidualRiskScoreComponents CalculateResidualRiskScore(ProcessRiskDto processRisk)
         {
 
             var processRiskControls = GetProcessRiskControl(processRisk.ProcessId, processRisk.Id);
@@ -160,7 +164,11 @@ namespace ICMSDemo.ProcessRisks
             var likelihoodScore = (processRisk.Likelyhood??0) * ( 1 - (totalLikelihood > 1 ? 1 : totalLikelihood));
             var impactScore = (processRisk.Impact??0) * ( 1 - (totalImpact > 1 ? 1 : totalImpact));
 
-            return likelihoodScore * impactScore;
+            return new ResidualRiskScoreComponents
+            {
+                ResidualRiskScore = likelihoodScore * impactScore,
+                OverControlled = totalLikelihood > 1 || totalImpact > 1 ? true : false
+            };
 
         }
 
