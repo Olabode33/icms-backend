@@ -1,6 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>
+  <texts>    <text name="LossEvents">Loss events</text>
+    <text name="LossEvent">Loss event</text>
+    <text name="ICMSDemo.LossEvents.LossEvent">LossEvent</text>
+    <text name="DateOccured">Date occured</text>
+    <text name="DateDiscovered">Date discovered</text>
+    <text name="LossType">Loss type</text>
+    <text name="LossCategory">Loss category</text>
+    <text name="LossEventsHeaderInfo">Loss events header info</text>
+    <text name="CreateNewLossEvent">Create new loss event</text>
+    <text name="EditLossEvent">Edit loss event</text>
+    <text name="DeleteLossEvent">Delete loss event</text>
+    <text name="DateOccuredRange">Date occured range</text>
+    <text name="DateDiscoveredRange">Date discovered range</text>
+
     
     <text name="Likelihood_1">Very Low</text>
     <text name="Likelihood_2">Low</text>

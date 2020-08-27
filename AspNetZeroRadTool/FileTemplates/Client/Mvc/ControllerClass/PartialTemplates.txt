@@ -84,7 +84,7 @@
 		},
 		{
 			"placeholder": "{{View_Method_Here}}",
-			"condition": "{{Create_View_Only_Here}} == true && {{Is_Master_Detail_Page_Here}} == false",
+			"condition": "{{Create_View_Only_Here}} == true && {{Is_Non_Modal_CRUD_Page}} == false",
 			"content": "
         public async Task<PartialViewResult> View{{Entity_Name_Here}}Modal({{Primary_Key_Here}} id)
         {
@@ -100,7 +100,7 @@
 		},
 		{
 			"placeholder": "{{View_Method_Here}}",
-			"condition": "{{Create_View_Only_Here}} == true && {{Is_Master_Detail_Page_Here}} == true",
+			"condition": "{{Create_View_Only_Here}} == true && {{Is_Non_Modal_CRUD_Page}} == true",
 			"content": "
         public async Task<ActionResult> View{{Entity_Name_Here}}({{Primary_Key_Here}} id)
         {
@@ -116,7 +116,7 @@
 		},
 		{
 			"placeholder": "{{Create_Or_Edit_Here}}",
-			"condition": "{{Is_Master_Detail_Page_Here}} == false",
+			"condition": "{{Is_Non_Modal_CRUD_Page}} == false",
 			"content": "
 			 [AbpMvcAuthorize(AppPermissions.{{Permission_Name_Here}}_Create, AppPermissions.{{Permission_Name_Here}}_Edit)]
 			public async Task<PartialViewResult> CreateOrEditModal({{Primary_Key_Here}}{{Primary_Key_Nullable_If_Not_String_Here}} id)
@@ -143,7 +143,7 @@
 		},
 		{
 			"placeholder": "{{Create_Or_Edit_Here}}",
-			"condition": "{{Is_Master_Detail_Page_Here}} == true",
+			"condition": "{{Is_Non_Modal_CRUD_Page}} == true",
 			"content": "[AbpMvcAuthorize(AppPermissions.{{Permission_Name_Here}}_Create, AppPermissions.{{Permission_Name_Here}}_Edit)]
 			public async Task<ActionResult> CreateOrEdit({{Primary_Key_Here}}{{Primary_Key_Nullable_If_Not_String_Here}} id)
 			{

@@ -30,6 +30,13 @@ namespace ICMSDemo.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var lossEvents = pages.CreateChildPermission(AppPermissions.Pages_LossEvents, L("LossEvents"));
+            lossEvents.CreateChildPermission(AppPermissions.Pages_LossEvents_Create, L("CreateNewLossEvent"));
+            lossEvents.CreateChildPermission(AppPermissions.Pages_LossEvents_Edit, L("EditLossEvent"));
+            lossEvents.CreateChildPermission(AppPermissions.Pages_LossEvents_Delete, L("DeleteLossEvent"));
+
+
+
             var libraryControls = pages.CreateChildPermission(AppPermissions.Pages_LibraryControls, L("LibraryControls"), multiTenancySides: MultiTenancySides.Tenant);
             libraryControls.CreateChildPermission(AppPermissions.Pages_LibraryControls_Create, L("CreateNewLibraryControl"), multiTenancySides: MultiTenancySides.Tenant);
             libraryControls.CreateChildPermission(AppPermissions.Pages_LibraryControls_Edit, L("EditLibraryControl"), multiTenancySides: MultiTenancySides.Tenant);

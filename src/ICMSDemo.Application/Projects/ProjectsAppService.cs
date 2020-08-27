@@ -71,26 +71,26 @@ namespace ICMSDemo.Projects
        
         public async Task<PagedResultDto<GetProjectForViewDto>> GetAll(GetAllProjectsInput input)
          {
-            
-			
-			var filteredProjects = _projectRepository.GetAll()
-						.Include( e => e.ControlUnitFk)
-						.Include( e => e.ScopeFk)
-						.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false  || e.Code.Contains(input.Filter) || e.Description.Contains(input.Filter) || e.Title.Contains(input.Filter))
-						.WhereIf(input.MinStartDateFilter != null, e => e.StartDate >= input.MinStartDateFilter)
-						.WhereIf(input.MaxStartDateFilter != null, e => e.StartDate <= input.MaxStartDateFilter)
-						.WhereIf(input.MinEndDateFilter != null, e => e.EndDate >= input.MinEndDateFilter)
+
+
+            var filteredProjects = _projectRepository.GetAll()
+                        .Include(e => e.ControlUnitFk)
+                        .Include(e => e.ScopeFk)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Code.Contains(input.Filter) || e.Description.Contains(input.Filter) || e.Title.Contains(input.Filter))
+                        .WhereIf(input.MinStartDateFilter != null, e => e.StartDate >= input.MinStartDateFilter)
+                        .WhereIf(input.MaxStartDateFilter != null, e => e.StartDate <= input.MaxStartDateFilter)
+                        .WhereIf(input.MinEndDateFilter != null, e => e.EndDate >= input.MinEndDateFilter)
                         .WhereIf(input.MaxEndDateFilter != null, e => e.EndDate <= input.MaxEndDateFilter)
                         .WhereIf(input.MinBudgetedStartDateFilter != null, e => e.BudgetedStartDate >= input.MinBudgetedStartDateFilter)
-						.WhereIf(input.MaxBudgetedStartDateFilter != null, e => e.BudgetedStartDate <= input.MaxBudgetedStartDateFilter)
-						.WhereIf(input.MinBudgetedEndDateFilter != null, e => e.BudgetedEndDate >= input.MinBudgetedEndDateFilter)
-						.WhereIf(input.MaxBudgetedEndDateFilter != null, e => e.BudgetedEndDate <= input.MaxBudgetedEndDateFilter)
-						.WhereIf(!string.IsNullOrWhiteSpace(input.TitleFilter),  e => e.Title == input.TitleFilter)
-						.WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayNameFilter), e => e.ControlUnitFk != null && e.ControlUnitFk.DisplayName == input.OrganizationUnitDisplayNameFilter)
-						.WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayName2Filter), e => e.ScopeFk != null && e.ScopeFk.DisplayName == input.OrganizationUnitDisplayName2Filter)
+                        .WhereIf(input.MaxBudgetedStartDateFilter != null, e => e.BudgetedStartDate <= input.MaxBudgetedStartDateFilter)
+                        .WhereIf(input.MinBudgetedEndDateFilter != null, e => e.BudgetedEndDate >= input.MinBudgetedEndDateFilter)
+                        .WhereIf(input.MaxBudgetedEndDateFilter != null, e => e.BudgetedEndDate <= input.MaxBudgetedEndDateFilter)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.TitleFilter), e => e.Title == input.TitleFilter)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayNameFilter), e => e.ControlUnitFk != null && e.ControlUnitFk.DisplayName == input.OrganizationUnitDisplayNameFilter)
+                        .WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayName2Filter), e => e.ScopeFk != null && e.ScopeFk.DisplayName == input.OrganizationUnitDisplayName2Filter)
                         .WhereIf(input.CommencedFilter, e => e.Commenced == input.CommencedFilter)
-                        .WhereIf(input.ProjectOwner != null, e => e.ProjectOwner == input.ProjectOwner || e.ProjectOwner == ProjectOwner.General)
-                        .WhereIf(input.ProjectOwner == ProjectOwner.General, e => e.ProjectOwner == null);
+                        .WhereIf(input.ProjectOwner != null, e => e.ProjectOwner == input.ProjectOwner || e.ProjectOwner == ProjectOwner.General);
+                        //.WhereIf(input.ProjectOwner == ProjectOwner.General, e => e.ProjectOwner == null);
 
 
 			var pagedAndFilteredProjects = filteredProjects
@@ -283,7 +283,7 @@ namespace ICMSDemo.Projects
             project.Commenced = true;
             project.StartDate = Clock.Now.Date;
 
-            await EventBus.TriggerAsync(new ProjectActivatedEventData() { EventSource = project, EventTime = Clock.Now, TenantId = project.TenantId, Project = project });
+            await EventBus.TriggerAsync(new ProjectActivatedEventData() { EventSource = project, EventTime = Clock.Now, TenantId = project.TenantId, Project = project, ProjectOwner = project.ProjectOwner });
         }
 
 

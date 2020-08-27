@@ -1,4 +1,5 @@
-﻿using ICMSDemo.LibraryControls;
+﻿using ICMSDemo.LossEvents;
+using ICMSDemo.LibraryControls;
 using ICMSDemo.LibraryRisks;
 using ICMSDemo.DepartmentRatingHistory;
 using ICMSDemo.Ratings;
@@ -35,6 +36,8 @@ namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<LossEvent> LossEvents { get; set; }
+
         public virtual DbSet<LibraryControl> LibraryControls { get; set; }
 
         public virtual DbSet<LibraryRisk> LibraryRisks { get; set; }
@@ -124,7 +127,12 @@ namespace ICMSDemo.EntityFrameworkCore
            
            
            
-            modelBuilder.Entity<LibraryControl>(l =>
+           
+            modelBuilder.Entity<LossEvent>(l =>
+            {
+                l.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<LibraryControl>(l =>
             {
                 l.HasIndex(e => new { e.TenantId });
             });

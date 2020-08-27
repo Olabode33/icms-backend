@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_LossEvents = "Pages.LossEvents";
+        public const string Pages_LossEvents_Create = "Pages.LossEvents.Create";
+        public const string Pages_LossEvents_Edit = "Pages.LossEvents.Edit";
+        public const string Pages_LossEvents_Delete = "Pages.LossEvents.Delete";
+
         public const string Pages_LibraryControls = "Pages.LibraryControls";
         public const string Pages_LibraryControls_Create = "Pages.LibraryControls.Create";
         public const string Pages_LibraryControls_Edit = "Pages.LibraryControls.Edit";

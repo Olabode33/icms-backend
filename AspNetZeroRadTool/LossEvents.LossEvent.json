@@ -1,0 +1,253 @@
+{
+  "IsRegenerate": false,
+  "MenuPosition": "main",
+  "RelativeNamespace": "LossEvents",
+  "EntityName": "LossEvent",
+  "EntityNamePlural": "LossEvents",
+  "TableName": "LossEvents",
+  "PrimaryKeyType": "int",
+  "BaseClass": "FullAuditedEntity",
+  "EntityHistory": false,
+  "AutoMigration": false,
+  "UpdateDatabase": false,
+  "CreateUserInterface": true,
+  "CreateViewOnly": true,
+  "CreateExcelExport": true,
+  "IsNonModalCRUDPage": true,
+  "PagePermission": {
+    "Host": true,
+    "Tenant": true
+  },
+  "Properties": [
+    {
+      "Name": "Amount",
+      "Type": "double",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": true,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "Description",
+      "Type": "string",
+      "MaxLength": -1,
+      "MinLength": -1,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": false,
+        "List": false,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "DateOccured",
+      "Type": "DateTime",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": false,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "DateDiscovered",
+      "Type": "DateTime",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": false,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "LossType",
+      "Type": "LossEventTypeEnums",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": true,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "Status",
+      "Type": "Status",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": true,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "LossCategory",
+      "Type": "LossCategoryEnums",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": false,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    }
+  ],
+  "NavigationProperties": [
+    {
+      "Namespace": "ICMSDemo.Authorization.Users",
+      "ForeignEntityName": "User",
+      "IdType": "long",
+      "IsNullable": true,
+      "PropertyName": "EmployeeUserId",
+      "DisplayPropertyName": "Name",
+      "DuplicationNumber": 0,
+      "RelationType": "single",
+      "ViewType": "LookupTable"
+    },
+    {
+      "Namespace": "Abp.Organizations",
+      "ForeignEntityName": "OrganizationUnit",
+      "IdType": "long",
+      "IsNullable": true,
+      "PropertyName": "DepartmentId",
+      "DisplayPropertyName": "DisplayName",
+      "DuplicationNumber": 0,
+      "RelationType": "single",
+      "ViewType": "LookupTable"
+    }
+  ],
+  "EnumDefinitions": [
+    {
+      "Name": "LossEventTypeEnums",
+      "Namespace": "ICMSDemo",
+      "EnumProperties": [
+        {
+          "Name": "InternalFraud",
+          "Value": 0
+        },
+        {
+          "Name": "ExternalFraud",
+          "Value": 1
+        },
+        {
+          "Name": "EmploymentPracticesWorkplaceSafety",
+          "Value": 2
+        },
+        {
+          "Name": "ClientsProductsBusinessPractice",
+          "Value": 3
+        },
+        {
+          "Name": "DamagePhysicalAssets",
+          "Value": 4
+        },
+        {
+          "Name": "BusinessDisruptionSystemsFailures",
+          "Value": 5
+        },
+        {
+          "Name": "ExecutionDeliveryProcessManagement",
+          "Value": 6
+        }
+      ]
+    },
+    {
+      "Name": "Status",
+      "Namespace": "ICMSDemo",
+      "EnumProperties": [
+        {
+          "Name": "Open",
+          "Value": 0
+        },
+        {
+          "Name": "Resolved",
+          "Value": 1
+        },
+        {
+          "Name": "Closed",
+          "Value": 2
+        }
+      ]
+    },
+    {
+      "Name": "LossCategoryEnums",
+      "Namespace": "ICMSDemo",
+      "EnumProperties": [
+        {
+          "Name": "Actual",
+          "Value": 0
+        },
+        {
+          "Name": "Potential",
+          "Value": 1
+        },
+        {
+          "Name": "NearMisses",
+          "Value": 2
+        }
+      ]
+    }
+  ],
+  "DbContext": null
+}
