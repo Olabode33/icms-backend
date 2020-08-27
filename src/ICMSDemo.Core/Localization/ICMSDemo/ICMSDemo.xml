@@ -1,6 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="LossEvents">Loss events</text>
+  <texts>        <text name="InternalFraud">Internal Fraud</text>
+    <text name="ExternalFraud">External Fraud</text>
+    <text name="EmploymentPracticesWorkplaceSafety">Employment Practices and Workplace Safety</text>
+    <text name="ClientsProductsBusinessPractice">Clients, Products, and Business Practice</text>
+    <text name="DamagePhysicalAssets">Damage to Physical Assets</text>
+    <text name="BusinessDisruptionSystemsFailures">Business Disruption and Systems Failures</text>
+    <text name="ExecutionDeliveryProcessManagement">Execution, Delivery, and Process Management</text>
+    
+    <text name="LossTypeColumn">Loss type column</text>
+    <text name="ICMSDemo.LossEvents.LossTypeColumn">LossTypeColumn</text>
+    <text name="ColumnName">Column name</text>
+    <text name="DataType">Data type</text>
+    <text name="NotRequired">Not required</text>
+    <text name="Minimum">Minimum</text>
+    <text name="Maximum">Maximum</text>
+    <text name="LossTypeColumnsHeaderInfo">Loss type columns header info</text>
+    <text name="CreateNewLossTypeColumn">Create new loss type column</text>
+    <text name="EditLossTypeColumn">Edit loss type column</text>
+    <text name="DeleteLossTypeColumn">Delete loss type column</text>
+    <text name="LossTypeColumns">Loss type columns</text>
+    <text name="LossEvents">Loss events</text>
     <text name="LossEvent">Loss event</text>
     <text name="ICMSDemo.LossEvents.LossEvent">LossEvent</text>
     <text name="DateOccured">Date occured</text>

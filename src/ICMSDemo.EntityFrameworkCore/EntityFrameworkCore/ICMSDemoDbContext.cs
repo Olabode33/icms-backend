@@ -36,6 +36,8 @@ namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<LossTypeColumn> LossTypeColumns { get; set; }
+
         public virtual DbSet<LossEvent> LossEvents { get; set; }
 
         public virtual DbSet<LibraryControl> LibraryControls { get; set; }
@@ -128,7 +130,12 @@ namespace ICMSDemo.EntityFrameworkCore
            
            
            
-            modelBuilder.Entity<LossEvent>(l =>
+           
+            modelBuilder.Entity<LossTypeColumn>(l =>
+            {
+                l.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<LossEvent>(l =>
             {
                 l.HasIndex(e => new { e.TenantId });
             });

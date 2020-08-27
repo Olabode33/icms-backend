@@ -11,8 +11,8 @@ using static ICMSDemo.IcmsEnums;
 namespace ICMSDemo.LossEvents
 {
 	[Table("LossEvents")]
-    public class LossEvent : FullAuditedEntity , IMayHaveTenant
-    {
+    public class LossEvent : FullAuditedEntity , IMayHaveTenant, IExtendableObject
+	{
 			public int? TenantId { get; set; }
 			
 
@@ -29,7 +29,8 @@ namespace ICMSDemo.LossEvents
 		public virtual Status Status { get; set; }
 		
 		public virtual LossCategoryEnums LossCategory { get; set; }
-		
+
+		public virtual string ExtensionData { get; set; }
 
 		public virtual long? EmployeeUserId { get; set; }
 		

@@ -83,6 +83,8 @@ namespace ICMSDemo
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditLossTypeColumnDto, LossTypeColumn>().ReverseMap();
+            configuration.CreateMap<LossTypeColumnDto, LossTypeColumn>().ReverseMap();
             configuration.CreateMap<CreateOrEditLossEventDto, LossEvent>().ReverseMap();
             configuration.CreateMap<LossEventDto, LossEvent>().ReverseMap();
             configuration.CreateMap<CreateOrEditLibraryControlDto, LibraryControl>().ReverseMap();

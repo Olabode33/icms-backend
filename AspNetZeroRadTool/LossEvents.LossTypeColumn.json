@@ -1,0 +1,201 @@
+{
+  "IsRegenerate": false,
+  "MenuPosition": "main",
+  "RelativeNamespace": "LossEvents",
+  "EntityName": "LossTypeColumn",
+  "EntityNamePlural": "LossTypeColumns",
+  "TableName": "LossTypeColumns",
+  "PrimaryKeyType": "int",
+  "BaseClass": "Entity",
+  "EntityHistory": false,
+  "AutoMigration": true,
+  "UpdateDatabase": true,
+  "CreateUserInterface": true,
+  "CreateViewOnly": false,
+  "CreateExcelExport": false,
+  "IsNonModalCRUDPage": false,
+  "PagePermission": {
+    "Host": true,
+    "Tenant": true
+  },
+  "Properties": [
+    {
+      "Name": "ColumnName",
+      "Type": "string",
+      "MaxLength": -1,
+      "MinLength": -1,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": false,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "DataType",
+      "Type": "DataTypes",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": false,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "Required",
+      "Type": "bool",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": false,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "LossType",
+      "Type": "LossEventTypeEnums",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": false,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "Minimum",
+      "Type": "double",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": true,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": false,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "Maximum",
+      "Type": "double",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": true,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": false,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    }
+  ],
+  "NavigationProperties": [],
+  "EnumDefinitions": [
+    {
+      "Name": "DataTypes",
+      "Namespace": "ICMSDemo",
+      "EnumProperties": [
+        {
+          "Name": "String",
+          "Value": 0
+        },
+        {
+          "Name": "Number",
+          "Value": 1
+        },
+        {
+          "Name": "Bool",
+          "Value": 2
+        },
+        {
+          "Name": "Date",
+          "Value": 3
+        },
+        {
+          "Name": "List",
+          "Value": 4
+        }
+      ]
+    },
+    {
+      "Name": "LossEventTypeEnums",
+      "Namespace": "ICMSDemo",
+      "EnumProperties": [
+        {
+          "Name": "InternalFraud",
+          "Value": 0
+        },
+        {
+          "Name": "ExternalFraud",
+          "Value": 1
+        },
+        {
+          "Name": "EmploymentPracticesWorkplaceSafety",
+          "Value": 2
+        },
+        {
+          "Name": "ClientsProductsBusinessPractice",
+          "Value": 3
+        },
+        {
+          "Name": "DamagePhysicalAssets",
+          "Value": 4
+        },
+        {
+          "Name": "BusinessDisruptionSystemsFailures",
+          "Value": 5
+        },
+        {
+          "Name": "ExecutionDeliveryProcessManagement",
+          "Value": 6
+        }
+      ]
+    }
+  ],
+  "DbContext": null
+}
