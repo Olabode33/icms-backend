@@ -2,6 +2,7 @@
 
 using System;
 using Abp.Application.Services.Dto;
+using static ICMSDemo.IcmsEnums;
 
 namespace ICMSDemo.TestingTemplates.Dtos
 {
@@ -19,5 +20,6 @@ namespace ICMSDemo.TestingTemplates.Dtos
 
 		 public int? DepartmentRiskControlId { get; set; }
         public bool IsActive { get; set; }
-    }
+		public ProjectOwner? ProjectOwner { get; set; }
+	}
 }
