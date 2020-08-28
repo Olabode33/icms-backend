@@ -9,6 +9,7 @@ namespace ICMSDemo.Notifications
 {
     public interface IAppNotifier
     {
+        Task WelcomeToTheApplicationTestAsync(User user);
         Task WelcomeToTheApplicationAsync(User user);
 
         Task NewUserRegisteredAsync(User user);

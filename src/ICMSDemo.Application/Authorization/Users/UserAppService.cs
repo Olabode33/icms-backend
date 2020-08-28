@@ -234,6 +234,16 @@ namespace ICMSDemo.Authorization.Users
             await UserManager.SetGrantedPermissionsAsync(user, grantedPermissions);
         }
 
+        public async Task DemoNotification(string input)
+        {
+
+            var res = new CreateOrUpdateUserInput();
+            var user = new UserEditDto();
+            user.Id = AbpSession.UserId;
+            res.User = user;
+            await Notification(res);
+        }
+
         public async Task CreateOrUpdateUser(CreateOrUpdateUserInput input)
         {
             if (input.User.Id.HasValue)
@@ -271,7 +281,7 @@ namespace ICMSDemo.Authorization.Users
             Debug.Assert(input.User.Id != null, "input.User.Id should be set.");
 
             var user = await UserManager.FindByIdAsync(input.User.Id.Value.ToString());
-            
+
             //Update user properties
             ObjectMapper.Map(input.User, user); //Passwords is not mapped (see mapping configuration)
 
@@ -304,6 +314,13 @@ namespace ICMSDemo.Authorization.Users
                     input.User.Password
                 );
             }
+        }
+
+        protected virtual async Task Notification(CreateOrUpdateUserInput input)
+        {
+            var user = ObjectMapper.Map<User>(input.User);
+            user.TenantId = AbpSession.TenantId;
+            await _appNotifier.WelcomeToTheApplicationTestAsync(user);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Create)]
