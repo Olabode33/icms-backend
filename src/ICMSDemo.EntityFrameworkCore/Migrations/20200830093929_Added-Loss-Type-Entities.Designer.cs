@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200830093929_Added-Loss-Type-Entities")]
+    partial class AddedLossTypeEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2082,8 +2084,6 @@ namespace ICMSDemo.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LossTypeId");
-
                     b.HasIndex("TenantId");
 
                     b.ToTable("LossTypeColumns");
@@ -3229,15 +3229,6 @@ namespace ICMSDemo.Migrations
                     b.HasOne("ICMSDemo.Authorization.Users.User", "EmployeeUserFk")
                         .WithMany()
                         .HasForeignKey("EmployeeUserId");
-                });
-
-            modelBuilder.Entity("ICMSDemo.LossEvents.LossTypeColumn", b =>
-                {
-                    b.HasOne("ICMSDemo.LossEvents.LossType", "LossTypeFk")
-                        .WithMany()
-                        .HasForeignKey("LossTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("ICMSDemo.LossEvents.LossTypeTrigger", b =>

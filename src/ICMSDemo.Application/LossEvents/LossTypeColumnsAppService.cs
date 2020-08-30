@@ -49,7 +49,7 @@ namespace ICMSDemo.LossEvents
                                           ColumnName = o.ColumnName,
                                           DataType = o.DataType,
                                           Required = o.Required,
-                                          LossType = o.LossType,
+                                          //LossType = o.LossType,
                                           Minimum = o.Minimum,
                                           Maximum = o.Maximum,
                                           Id = o.Id
@@ -67,7 +67,7 @@ namespace ICMSDemo.LossEvents
         public async Task<List<LossTypeColumnDto>> GetColumnsForLossType(LossEventTypeEnums input)
         {
 
-            var filteredLossTypeColumns = _lossTypeColumnRepository.GetAll().Where(e => e.LossType == input);
+            var filteredLossTypeColumns = _lossTypeColumnRepository.GetAll();//.Where(e => e.LossType == input);
 
             var lossTypeColumns = from o in filteredLossTypeColumns
                                   select new LossTypeColumnDto
@@ -75,7 +75,7 @@ namespace ICMSDemo.LossEvents
                                       ColumnName = o.ColumnName,
                                       DataType = o.DataType,
                                       Required = o.Required,
-                                      LossType = o.LossType,
+                                      //LossType = o.LossType,
                                       Minimum = o.Minimum,
                                       Maximum = o.Maximum,
                                       Id = o.Id

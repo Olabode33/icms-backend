@@ -36,6 +36,8 @@ namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<LossType> LossType { get; set; }
+        public virtual DbSet<LossTypeTrigger> LossTypeTrigger { get; set; }
         public virtual DbSet<LossTypeColumn> LossTypeColumns { get; set; }
 
         public virtual DbSet<LossEvent> LossEvents { get; set; }
