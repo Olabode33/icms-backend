@@ -69,29 +69,14 @@ namespace ICMSDemo.LossEvents
             var output = new CreateOrEditLossTypeDto { LossType = ObjectMapper.Map<LossTypeDto>(lossTypeColumn) };
 
             var columns = await _lossTypeColumnRepository.GetAll().Where(e => e.LossTypeId == input.Id)
-                                                   .Select(e => new LossTypeColumnDto() {
-                                                       LossTypeId = e.LossTypeId,
-                                                       ColumnName = e.ColumnName,
-                                                       DataType = e.DataType,
-                                                       Id = e.Id,
-                                                       Maximum = e.Maximum,
-                                                       Minimum = e.Minimum,
-                                                       Required = e.Required
-                                                   })
+                                                   .Select(e => ObjectMapper.Map<LossTypeColumnDto>(e))
                                                    .ToListAsync();
 
-            var triggers = await _lossTypeTriggerRepository.GetAll().Where(e => e.LossTypeId == input.Id)
-                                                   .Select(e => new LossTypeTriggerDto()
-                                                   {
-                                                       LossTypeId = e.LossTypeId,
-                                                       DataSource = e.DataSource,
-                                                       Description = e.Description,
-                                                       Frequency = e.Frequency,
-                                                       Id = e.Id,
-                                                       Name = e.Name,
-                                                       Role = e.Role,
-                                                       Staff = e.Staff,
-                                                       TenantId = e.TenantId
+            var triggers = await _lossTypeTriggerRepository.GetAll().Include(e => e.NotifyUserFk)
+                                                   .Where(e => e.LossTypeId == input.Id)
+                                                   .Select(e => new GetLossTypeTriggerForView {
+                                                       LossTypeTrigger =  ObjectMapper.Map<LossTypeTriggerDto>(e),
+                                                       NotifyUserName = e.NotifyUserFk == null ? "" : e.NotifyUserFk.FullName
                                                    })
                                                    .ToListAsync();
 
@@ -135,7 +120,7 @@ namespace ICMSDemo.LossEvents
         protected virtual async Task Update(CreateOrEditLossTypeDto input)
         {
             var lossTypeColumn = await _lossTypeRepository.FirstOrDefaultAsync((int)input.LossType.Id);
-            ObjectMapper.Map(input, lossTypeColumn);
+            ObjectMapper.Map(input.LossType, lossTypeColumn);
 
             await SaveLossTypeColumn(input.LossTypeColumns, (int)input.LossType.Id);
             await SaveLossTypeTrigger(input.LossTypeTriggers, (int)input.LossType.Id);
@@ -149,18 +134,26 @@ namespace ICMSDemo.LossEvents
             {
                 var column = ObjectMapper.Map<LossTypeColumn>(item);
                 column.LossTypeId = lossTypeId;
+                if (AbpSession.TenantId != null)
+                {
+                    column.TenantId = (int?)AbpSession.TenantId;
+                }
                 await _lossTypeColumnRepository.InsertAsync(column);
             }
         }
 
-        private async Task SaveLossTypeTrigger(List<LossTypeTriggerDto> input, int lossTypeId)
+        private async Task SaveLossTypeTrigger(List<GetLossTypeTriggerForView> input, int lossTypeId)
         {
             await _lossTypeTriggerRepository.DeleteAsync(e => e.LossTypeId == lossTypeId);
 
             foreach (var item in input)
             {
-                var column = ObjectMapper.Map<LossTypeTrigger>(item);
+                var column = ObjectMapper.Map<LossTypeTrigger>(item.LossTypeTrigger);
                 column.LossTypeId = lossTypeId;
+                if (AbpSession.TenantId != null)
+                {
+                    column.TenantId = (int?)AbpSession.TenantId;
+                }
                 await _lossTypeTriggerRepository.InsertAsync(column);
             }
         }

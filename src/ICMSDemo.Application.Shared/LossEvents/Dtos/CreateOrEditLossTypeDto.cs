@@ -8,6 +8,6 @@ namespace ICMSDemo.LossEvents.Dtos
     {
         public LossTypeDto LossType { get; set; }
         public List<LossTypeColumnDto> LossTypeColumns { get; set; }
-        public List<LossTypeTriggerDto> LossTypeTriggers { get; set; }
+        public List<GetLossTypeTriggerForView> LossTypeTriggers { get; set; }
     }
 }

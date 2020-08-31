@@ -15,5 +15,12 @@ namespace ICMSDemo.LossEvents.Dtos
         public string Role { get; set; }
         public string DataSource { get; set; }
         public virtual int LossTypeId { get; set; }
+        public virtual long? NotifyUserId { get; set; }
+    }
+
+    public class GetLossTypeTriggerForView
+    {
+        public LossTypeTriggerDto LossTypeTrigger { get; set; }
+        public string NotifyUserName { get; set; }
     }
 }

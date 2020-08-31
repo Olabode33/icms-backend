@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities;
+using ICMSDemo.Authorization.Users;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,5 +21,9 @@ namespace ICMSDemo.LossEvents
 
         [ForeignKey("LossTypeId")]
         public virtual LossType LossTypeFk { get; set; }
+        public virtual long? NotifyUserId { get; set; }
+
+        [ForeignKey("NotifyUserId")]
+        public virtual User NotifyUserFk { get; set; }
     }
 }
