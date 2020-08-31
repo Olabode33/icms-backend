@@ -23,9 +23,12 @@ namespace ICMSDemo.LossEvents
 		public virtual DateTime DateOccured { get; set; }
 		
 		public virtual DateTime DateDiscovered { get; set; }
-		
-		public virtual LossEventTypeEnums LossType { get; set; }
-		
+
+		public virtual int LossTypeId { get; set; }
+
+		[ForeignKey("LossTypeId")]
+		public virtual LossType LossTypeFk { get; set; }
+
 		public virtual Status Status { get; set; }
 		
 		public virtual LossCategoryEnums LossCategory { get; set; }

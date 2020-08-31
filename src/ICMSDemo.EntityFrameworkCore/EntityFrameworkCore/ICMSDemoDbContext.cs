@@ -1,4 +1,5 @@
-﻿using ICMSDemo.LossEvents;
+﻿using ICMSDemo.LossEventTasks;
+using ICMSDemo.LossEvents;
 using ICMSDemo.LibraryControls;
 using ICMSDemo.LibraryRisks;
 using ICMSDemo.DepartmentRatingHistory;
@@ -36,6 +37,8 @@ namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<LossEventTask> LossEventTasks { get; set; }
+
         public virtual DbSet<LossType> LossType { get; set; }
         public virtual DbSet<LossTypeTrigger> LossTypeTrigger { get; set; }
         public virtual DbSet<LossTypeColumn> LossTypeColumns { get; set; }
@@ -133,7 +136,12 @@ namespace ICMSDemo.EntityFrameworkCore
            
            
            
-            modelBuilder.Entity<LossTypeColumn>(l =>
+           
+            modelBuilder.Entity<LossEventTask>(l =>
+            {
+                l.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<LossTypeColumn>(l =>
             {
                 l.HasIndex(e => new { e.TenantId });
             });

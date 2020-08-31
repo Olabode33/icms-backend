@@ -61,6 +61,26 @@ namespace ICMSDemo.LossEvents
             );
         }
 
+        public async Task<List<LossTypeColumnDto>> GetColumnsForLossType(int input)
+        {
+
+            var filteredLossTypeColumns = _lossTypeColumnRepository.GetAll().Where(e => e.LossTypeId == input);
+
+            var lossTypeColumns = from o in filteredLossTypeColumns
+                                  select new LossTypeColumnDto
+                                  {
+                                      ColumnName = o.ColumnName,
+                                      DataType = o.DataType,
+                                      Required = o.Required,
+                                      LossTypeId = o.LossTypeId,
+                                      Minimum = o.Minimum,
+                                      Maximum = o.Maximum,
+                                      Id = o.Id
+                                  };
+
+            return await lossTypeColumns.ToListAsync();
+        }
+
         //[AbpAuthorize(AppPermissions.Pages_LossTypeColumns_Edit)]
         public async Task<CreateOrEditLossTypeDto> GetLossTypeColumnForEdit(EntityDto input)
         {

@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_LossEventTasks = "Pages.LossEventTasks";
+        public const string Pages_LossEventTasks_Create = "Pages.LossEventTasks.Create";
+        public const string Pages_LossEventTasks_Edit = "Pages.LossEventTasks.Edit";
+        public const string Pages_LossEventTasks_Delete = "Pages.LossEventTasks.Delete";
+
         public const string Pages_LossTypeColumns = "Pages.LossTypeColumns";
         public const string Pages_LossTypeColumns_Create = "Pages.LossTypeColumns.Create";
         public const string Pages_LossTypeColumns_Edit = "Pages.LossTypeColumns.Edit";

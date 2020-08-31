@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>        <text name="InternalFraud">Internal Fraud</text>
+  <texts>    <text name="LossEventTasks">Loss event tasks</text>
+    <text name="LossEventTask">Loss event task</text>
+    <text name="ICMSDemo.LossEventTasks.LossEventTask">LossEventTask</text>
+    <text name="LossTypeId">Loss type id</text>
+    <text name="LossTypeTriggerId">Loss type trigger id</text>
+    <text name="AssignedTo">Assigned to</text>
+    <text name="DateAssigned">Date assigned</text>
+    <text name="LossEventTasksHeaderInfo">Loss event tasks header info</text>
+    <text name="CreateNewLossEventTask">Create new loss event task</text>
+    <text name="EditLossEventTask">Edit loss event task</text>
+    <text name="DeleteLossEventTask">Delete loss event task</text>
+    <text name="DateAssignedRange">Date assigned range</text>
+        <text name="InternalFraud">Internal Fraud</text>
     <text name="ExternalFraud">External Fraud</text>
     <text name="EmploymentPracticesWorkplaceSafety">Employment Practices and Workplace Safety</text>
     <text name="ClientsProductsBusinessPractice">Clients, Products, and Business Practice</text>

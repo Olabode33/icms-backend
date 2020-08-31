@@ -51,7 +51,7 @@ namespace ICMSDemo.LossEvents.Exporting
                         _ => _.LossEvent.Amount,
                         _ => _timeZoneConverter.Convert(_.LossEvent.DateOccured, _abpSession.TenantId, _abpSession.GetUserId()),
                         _ => _timeZoneConverter.Convert(_.LossEvent.DateDiscovered, _abpSession.TenantId, _abpSession.GetUserId()),
-                        _ => _.LossEvent.LossType,
+                        _ => _.LossEvent.LossTypeId,
                         _ => _.LossEvent.Status,
                         _ => _.LossEvent.LossCategory,
                         _ => _.UserName,

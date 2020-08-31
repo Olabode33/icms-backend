@@ -14,7 +14,7 @@ namespace ICMSDemo.LossEvents.Dtos
 
 		public DateTime DateDiscovered { get; set; }
 
-		public LossEventTypeEnums LossType { get; set; }
+		public int LossTypeId { get; set; }
 
 		public Status Status { get; set; }
 

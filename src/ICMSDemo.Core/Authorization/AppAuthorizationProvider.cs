@@ -30,6 +30,13 @@ namespace ICMSDemo.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var lossEventTasks = pages.CreateChildPermission(AppPermissions.Pages_LossEventTasks, L("LossEventTasks"));
+            lossEventTasks.CreateChildPermission(AppPermissions.Pages_LossEventTasks_Create, L("CreateNewLossEventTask"));
+            lossEventTasks.CreateChildPermission(AppPermissions.Pages_LossEventTasks_Edit, L("EditLossEventTask"));
+            lossEventTasks.CreateChildPermission(AppPermissions.Pages_LossEventTasks_Delete, L("DeleteLossEventTask"));
+
+
+
             var lossTypeColumns = pages.CreateChildPermission(AppPermissions.Pages_LossTypeColumns, L("LossTypeColumns"));
             lossTypeColumns.CreateChildPermission(AppPermissions.Pages_LossTypeColumns_Create, L("CreateNewLossTypeColumn"));
             lossTypeColumns.CreateChildPermission(AppPermissions.Pages_LossTypeColumns_Edit, L("EditLossTypeColumn"));

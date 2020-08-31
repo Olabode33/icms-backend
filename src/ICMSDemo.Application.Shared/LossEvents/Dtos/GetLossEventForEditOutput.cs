@@ -12,6 +12,6 @@ namespace ICMSDemo.LossEvents.Dtos
 
 		public string OrganizationUnitDisplayName { get; set;}
 
-
+        public string LossEventTypeName { get; set; }
     }
 }

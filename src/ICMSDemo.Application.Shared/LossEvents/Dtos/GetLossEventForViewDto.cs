@@ -8,6 +8,6 @@
 
 		public string OrganizationUnitDisplayName { get; set;}
 
-
+        public string LossTypeName { get; set; }
     }
 }
