@@ -163,5 +163,23 @@ namespace ICMSDemo.LossEvents
         {
             await _lossTypeRepository.DeleteAsync(input.Id);
         }
+
+        public async Task<GetLossTypeTriggerForView> GetLossTrigerForNotificationDemo()
+        {
+            var trigger = await _lossTypeTriggerRepository.FirstOrDefaultAsync(e => e.TenantId == AbpSession.TenantId);
+
+            var notifyUser = "";
+            if (trigger.NotifyUserId != null)
+            {
+                var user = UserManager.GetUserById((long)trigger.NotifyUserId);
+                notifyUser = user.FullName;
+            }
+
+            return new GetLossTypeTriggerForView
+            {
+                LossTypeTrigger = ObjectMapper.Map<LossTypeTriggerDto>(trigger),
+                NotifyUserName = notifyUser
+            };
+        }
     }
 }
