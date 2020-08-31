@@ -25,7 +25,7 @@ using ICMSDemo.ProcessRiskControls;
 
 namespace ICMSDemo.TestingTemplates
 {
-  
+
     public class TestingTemplatesAppService : ICMSDemoAppServiceBase, ITestingTemplatesAppService
     {
         private readonly IRepository<TestingTemplate> _testingTemplateRepository;
@@ -39,13 +39,13 @@ namespace ICMSDemo.TestingTemplates
         public TestingTemplatesAppService(IRepository<TestingTemplate> testingTemplateRepository,
             IRepository<ExceptionType> exceptionTypesRepository,
             IRepository<TestingAttrribute> testingTemplateAttributesRepository,
-            ITestingTemplatesExcelExporter testingTemplatesExcelExporter, 
+            ITestingTemplatesExcelExporter testingTemplatesExcelExporter,
 
             IRepository<ProcessRiskControl, int> lookup_processRiskControlRepository)
         {
             _testingTemplateRepository = testingTemplateRepository;
             _testingTemplatesExcelExporter = testingTemplatesExcelExporter;
-       
+
             _lookup_processRiskControlRepository = lookup_processRiskControlRepository;
             _testingTemplateAttributesRepository = testingTemplateAttributesRepository;
             _exceptionTypesRepository = exceptionTypesRepository;
@@ -156,7 +156,8 @@ namespace ICMSDemo.TestingTemplates
                     output.ProcessDescription = _lookupProcessRiskControl.ProcessRiskFk.ProcessFk.Description;
                     output.ProcessDepartment = _lookupProcessRiskControl.ProcessRiskFk.ProcessFk.DepartmentFk == null ? "" : _lookupProcessRiskControl.ProcessRiskFk.ProcessFk.DepartmentFk.DisplayName;
                     output.ProcessOwner = _lookupProcessRiskControl.ProcessRiskFk.ProcessFk.OwnerFk == null ? "" : _lookupProcessRiskControl.ProcessRiskFk.ProcessFk.OwnerFk.FullName;
-                } else
+                }
+                else
                 {
                     output.Risk = ObjectMapper.Map<RiskDto>(_lookupDepartmentRiskControl.DepartmentRiskFk.RiskFk);
                     output.Control = ObjectMapper.Map<ControlDto>(_lookupDepartmentRiskControl.ControlFk);
@@ -178,6 +179,7 @@ namespace ICMSDemo.TestingTemplates
                     AttributeText = item.TestAttribute,
                     TestingAttrributeId = item.Id,
                     Weight = item.Weight,
+                    ParentId = item.ParentId,
                     Result = false
                 });
             }
@@ -193,24 +195,25 @@ namespace ICMSDemo.TestingTemplates
             return output;
         }
 
-        //public async Task<List<CreateOrEditTestingAttributeDto>> GetTestAttributesForTemplate(int testTemplateId)
-        //{
-        //    var attributesToTest = await _lookup_testingAttributeRepository.GetAllListAsync(x => x.TestingTemplateId == testTemplateId);
+        public List<NameValueDto> GetTestAttributesForTemplate()
+        {
+            var attributesToTest = _testingTemplateAttributesRepository.GetAll();
 
-        //    List<CreateOrEditTestingAttributeDto> output = new List<CreateOrEditTestingAttributeDto>();
+            var output = new List<NameValueDto>();
 
-        //    foreach (var item in attributesToTest)
-        //    {
-        //        output.Add(new CreateOrEditTestingAttributeDto()
-        //        {
-        //            AttributeText = item.TestAttribute,
-        //            TestingAttrributeId = item.Id,
-        //            Result = false
-        //        });
-        //    }
 
-        //    return output;
-        //}
+
+            foreach (var item in attributesToTest)
+            {
+                output.Add(new NameValueDto()
+                {
+                    Value = item.Id.ToString(),
+                    Name = item.TestAttribute
+                });
+            }
+
+            return output;
+        }
 
         [AbpAuthorize(AppPermissions.Pages_TestingTemplates_Edit)]
         public async Task<GetTestingTemplateForEditOutput> GetTestingTemplateForEdit(EntityDto input)
@@ -264,7 +267,9 @@ namespace ICMSDemo.TestingTemplates
                 {
                     TestAttribute = item.TestAttribute,
                     TestingTemplateId = id,
-                    Weight = item.Weight  
+                    Weight = item.Weight,
+                    ParentId = item.ParentId
+
                 });
             }
         }

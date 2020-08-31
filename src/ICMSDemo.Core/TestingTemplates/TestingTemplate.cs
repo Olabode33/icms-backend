@@ -61,7 +61,7 @@ namespace ICMSDemo.TestingTemplates
 
 		[ForeignKey("TestingTemplateId")]
 		public TestingTemplate TestingTemplate { get; set; }
-
+		public virtual int? ParentId { get; set; }
 
 
 
