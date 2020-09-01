@@ -16,5 +16,12 @@ namespace ICMSDemo.Organizations.Dto
 
         public string DepartmentCode { get; set; }
         public long? DepartmentId { get; set; }
+
+        public string TestAttribute { get; set; }
+
+        public int Weight { get; set; }
+
+        public virtual int? TestingTemplateId { get; set; }
+
     }
 }

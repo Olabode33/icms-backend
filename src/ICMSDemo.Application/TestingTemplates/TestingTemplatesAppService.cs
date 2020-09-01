@@ -22,6 +22,7 @@ using ICMSDemo.Controls.Dtos;
 using ICMSDemo.ExceptionTypes;
 using ICMSDemo.WorkingPaperNews.Dtos;
 using ICMSDemo.ProcessRiskControls;
+using ICMSDemo.Organizations.Dto;
 
 namespace ICMSDemo.TestingTemplates
 {
@@ -195,6 +196,43 @@ namespace ICMSDemo.TestingTemplates
             return output;
         }
 
+        public async Task<GetTestingTemplateForEditOutput> GetQuestionsForEdit(int id)
+        {
+            var process = await _testingTemplateAttributesRepository.FirstOrDefaultAsync(id);
+
+            var output = new GetTestingTemplateForEditOutput { TestingTemplate = ObjectMapper.Map<CreateOrEditTestingTemplateDto>(process) };
+            output.OrganizationUnitDisplayName = process.TestAttribute;
+
+            return output;
+        }
+
+        public async Task<ListResultDto<OrganizationUnitDto>> GetTemplateQuestions(int testingTemplateId)
+        {
+            var query =
+                from ou in _testingTemplateAttributesRepository.GetAll().Where(o => o.TestingTemplateId == testingTemplateId)
+                select new { ou };
+
+            var items = await query.ToListAsync();
+            var oUnit = new OrganizationUnitDto();
+
+          var ouRes=  items.Select(i => new OrganizationUnitDto
+            {
+                DisplayName = i.ou.TestAttribute,
+                Id =i.ou.Id,
+                Weight = i.ou.Weight,
+                ParentId = i.ou.ParentId,
+                TestingTemplateId =i.ou.TestingTemplateId,
+               
+          });
+
+            var res = new ListResultDto<OrganizationUnitDto>(
+                ouRes.ToList()
+                );
+
+            return res;
+        }
+
+
         public List<NameValueDto> GetTestAttributesForTemplate()
         {
             var attributesToTest = _testingTemplateAttributesRepository.GetAll();
@@ -230,6 +268,41 @@ namespace ICMSDemo.TestingTemplates
 
             return output;
         }
+
+        public async Task CreateOrEditTemplate(CreateOrEditTestingTemplateDto input)
+        {
+            if (input.templateContent.Id == null)
+            {
+                await CreateTemplate(input);
+            }
+            else
+            {
+                await UpdateTemplate(input);
+            }
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_TestingTemplates_Create)]
+        protected virtual async Task CreateTemplate(CreateOrEditTestingTemplateDto input)
+        {
+
+            await _testingTemplateAttributesRepository.InsertAsync(new TestingAttrribute()
+            {
+                TestAttribute = input.templateContent.TestAttribute,
+                TestingTemplateId = input.templateContent.TestingTemplateId,
+                Weight = input.templateContent.Weight,
+                ParentId = input.templateContent.ParentId
+                
+
+            });
+        }
+
+        [AbpAuthorize(AppPermissions.Pages_TestingTemplates_Edit)]
+        protected virtual async Task UpdateTemplate(CreateOrEditTestingTemplateDto input)
+        {
+            var testingTemplate = await _testingTemplateRepository.FirstOrDefaultAsync((int)input.templateContent.Id);
+            ObjectMapper.Map(input, testingTemplate);
+        }
+
 
         public async Task CreateOrEdit(CreateOrEditTestingTemplateDto input)
         {
