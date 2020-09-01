@@ -304,6 +304,26 @@ namespace ICMSDemo.TestingTemplates
         }
 
 
+        public virtual async Task<int> CreateAndGetId(CreateOrEditTestingTemplateDto input)
+        {
+            var previousCount = await _testingTemplateRepository.CountAsync();
+
+            previousCount++;
+
+            var testingTemplate = ObjectMapper.Map<TestingTemplate>(input);
+            testingTemplate.Code = "TT-" + previousCount.ToString();
+            testingTemplate.ProcessRiskControlId = input.DepartmentRiskControlId;
+
+            if (AbpSession.TenantId != null)
+            {
+                testingTemplate.TenantId = (int)AbpSession.TenantId;
+            }
+
+            var id = await _testingTemplateRepository.InsertAndGetIdAsync(testingTemplate);
+
+            return id;
+        }
+
         public async Task CreateOrEdit(CreateOrEditTestingTemplateDto input)
         {
             if (input.Id == null)
