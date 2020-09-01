@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200901152628_Removed_Priority")]
+    partial class Removed_Priority
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2708,17 +2710,8 @@ namespace ICMSDemo.Migrations
                     b.Property<DateTime>("CompletionDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("ExpectedCompletionDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Response")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Severity")
                         .HasColumnType("int");

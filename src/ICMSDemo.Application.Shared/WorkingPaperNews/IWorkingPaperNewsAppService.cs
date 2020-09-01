@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using ICMSDemo.WorkingPaperNews.Dtos;
-using ICMSDemo.Dto;
 
 namespace ICMSDemo.WorkingPaperNews
 {

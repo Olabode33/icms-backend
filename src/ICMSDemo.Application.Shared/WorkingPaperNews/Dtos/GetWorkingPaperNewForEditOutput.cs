@@ -3,6 +3,7 @@ using Abp.Application.Services.Dto;
 using System.ComponentModel.DataAnnotations;
 using ICMSDemo.TestingTemplates.Dtos;
 using System.Collections.Generic;
+using ICMSDemo.WorkingPaperReviewComments.Dtos;
 
 namespace ICMSDemo.WorkingPaperNews.Dtos
 {
@@ -20,7 +21,6 @@ namespace ICMSDemo.WorkingPaperNews.Dtos
 
 		public string ReviewedBy { get; set;}
 		public string AssignedTo { get; set;}
-
-
+        public GetWorkingPaperReviewCommentForViewDto[] ReviewComments { get; set; }
     }
 }

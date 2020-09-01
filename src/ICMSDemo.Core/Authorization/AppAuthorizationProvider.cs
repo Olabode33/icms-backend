@@ -30,6 +30,13 @@ namespace ICMSDemo.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var workingPaperReviewComments = pages.CreateChildPermission(AppPermissions.Pages_WorkingPaperReviewComments, L("WorkingPaperReviewComments"), multiTenancySides: MultiTenancySides.Tenant);
+            workingPaperReviewComments.CreateChildPermission(AppPermissions.Pages_WorkingPaperReviewComments_Create, L("CreateNewWorkingPaperReviewComment"), multiTenancySides: MultiTenancySides.Tenant);
+            workingPaperReviewComments.CreateChildPermission(AppPermissions.Pages_WorkingPaperReviewComments_Edit, L("EditWorkingPaperReviewComment"), multiTenancySides: MultiTenancySides.Tenant);
+            workingPaperReviewComments.CreateChildPermission(AppPermissions.Pages_WorkingPaperReviewComments_Delete, L("DeleteWorkingPaperReviewComment"), multiTenancySides: MultiTenancySides.Tenant);
+
+
+
             var lossEventTasks = pages.CreateChildPermission(AppPermissions.Pages_LossEventTasks, L("LossEventTasks"));
             lossEventTasks.CreateChildPermission(AppPermissions.Pages_LossEventTasks_Create, L("CreateNewLossEventTask"));
             lossEventTasks.CreateChildPermission(AppPermissions.Pages_LossEventTasks_Edit, L("EditLossEventTask"));

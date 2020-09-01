@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200901125754_Added_WorkingPaperReviewComment")]
+    partial class Added_WorkingPaperReviewComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2705,19 +2707,13 @@ namespace ICMSDemo.Migrations
                     b.Property<string>("Comments")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CompletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CompletionDate")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ExpectedCompletionDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Response")
+                    b.Property<string>("Priority")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Severity")

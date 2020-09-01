@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_WorkingPaperReviewComments = "Pages.WorkingPaperReviewComments";
+        public const string Pages_WorkingPaperReviewComments_Create = "Pages.WorkingPaperReviewComments.Create";
+        public const string Pages_WorkingPaperReviewComments_Edit = "Pages.WorkingPaperReviewComments.Edit";
+        public const string Pages_WorkingPaperReviewComments_Delete = "Pages.WorkingPaperReviewComments.Delete";
+
         public const string Pages_LossEventTasks = "Pages.LossEventTasks";
         public const string Pages_LossEventTasks_Create = "Pages.LossEventTasks.Create";
         public const string Pages_LossEventTasks_Edit = "Pages.LossEventTasks.Edit";

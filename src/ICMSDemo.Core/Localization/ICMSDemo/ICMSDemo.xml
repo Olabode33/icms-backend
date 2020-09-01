@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="LossEventTasks">Loss event tasks</text>
+  <texts>    <text name="WorkingPaperReviewComments">Working paper review comments</text>
+    <text name="WorkingPaperReviewComment">Working paper review comment</text>
+    <text name="ICMSDemo.WorkingPaperReviewComments.WorkingPaperReviewComment">WorkingPaperReviewComment</text>
+    <text name="Priority">Priority</text>
+    <text name="ExpectedCompletionDate">Expected completion date</text>
+    <text name="WorkingPaperReviewCommentsHeaderInfo">Working paper review comments header info</text>
+    <text name="CreateNewWorkingPaperReviewComment">Create new working paper review comment</text>
+    <text name="EditWorkingPaperReviewComment">Edit working paper review comment</text>
+    <text name="DeleteWorkingPaperReviewComment">Delete working paper review comment</text>
+    <text name="WorkingPaperCode">Working paper code</text>
+    <text name="PickWorkingPaper">Pick working paper</text>
+    <text name="ExpectedCompletionDateRange">Expected completion date range</text>
+    <text name="LossEventTasks">Loss event tasks</text>
     <text name="LossEventTask">Loss event task</text>
     <text name="ICMSDemo.LossEventTasks.LossEventTask">LossEventTask</text>
     <text name="LossTypeId">Loss type id</text>
