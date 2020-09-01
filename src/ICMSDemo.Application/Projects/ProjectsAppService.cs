@@ -94,7 +94,7 @@ namespace ICMSDemo.Projects
 
 
 			var pagedAndFilteredProjects = filteredProjects
-                .OrderBy(input.Sorting ?? "id asc")
+                .OrderBy(input.Sorting ?? "budgetedEndDate desc")
                 .PageBy(input);
 
 			var projects = from o in pagedAndFilteredProjects

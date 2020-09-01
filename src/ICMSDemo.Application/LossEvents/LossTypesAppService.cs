@@ -195,10 +195,18 @@ namespace ICMSDemo.LossEvents
                 notifyUser = user.FullName;
             }
 
+            var lossTypeName = "";
+            if (trigger.LossTypeId != null)
+            {
+                var lossType = await _lossTypeRepository.FirstOrDefaultAsync(trigger.LossTypeId);
+                lossTypeName = lossType.Name;
+            }
+
             return new GetLossTypeTriggerForView
             {
                 LossTypeTrigger = ObjectMapper.Map<LossTypeTriggerDto>(trigger),
-                NotifyUserName = notifyUser
+                NotifyUserName = notifyUser,
+                LossTypeName = lossTypeName
             };
         }
     }

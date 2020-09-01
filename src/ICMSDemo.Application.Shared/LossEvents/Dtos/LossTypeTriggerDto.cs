@@ -22,5 +22,6 @@ namespace ICMSDemo.LossEvents.Dtos
     {
         public LossTypeTriggerDto LossTypeTrigger { get; set; }
         public string NotifyUserName { get; set; }
+        public string LossTypeName { get; set; }
     }
 }
