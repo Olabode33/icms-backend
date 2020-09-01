@@ -62,7 +62,8 @@ namespace ICMSDemo.ExceptionTypes
                                 Description = o.Description,
                                 Severity = o.Severity,
                                 TargetRemediation = o.TargetRemediation,
-                                Id = o.Id
+                                Id = o.Id,
+								Remediation = o.Remediation
 							}
 						};
 

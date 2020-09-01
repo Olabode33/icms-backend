@@ -25,7 +25,8 @@ namespace ICMSDemo.ExceptionTypes
 		
 		[Range(ExceptionTypeConsts.MinTargetRemediationValue, ExceptionTypeConsts.MaxTargetRemediationValue)]
 		public virtual int? TargetRemediation { get; set; }
-		
+
+		public virtual ExceptionRemediationTypeEnum? Remediation { get; set; }
 
     }
 }
