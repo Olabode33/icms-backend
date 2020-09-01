@@ -17,6 +17,7 @@ using ICMSDemo.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using ICMSDemo.Departments;
 
 namespace ICMSDemo.DepartmentRatingHistory
 {
@@ -25,11 +26,11 @@ namespace ICMSDemo.DepartmentRatingHistory
     {
 		 private readonly IRepository<DepartmentRating> _departmentRatingRepository;
 		 private readonly IDepartmentRatingHistoryExcelExporter _departmentRatingHistoryExcelExporter;
-		 private readonly IRepository<OrganizationUnit,long> _lookup_organizationUnitRepository;
+		 private readonly IRepository<Department,long> _lookup_organizationUnitRepository;
 		 private readonly IRepository<Rating,int> _lookup_ratingRepository;
 		 
 
-		  public DepartmentRatingHistoryAppService(IRepository<DepartmentRating> departmentRatingRepository, IDepartmentRatingHistoryExcelExporter departmentRatingHistoryExcelExporter , IRepository<OrganizationUnit, long> lookup_organizationUnitRepository, IRepository<Rating, int> lookup_ratingRepository) 
+		  public DepartmentRatingHistoryAppService(IRepository<DepartmentRating> departmentRatingRepository, IDepartmentRatingHistoryExcelExporter departmentRatingHistoryExcelExporter , IRepository<Department, long> lookup_organizationUnitRepository, IRepository<Rating, int> lookup_ratingRepository) 
 		  {
 			_departmentRatingRepository = departmentRatingRepository;
 			_departmentRatingHistoryExcelExporter = departmentRatingHistoryExcelExporter;
@@ -141,7 +142,11 @@ namespace ICMSDemo.DepartmentRatingHistory
 			{
 				departmentRating.TenantId = (int) AbpSession.TenantId;
 			}
-		
+
+          var department = await _lookup_organizationUnitRepository.FirstOrDefaultAsync(x => x.Id == input.OrganizationUnitId);
+            department.RatingId = input.RatingId;
+
+            await _lookup_organizationUnitRepository.UpdateAsync(department);
 
             await _departmentRatingRepository.InsertAsync(departmentRating);
          }

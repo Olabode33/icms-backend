@@ -20,6 +20,7 @@ using Abp.UI;
 using ICMSDemo.Projects;
 using Abp.Authorization.Users;
 using Abp.Timing;
+using ICMSDemo.Notifications;
 
 namespace ICMSDemo.WorkingPaperNews
 {
@@ -35,9 +36,12 @@ namespace ICMSDemo.WorkingPaperNews
         private readonly IRepository<Project> _lookup_projectRepository;
         private readonly IRepository<UnitOrganizationRole,long> _lookup_ouRoleRepository;
 
+        private readonly IAppNotifier _appNotifier;
+
 
 
         public WorkingPaperNewsAppService(IRepository<WorkingPaper, Guid> workingPaperNewRepository,
+             IAppNotifier appNotifier,
             IRepository<TestingAttrribute, int> lookup_testingAttributeRepository, IRepository<UnitOrganizationRole, long> lookup_ouRoleRepository,
             IRepository<WorkingPaperDetail> workingPaperDetailsRepository, IRepository<Project> lookup_projectRepository,
             IRepository<TestingTemplate, int> lookup_testingTemplateRepository, IRepository<Department, long> lookup_organizationUnitRepository, IRepository<User, long> lookup_userRepository)
@@ -50,6 +54,7 @@ namespace ICMSDemo.WorkingPaperNews
             _lookup_testingAttributeRepository = lookup_testingAttributeRepository;
             _workingPaperDetailsRepository = workingPaperDetailsRepository;
             _lookup_ouRoleRepository = lookup_ouRoleRepository;
+            _appNotifier = appNotifier;
         }
 
         public async Task<PagedResultDto<GetWorkingPaperNewForViewDto>> GetAll(GetAllWorkingPaperNewsInput input)
@@ -284,6 +289,10 @@ namespace ICMSDemo.WorkingPaperNews
 
                 var newAssignee = await _lookup_ouRoleRepository.FirstOrDefaultAsync(x => x.DepartmentRole == DepartmentRole.ControlHead && x.OrganizationUnitId == workingPaperNew.OrganizationUnitId);
                 workingPaperNew.AssignedToId = newAssignee.UserId;
+
+                var completedUser = await _lookup_userRepository.FirstOrDefaultAsync(x => x.Id == newAssignee.UserId);
+
+                await _appNotifier.NotifyControlManager(completedUser.ToUserIdentifier());
             }
         }
 
@@ -308,6 +317,10 @@ namespace ICMSDemo.WorkingPaperNews
             project.Progress = Convert.ToDecimal(progress);
 
             await _lookup_projectRepository.UpdateAsync(project);
+
+           var completedUser = await _lookup_userRepository.FirstOrDefaultAsync(x => x.Id == workingPaperNew.CompletedById);
+
+           await _appNotifier.NotifyControlOfficerOfApproval(completedUser.ToUserIdentifier());
         }
 
         private async Task<decimal> SaveWorkingPaperDetails(CreateOrEditTestingAttributeDto[] input, List<TestingAttrribute> testingAttrributes, Guid workingPaperId)

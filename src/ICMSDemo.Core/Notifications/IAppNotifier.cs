@@ -9,6 +9,10 @@ namespace ICMSDemo.Notifications
 {
     public interface IAppNotifier
     {
+        Task NotifyControlOfficerOfApproval(UserIdentifier argsUser);
+
+        Task NotifyControlManager(UserIdentifier argsUser);
+
         Task WelcomeToTheApplicationAsync(User user);
 
         Task NewUserRegisteredAsync(User user);
