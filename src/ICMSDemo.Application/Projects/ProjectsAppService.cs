@@ -343,8 +343,6 @@ namespace ICMSDemo.Projects
         }
 
 
-
-
         [AbpAuthorize(AppPermissions.Pages_Projects_Delete)]
          public async Task Delete(EntityDto input)
          {
@@ -398,7 +396,6 @@ namespace ICMSDemo.Projects
 
             return _projectsExcelExporter.ExportToFile(projectListDtos);
          }
-
 
 
 		//[AbpAuthorize(AppPermissions.Pages_Projects)]

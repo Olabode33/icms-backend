@@ -31,14 +31,17 @@ namespace ICMSDemo.TestingTemplates.Dtos
 		public ProjectOwner? ProjectOwner { get; set; }
 
 		public CreateorEditTestTemplateDetailsDto[] Attributes { get; set; }
+
+		public CreateorEditTestTemplateDetailsDto templateContent { get; set; }
 	}
 
 
 	public class CreateorEditTestTemplateDetailsDto
 	{
+		public int TestingTemplateId { get; set; }
 		public string TestAttribute { get; set; }
-
-		public int Weight { get; set; }
+        public int? Id { get; set; }
+        public int Weight { get; set; }
 		public int? ParentId { get; set; }
 
 	}
