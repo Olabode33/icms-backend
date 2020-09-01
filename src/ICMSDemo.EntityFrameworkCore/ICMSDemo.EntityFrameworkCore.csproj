@@ -10,6 +10,12 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Migrations\20200822122957_Likelhood and Impact Columns.cs" />
+    <Compile Remove="Migrations\20200822122957_Likelhood and Impact Columns.Designer.cs" />
+    <Compile Remove="Migrations\20200830093417_Added-Loss-Type-Entities.cs" />
+    <Compile Remove="Migrations\20200830093417_Added-Loss-Type-Entities.Designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>

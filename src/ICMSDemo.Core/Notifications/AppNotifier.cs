@@ -17,6 +17,16 @@ namespace ICMSDemo.Notifications
             _notificationPublisher = notificationPublisher;
         }
 
+        public async Task WelcomeToTheApplicationTestAsync(User user)
+        {
+            await _notificationPublisher.PublishAsync(
+                AppNotificationNames.WelcomeToTheApplication,
+                new MessageNotificationData("A posssible loss event has been identified!"),
+                severity: NotificationSeverity.Success,
+                userIds: new[] { user.ToUserIdentifier() }
+                );
+        }
+
         public async Task WelcomeToTheApplicationAsync(User user)
         {
             await _notificationPublisher.PublishAsync(

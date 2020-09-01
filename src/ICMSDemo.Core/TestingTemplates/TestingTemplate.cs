@@ -8,6 +8,7 @@ using Abp.Domain.Entities;
 using Abp.Auditing;
 using ICMSDemo.ExceptionTypes;
 using ICMSDemo.ProcessRiskControls;
+using static ICMSDemo.IcmsEnums;
 
 namespace ICMSDemo.TestingTemplates
 {
@@ -44,7 +45,10 @@ namespace ICMSDemo.TestingTemplates
 
 		[ForeignKey("ExceptionTypeId")]
 		public ExceptionType ExceptionType { get; set; }
-	}
+        public virtual ProjectOwner? ProjectOwner { get; set; }
+
+
+    }
 
 
 	public class TestingAttrribute : CreationAuditedEntity
@@ -57,7 +61,7 @@ namespace ICMSDemo.TestingTemplates
 
 		[ForeignKey("TestingTemplateId")]
 		public TestingTemplate TestingTemplate { get; set; }
-
+		public virtual int? ParentId { get; set; }
 
 
 

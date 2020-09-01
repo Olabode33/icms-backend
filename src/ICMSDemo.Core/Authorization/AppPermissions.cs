@@ -6,6 +6,21 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_LossEventTasks = "Pages.LossEventTasks";
+        public const string Pages_LossEventTasks_Create = "Pages.LossEventTasks.Create";
+        public const string Pages_LossEventTasks_Edit = "Pages.LossEventTasks.Edit";
+        public const string Pages_LossEventTasks_Delete = "Pages.LossEventTasks.Delete";
+
+        public const string Pages_LossTypeColumns = "Pages.LossTypeColumns";
+        public const string Pages_LossTypeColumns_Create = "Pages.LossTypeColumns.Create";
+        public const string Pages_LossTypeColumns_Edit = "Pages.LossTypeColumns.Edit";
+        public const string Pages_LossTypeColumns_Delete = "Pages.LossTypeColumns.Delete";
+
+        public const string Pages_LossEvents = "Pages.LossEvents";
+        public const string Pages_LossEvents_Create = "Pages.LossEvents.Create";
+        public const string Pages_LossEvents_Edit = "Pages.LossEvents.Edit";
+        public const string Pages_LossEvents_Delete = "Pages.LossEvents.Delete";
+
         public const string Pages_LibraryControls = "Pages.LibraryControls";
         public const string Pages_LibraryControls_Create = "Pages.LibraryControls.Create";
         public const string Pages_LibraryControls_Edit = "Pages.LibraryControls.Edit";

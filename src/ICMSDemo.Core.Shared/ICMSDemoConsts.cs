@@ -25,7 +25,7 @@
 
     public enum Status
     {
-        Open, Resolved,Closed
+        Open, Resolved,Closed, Draft, Submitted
     }
 
     public enum ControlType

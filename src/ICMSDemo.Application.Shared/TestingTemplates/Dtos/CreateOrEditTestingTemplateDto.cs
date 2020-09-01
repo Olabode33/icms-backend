@@ -3,6 +3,7 @@
 using System;
 using Abp.Application.Services.Dto;
 using System.ComponentModel.DataAnnotations;
+using static ICMSDemo.IcmsEnums;
 
 namespace ICMSDemo.TestingTemplates.Dtos
 {
@@ -27,6 +28,8 @@ namespace ICMSDemo.TestingTemplates.Dtos
 		 
 		 public int? SampleSize { set; get; }
 
+		public ProjectOwner? ProjectOwner { get; set; }
+
 		public CreateorEditTestTemplateDetailsDto[] Attributes { get; set; }
 	}
 
@@ -36,6 +39,7 @@ namespace ICMSDemo.TestingTemplates.Dtos
 		public string TestAttribute { get; set; }
 
 		public int Weight { get; set; }
+		public int? ParentId { get; set; }
 
 	}
 }

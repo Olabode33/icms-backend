@@ -153,7 +153,7 @@ import { EntityTypeHistoryModalComponent } from '@app/shared/common/entityHistor
 		},
 		{
 			"placeholder": "{{View_Component_Import_Here}}",
-			"condition": "{{Create_View_Only_Here}} == true && {{Is_Master_Detail_Page_Here}} == false",
+			"condition": "{{Create_View_Only_Here}} == true && {{Is_Non_Modal_CRUD_Page}} == false",
 			"content": "
 import { View{{Entity_Name_Here}}ModalComponent } from './view-{{entity_Name_Here}}-modal.component';"
 		},		
@@ -231,27 +231,27 @@ import { LazyLoadEvent } from 'primeng/public_api';"
 		},
 		{
 			"placeholder": "{{Import_Create_Or_Edit_Component_Here}}",
-			"condition": "{{Is_Master_Detail_Page_Here}} == false",
+			"condition": "{{Is_Non_Modal_CRUD_Page}} == false",
 			"content": "import { CreateOrEdit{{Entity_Name_Here}}ModalComponent } from './create-or-edit-{{entity_Name_Here}}-modal.component';"
 		},
 		{
 			"placeholder": "{{View_Child_Create_Or_Edit_Modal_Def_Here}}",
-			"condition": "{{Is_Master_Detail_Page_Here}} == false",
-			"content": "@ViewChild('createOrEdit{{Entity_Name_Here}}Modal', { static: true }) createOrEdit{{Entity_Name_Here}}Modal: CreateOrEdit{{Entity_Name_Here}}ModalComponent;{{View_Component_Dec_Here}}{{EntityTypeHistoryModal_Dev_Here}}"
+			"condition": "{{Is_Non_Modal_CRUD_Page}} == false",
+			"content": "@ViewChild('createOrEdit{{Entity_Name_Here}}Modal', { static: true }) createOrEdit{{Entity_Name_Here}}Modal: CreateOrEdit{{Entity_Name_Here}}ModalComponent;{{View_Component_Dec_Here}}"
 		},
 		{
 			"placeholder": "{{On_Click_Create_Here}}",
-			"condition": "{{Is_Master_Detail_Page_Here}} == false",
+			"condition": "{{Is_Non_Modal_CRUD_Page}} == false",
 			"content": "this.createOrEdit{{Entity_Name_Here}}Modal.show();"
 		},
 		{
 			"placeholder": "{{On_Click_Create_Here}}",
-			"condition": "{{Is_Master_Detail_Page_Here}} == true",
+			"condition": "{{Is_Non_Modal_CRUD_Page}} == true",
 			"content": "this._router.navigate(['/app/{{menu_Position_Here}}/{{namespace_Relative_Here}}/{{entity_Name_Plural_Here}}/createOrEdit']);"
 		},
 		{
 			"placeholder": "{{Router_Field_Here}}",
-			"condition": "{{Is_Master_Detail_Page_Here}} == true",
+			"condition": "{{Is_Non_Modal_CRUD_Page}} == true",
 			"content": ",
 			private _router: Router"
 		},

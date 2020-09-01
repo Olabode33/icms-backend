@@ -39,7 +39,7 @@ namespace ICMSDemo.Controls
 			var controlTypeFilter = (ControlType) input.ControlTypeFilter;
 			var frequencyFilter = (Frequency) input.FrequencyFilter;
 			
-			var filteredControls = _controlRepository.GetAll()
+			var filteredControls = _controlRepository.GetAll().Include(e => e.ControlOwnerFK)
 						.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false  || e.Code.Contains(input.Filter) || e.Name.Contains(input.Filter) || e.Description.Contains(input.Filter))
 						.WhereIf(!string.IsNullOrWhiteSpace(input.CodeFilter),  e => e.Code == input.CodeFilter)
 						.WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter),  e => e.Name == input.NameFilter)
@@ -59,8 +59,12 @@ namespace ICMSDemo.Controls
                                 Description = o.Description,
                                 ControlType = o.ControlType,
                                 Frequency = o.Frequency,
-                                Id = o.Id
-							}
+                                Id = o.Id,
+								ControlObjective = o.ControlObjective,
+								ControlOwnerId = o.ControlOwnerId,
+								ControlPoint = o.ControlPoint
+							},
+							ControlOwnerName = o.ControlOwnerFK != null ? o.ControlOwnerFK.FullName : ""
 						};
 
             var totalCount = await filteredControls.CountAsync();
@@ -86,6 +90,12 @@ namespace ICMSDemo.Controls
             var control = await _controlRepository.FirstOrDefaultAsync(input.Id);
            
 		    var output = new GetControlForEditOutput {Control = ObjectMapper.Map<CreateOrEditControlDto>(control)};
+
+			if (control.ControlOwnerId != null)
+            {
+				var user = await UserManager.GetUserByIdAsync((long)control.ControlOwnerId);
+				output.ControlOwnerName = user.FullName;
+            }
 			
             return output;
          }

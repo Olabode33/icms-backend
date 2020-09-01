@@ -18,5 +18,9 @@ namespace ICMSDemo.ProcessRiskControls
         [ForeignKey("ProcessId")]
 		public Process ProcessFk { get; set; }
 
-    }
+		public double? Likelyhood { get; set; }
+
+		public double? Impact { get; set; }
+
+	}
 }

@@ -18,6 +18,7 @@ using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ICMSDemo.Processes;
+using ICMSDemo.ProcessRiskControls;
 
 namespace ICMSDemo.ProcessRisks
 {
@@ -25,13 +26,15 @@ namespace ICMSDemo.ProcessRisks
     public class ProcessRisksAppService : ICMSDemoAppServiceBase, IProcessRisksAppService
     {
         private readonly IRepository<ProcessRisk> _processRiskRepository;
+        private readonly IRepository<ProcessRiskControl> _processRiskControlRepository;
         private readonly IProcessRisksExcelExporter _processRisksExcelExporter;
         private readonly IRepository<Process, long> _lookup_processRepository;
         private readonly IRepository<Risk, int> _lookup_riskRepository;
 
 
         public ProcessRisksAppService(
-            IRepository<ProcessRisk> processRiskRepository, 
+            IRepository<ProcessRisk> processRiskRepository,
+            IRepository<ProcessRiskControl> processRiskControlRepository,
             IProcessRisksExcelExporter processRisksExcelExporter, 
             IRepository<Process, long> lookup_processRepository, 
             IRepository<Risk, int> lookup_riskRepository)
@@ -40,7 +43,7 @@ namespace ICMSDemo.ProcessRisks
             _processRisksExcelExporter = processRisksExcelExporter;
             _lookup_processRepository = lookup_processRepository;
             _lookup_riskRepository = lookup_riskRepository;
-
+            _processRiskControlRepository = processRiskControlRepository;
         }
 
         public async Task<PagedResultDto<GetProcessRiskForViewDto>> GetAll(GetAllProcessRisksInput input)
@@ -58,31 +61,36 @@ namespace ICMSDemo.ProcessRisks
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-            var processRisks = from o in pagedAndFilteredProcessRisks
-                               join o1 in _lookup_processRepository.GetAll() on o.ProcessId equals o1.Id into j1
-                               from s1 in j1.DefaultIfEmpty()
+            var processRisks = await (from o in pagedAndFilteredProcessRisks
+                                       join o1 in _lookup_processRepository.GetAll() on o.ProcessId equals o1.Id into j1
+                                       from s1 in j1.DefaultIfEmpty()
 
-                               join o2 in _lookup_riskRepository.GetAll() on o.RiskId equals o2.Id into j2
-                               from s2 in j2.DefaultIfEmpty()
+                                       join o2 in _lookup_riskRepository.GetAll() on o.RiskId equals o2.Id into j2
+                                       from s2 in j2.DefaultIfEmpty()
 
-                               select new GetProcessRiskForViewDto()
-                               {
-                                   ProcessRisk = new ProcessRiskDto
-                                   {
-                                       Code = o.Code,
-                                       Comments = o.Comments,
-                                       Cascade = o.Cascade,
-                                       Id = o.Id
-                                   },
-                                   ProcessName = s1 == null ? "" : s1.DisplayName.ToString(),
-                                   RiskName = s2 == null ? "" : s2.Name.ToString()
-                               };
+                                       select new GetProcessRiskForViewDto()
+                                       {
+                                           ProcessRisk = ObjectMapper.Map<ProcessRiskDto>(o),
+                                           Inherited = o.ProcessId == input.ProcessId ? false : true,
+                                           ProcessName = o.ProcessFk == null ? "" : o.ProcessFk.Name.ToString(),
+                                           RiskName = o.RiskFk == null ? "" : o.RiskFk.Name.ToString(),
+                                           Severity = o.RiskFk == null ? "" : o.RiskFk.Severity.ToString(),
+                                           ProcessCode = o.ProcessFk == null ? "" : o.ProcessFk.Code
+                                       }).ToListAsync();
 
             var totalCount = await filteredProcessRisks.CountAsync();
 
+            foreach (var item in processRisks)
+            {
+                var residualRisk = CalculateResidualRiskScore(item.ProcessRisk);
+                item.InherentRiskScore = (item.ProcessRisk.Impact ?? 0) * (item.ProcessRisk.Likelyhood ?? 0);
+                item.ResidualRiskScore = residualRisk.ResidualRiskScore;
+                item.OverControlled = residualRisk.OverControlled;
+            }
+
             return new PagedResultDto<GetProcessRiskForViewDto>(
                 totalCount,
-                await processRisks.ToListAsync()
+                processRisks
             );
         }
 
@@ -134,9 +142,72 @@ namespace ICMSDemo.ProcessRisks
 
             var output = lists.Skip(input.SkipCount).Take(input.MaxResultCount);
 
+            foreach (var item in lists)
+            {
+                var residualRisk = CalculateResidualRiskScore(item.ProcessRisk);
+                item.InherentRiskScore = (item.ProcessRisk.Impact ?? 0) * (item.ProcessRisk.Likelyhood ?? 0);
+                item.ResidualRiskScore = residualRisk.ResidualRiskScore;
+                item.OverControlled = residualRisk.OverControlled;
+            }
+
             return new ListResultDto<GetProcessRiskForViewDto>(lists);
         }
 
+
+        public ResidualRiskScoreComponents CalculateResidualRiskScore(ProcessRiskDto processRisk)
+        {
+
+            var processRiskControls = GetProcessRiskControl(processRisk.ProcessId, processRisk.Id);
+            var totalLikelihood = processRiskControls.Sum(e => e.Likelyhood == null ? 0 : (double)e.Likelyhood);
+            var totalImpact = processRiskControls.Sum(e => e.Impact == null ? 0 : (double)e.Impact);
+
+            var likelihoodScore = (processRisk.Likelyhood??0) * ( 1 - (totalLikelihood > 1 ? 1 : totalLikelihood));
+            var impactScore = (processRisk.Impact??0) * ( 1 - (totalImpact > 1 ? 1 : totalImpact));
+
+            return new ResidualRiskScoreComponents
+            {
+                ResidualRiskScore = likelihoodScore * impactScore,
+                OverControlled = totalLikelihood > 1 || totalImpact > 1 ? true : false
+            };
+
+        }
+
+        private List<ProcessRiskControl> GetProcessRiskControl(long processId, int processRiskId)
+        {
+            var processCode = OrganizationUnitManager.GetCode(processId);
+
+            string[] roots = processCode.Split(".");
+            string previousCode = string.Empty;
+            List<string> codes = new List<string>();
+
+            foreach (var item in roots)
+            {
+                previousCode = previousCode == string.Empty ? item : previousCode + "." + item;
+                codes.Add(previousCode);
+            }
+
+            var departments = _lookup_processRepository.GetAllList(x => codes.Any(e => e == x.Code));
+
+
+            var filteredDepartmentRiskControls = _processRiskControlRepository.GetAll()
+                                                .Include(e => e.ControlFk)
+                                                .Include(e => e.ProcessRiskFk)
+                                                .ThenInclude(x => x.ProcessFk)
+                                                .Where(x => x.ProcessId == processId || (x.ProcessId != processId && x.Cascade))
+                                                .Select(e => new
+                                                {
+                                                    ProcessRiskControl = e,
+                                                    ProcessRiskCode = e.ProcessFk == null ? "" : e.ProcessFk.Code,
+                                                })
+                                                .ToList();
+
+            var outputList = filteredDepartmentRiskControls.Where(x => codes.Any(e => e == x.ProcessRiskCode));
+            var processRiskControls = outputList.Where(e => e.ProcessRiskControl.ProcessRiskId == processRiskId)
+                                                .Select(e => e.ProcessRiskControl)
+                                                .ToList();
+
+            return processRiskControls;
+        }
 
         public async Task<GetProcessRiskForViewDto> GetProcessRiskForView(int id)
         {

@@ -24,7 +24,10 @@ namespace ICMSDemo.Risks
 		public virtual string Description { get; set; }
 		
 		public virtual Severity Severity { get; set; }
-		
+
+        public int? Likelyhood { get; set; }
+
+        public int? Impact { get; set; }
 
     }
 }

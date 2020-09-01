@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
 using Abp.Auditing;
+using static ICMSDemo.IcmsEnums;
 
 namespace ICMSDemo.Projects
 {
@@ -53,6 +54,8 @@ namespace ICMSDemo.Projects
 		
         [ForeignKey("ScopeId")]
 		public OrganizationUnit ScopeFk { get; set; }
-		
+
+        public ProjectOwner? ProjectOwner { get; set; }
+
     }
 }

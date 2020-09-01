@@ -1,4 +1,8 @@
-﻿using ICMSDemo.LibraryControls.Dtos;
+﻿using ICMSDemo.LossEventTasks.Dtos;
+using ICMSDemo.LossEventTasks;
+using ICMSDemo.LossEvents.Dtos;
+using ICMSDemo.LossEvents;
+using ICMSDemo.LibraryControls.Dtos;
 using ICMSDemo.LibraryControls;
 using ICMSDemo.LibraryRisks.Dtos;
 using ICMSDemo.LibraryRisks;
@@ -81,6 +85,14 @@ namespace ICMSDemo
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditLossEventTaskDto, LossEventTask>().ReverseMap();
+            configuration.CreateMap<LossEventTaskDto, LossEventTask>().ReverseMap();
+            configuration.CreateMap<LossTypeDto, LossType>().ReverseMap();
+            configuration.CreateMap<LossTypeTriggerDto, LossTypeTrigger>().ReverseMap();
+            configuration.CreateMap<CreateOrEditLossTypeColumnDto, LossTypeColumn>().ReverseMap();
+            configuration.CreateMap<LossTypeColumnDto, LossTypeColumn>().ReverseMap();
+            configuration.CreateMap<CreateOrEditLossEventDto, LossEvent>().ReverseMap();
+            configuration.CreateMap<LossEventDto, LossEvent>().ReverseMap();
             configuration.CreateMap<CreateOrEditLibraryControlDto, LibraryControl>().ReverseMap();
             configuration.CreateMap<LibraryControlDto, LibraryControl>().ReverseMap();
             configuration.CreateMap<CreateOrEditLibraryRiskDto, LibraryRisk>().ReverseMap();

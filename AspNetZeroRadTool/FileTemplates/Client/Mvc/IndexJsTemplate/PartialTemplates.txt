@@ -83,7 +83,7 @@
 			"content": ",
 						render: function ({{property_Name_Here}}) {
 							if ({{property_Name_Here}}) {
-								return '<div class=\"text-center\"><i class=\"fa fa-check kt--font-success\" title=\"True\"></i></div>';
+								return '<div class=\"text-center\"><i class=\"fa fa-check {{Font_Success_Class_Here}}\" title=\"True\"></i></div>';
 							}
 							return '<div class=\"text-center\"><i class=\"fa fa-times-circle\" title=\"False\"></i></div>';
 					}
@@ -109,7 +109,7 @@
 		},
 		{
 			"placeholder": "{{View_Button_Here}}",
-			"condition": "{{Create_View_Only_Here}} == true && {{Is_Master_Detail_Page_Here}} == false",
+			"condition": "{{Create_View_Only_Here}} == true && {{Is_Non_Modal_CRUD_Page}} == false",
 			"content": "
 						{
                                 text: app.localize('View'),
@@ -120,7 +120,7 @@
 		},
 		{
 			"placeholder": "{{View_Button_Here}}",
-			"condition": "{{Create_View_Only_Here}} == true && {{Is_Master_Detail_Page_Here}} == true",
+			"condition": "{{Create_View_Only_Here}} == true && {{Is_Non_Modal_CRUD_Page}} == true",
 			"content": "
 						{
                                 text: app.localize('View'),
@@ -182,24 +182,24 @@
 		},
 		{
 			"placeholder": "{{Create_Button_Here}}",
-			"condition": "{{Is_Master_Detail_Page_Here}} == true",
+			"condition": "{{Is_Non_Modal_CRUD_Page}} == true",
 			"content": ""
 		},
 		{
 			"placeholder": "{{Create_Button_Here}}",
-			"condition": "{{Is_Master_Detail_Page_Here}} == false",
+			"condition": "{{Is_Non_Modal_CRUD_Page}} == false",
 			"content": "$('#CreateNew{{Entity_Name_Here}}Button').click(function () {
             _createOrEditModal.open();
         });"
 		},
 		{
 			"placeholder": "{{Create_Or_Edit_Modal_Dec_Here}}",
-			"condition": "{{Is_Master_Detail_Page_Here}} == true",
+			"condition": "{{Is_Non_Modal_CRUD_Page}} == true",
 			"content": ""
 		},
 		{
 			"placeholder": "{{Create_Or_Edit_Modal_Dec_Here}}",
-			"condition": "{{Is_Master_Detail_Page_Here}} == false",
+			"condition": "{{Is_Non_Modal_CRUD_Page}} == false",
 			"content": " var _createOrEditModal = new app.ModalManager({
             viewUrl: abp.appPath + '{{App_Area_Name_Here}}/{{Entity_Name_Plural_Here}}/CreateOrEditModal',
             scriptUrl: abp.appPath + 'view-resources/Areas/{{App_Area_Name_Here}}/Views/{{Entity_Name_Plural_Here}}/_CreateOrEditModal.js',
@@ -208,13 +208,23 @@
 		},
 		{
 			"placeholder": "{{Edit_Button_OnClick_Here}}",
-			"condition": "{{Is_Master_Detail_Page_Here}} == true",
+			"condition": "{{Is_Non_Modal_CRUD_Page}} == true",
 			"content": "window.location=\"/{{App_Area_Name_Here}}/{{Entity_Name_Plural_Here}}/CreateOrEdit/\" + data.record.{{entity_Name_Here}}.id;"
 		},
 		{
 			"placeholder": "{{Edit_Button_OnClick_Here}}",
-			"condition": "{{Is_Master_Detail_Page_Here}} == false",
+			"condition": "{{Is_Non_Modal_CRUD_Page}} == false",
 			"content": "_createOrEditModal.open({ id: data.record.{{entity_Name_Here}}.id });"
-		}
+		},
+        {
+            "placeholder": "{{Font_Success_Class_Here}}",
+            "condition": "{{Project_Version_Here}} < 090000",
+            "content": "kt--font-success"
+        },
+        {
+            "placeholder": "{{Font_Success_Class_Here}}",
+            "condition": "{{Project_Version_Here}} >= 090000",
+            "content": "text-success"
+        }
 	]
 }

@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using System;
+using static ICMSDemo.IcmsEnums;
 
 namespace ICMSDemo.Projects.Dtos
 {
@@ -26,6 +27,8 @@ namespace ICMSDemo.Projects.Dtos
 
         public string OrganizationUnitDisplayName2Filter { get; set; }
         public bool CommencedFilter { get; set; }
+
+        public ProjectOwner? ProjectOwner { get; set; }
 
     }
 }

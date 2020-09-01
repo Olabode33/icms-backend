@@ -26,7 +26,11 @@ namespace ICMSDemo.ProcessRiskControls.Dtos
 		 		 public long? ProcessId { get; set; }
 		 
 		 		 public int? ControlId { get; set; }
-		 
-		 
-    }
+
+		public double? Likelyhood { get; set; }
+
+		public double? Impact { get; set; }
+
+
+	}
 }

@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
 using Abp.Auditing;
+using ICMSDemo.Authorization.Users;
 
 namespace ICMSDemo.Controls
 {
@@ -28,6 +29,11 @@ namespace ICMSDemo.Controls
 		
 		public virtual Frequency Frequency { get; set; }
 		
+		public virtual string ControlPoint { get; set; }
+		public virtual string ControlObjective { get; set; }
+		public virtual long? ControlOwnerId { get; set; }
 
+		[ForeignKey("ControlOwnerId")]
+		public User ControlOwnerFK { get; set; }
     }
 }

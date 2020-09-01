@@ -30,6 +30,27 @@ namespace ICMSDemo.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var lossEventTasks = pages.CreateChildPermission(AppPermissions.Pages_LossEventTasks, L("LossEventTasks"));
+            lossEventTasks.CreateChildPermission(AppPermissions.Pages_LossEventTasks_Create, L("CreateNewLossEventTask"));
+            lossEventTasks.CreateChildPermission(AppPermissions.Pages_LossEventTasks_Edit, L("EditLossEventTask"));
+            lossEventTasks.CreateChildPermission(AppPermissions.Pages_LossEventTasks_Delete, L("DeleteLossEventTask"));
+
+
+
+            var lossTypeColumns = pages.CreateChildPermission(AppPermissions.Pages_LossTypeColumns, L("LossTypeColumns"));
+            lossTypeColumns.CreateChildPermission(AppPermissions.Pages_LossTypeColumns_Create, L("CreateNewLossTypeColumn"));
+            lossTypeColumns.CreateChildPermission(AppPermissions.Pages_LossTypeColumns_Edit, L("EditLossTypeColumn"));
+            lossTypeColumns.CreateChildPermission(AppPermissions.Pages_LossTypeColumns_Delete, L("DeleteLossTypeColumn"));
+
+
+
+            var lossEvents = pages.CreateChildPermission(AppPermissions.Pages_LossEvents, L("LossEvents"));
+            lossEvents.CreateChildPermission(AppPermissions.Pages_LossEvents_Create, L("CreateNewLossEvent"));
+            lossEvents.CreateChildPermission(AppPermissions.Pages_LossEvents_Edit, L("EditLossEvent"));
+            lossEvents.CreateChildPermission(AppPermissions.Pages_LossEvents_Delete, L("DeleteLossEvent"));
+
+
+
             var libraryControls = pages.CreateChildPermission(AppPermissions.Pages_LibraryControls, L("LibraryControls"), multiTenancySides: MultiTenancySides.Tenant);
             libraryControls.CreateChildPermission(AppPermissions.Pages_LibraryControls_Create, L("CreateNewLibraryControl"), multiTenancySides: MultiTenancySides.Tenant);
             libraryControls.CreateChildPermission(AppPermissions.Pages_LibraryControls_Edit, L("EditLibraryControl"), multiTenancySides: MultiTenancySides.Tenant);

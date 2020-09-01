@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static ICMSDemo.IcmsEnums;
 
 namespace ICMSDemo.Projects.EventHandlers
 {
@@ -52,7 +53,7 @@ namespace ICMSDemo.Projects.EventHandlers
             {
                 if (eventData.Project.ReviewType == ReviewType.Department)
                 {
-                    AsyncHelper.RunSync(() => DepartmentScope(eventData.Project.ScopeId.Value, eventData.Project.Cascade, eventData.Project));
+                    AsyncHelper.RunSync(() => DepartmentScope(eventData.Project.ScopeId.Value, eventData.Project.Cascade, eventData.Project,eventData.ProjectOwner));
                 }
                 else
                 {
@@ -64,7 +65,7 @@ namespace ICMSDemo.Projects.EventHandlers
 
 
 
-        public async Task DepartmentScope(long departmentId, bool cascade, Project project)
+        public async Task DepartmentScope(long departmentId, bool cascade, Project project,ProjectOwner? projectowner)
         {
             var allDepartments = await _departmentRepository.GetAllListAsync();
 
@@ -77,6 +78,7 @@ namespace ICMSDemo.Projects.EventHandlers
             List<string> codes = new List<string>();
 
             List<Department> allMyDepartments = new List<Department>();
+            List<TestingTemplate> relevantTestingTemplates = new List<TestingTemplate>();
 
             roots = departmentCode.Split(".").ToList();
             string previousCode = string.Empty;
@@ -123,9 +125,18 @@ namespace ICMSDemo.Projects.EventHandlers
 
             var relevantProcessRiskControl = allProcessRiskControls.Where(x => relevantProcessRisk.Any(y => y.Id == x.ProcessRiskId)).ToList();
 
-            var relevantTestingTemplates = allTestingTemplates.Where(x => relevantProcessRiskControl.Any(y => y.Id == x.ProcessRiskControlId)).ToList();
+            // relevent hint
+            if (projectowner == ProjectOwner.General)
+            {
+                relevantTestingTemplates = allTestingTemplates.Where(x => relevantProcessRiskControl.Any(y => y.Id == x.ProcessRiskControlId && x.ProjectOwner == ProjectOwner.General)).ToList();
 
+            }
+            else 
+            {
+                relevantTestingTemplates = allTestingTemplates.Where(x => relevantProcessRiskControl.Any(y => y.Id == x.ProcessRiskControlId && (x.ProjectOwner == projectowner || x.ProjectOwner == ProjectOwner.General))).ToList();
 
+            }
+           
             foreach (var d in allMyDepartments)
                 {
 

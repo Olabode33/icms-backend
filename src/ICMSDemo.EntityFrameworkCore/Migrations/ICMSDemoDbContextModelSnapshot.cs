@@ -1437,6 +1437,15 @@ namespace ICMSDemo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ControlObjective")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("ControlOwnerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ControlPoint")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ControlType")
                         .HasColumnType("int");
 
@@ -1454,6 +1463,8 @@ namespace ICMSDemo.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ControlOwnerId");
 
                     b.HasIndex("TenantId");
 
@@ -1948,6 +1959,219 @@ namespace ICMSDemo.Migrations
                     b.ToTable("LibraryRisks");
                 });
 
+            modelBuilder.Entity("ICMSDemo.LossEventTasks.LossEventTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("AssignedTo")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("DateAssigned")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LossTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LossTypeTriggerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("LossEventTasks");
+                });
+
+            modelBuilder.Entity("ICMSDemo.LossEvents.LossEvent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("DateDiscovered")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOccured")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("DepartmentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("EmployeeUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ExtensionData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("LossCategory")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LossTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("EmployeeUserId");
+
+                    b.HasIndex("LossTypeId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("LossEvents");
+                });
+
+            modelBuilder.Entity("ICMSDemo.LossEvents.LossType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LossTypes");
+                });
+
+            modelBuilder.Entity("ICMSDemo.LossEvents.LossTypeColumn", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ColumnName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DataType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LossTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("Maximum")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Minimum")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("Required")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LossTypeId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("LossTypeColumns");
+                });
+
+            modelBuilder.Entity("ICMSDemo.LossEvents.LossTypeTrigger", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("DataSource")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Frequency")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LossTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("NotifyUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Staff")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LossTypeId");
+
+                    b.HasIndex("NotifyUserId");
+
+                    b.ToTable("LossTypeTriggers");
+                });
+
             modelBuilder.Entity("ICMSDemo.MultiTenancy.Accounting.Invoice", b =>
                 {
                     b.Property<int>("Id")
@@ -2210,6 +2434,9 @@ namespace ICMSDemo.Migrations
                     b.Property<decimal>("Progress")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("ProjectOwner")
+                        .HasColumnType("int");
+
                     b.Property<int>("ReviewType")
                         .HasColumnType("int");
 
@@ -2307,6 +2534,12 @@ namespace ICMSDemo.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Impact")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Likelyhood")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2356,6 +2589,9 @@ namespace ICMSDemo.Migrations
 
                     b.Property<long?>("CreatorUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("TestAttribute")
                         .HasColumnType("nvarchar(max)");
@@ -2427,6 +2663,9 @@ namespace ICMSDemo.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<int?>("ProcessRiskControlId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProjectOwner")
                         .HasColumnType("int");
 
                     b.Property<int?>("SampleSize")
@@ -2766,6 +3005,12 @@ namespace ICMSDemo.Migrations
                 {
                     b.HasBaseType("ICMSDemo.DepartmentRiskControls.DepartmentRiskControl");
 
+                    b.Property<double?>("Impact")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Likelyhood")
+                        .HasColumnType("float");
+
                     b.Property<long?>("ProcessId")
                         .HasColumnType("bigint");
 
@@ -2784,6 +3029,12 @@ namespace ICMSDemo.Migrations
             modelBuilder.Entity("ICMSDemo.ProcessRisks.ProcessRisk", b =>
                 {
                     b.HasBaseType("ICMSDemo.DepartmentRisks.DepartmentRisk");
+
+                    b.Property<int?>("Impact")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Likelyhood")
+                        .HasColumnType("int");
 
                     b.Property<long>("ProcessId")
                         .HasColumnType("bigint");
@@ -2911,6 +3162,13 @@ namespace ICMSDemo.Migrations
                         .HasForeignKey("LastModifierUserId");
                 });
 
+            modelBuilder.Entity("ICMSDemo.Controls.Control", b =>
+                {
+                    b.HasOne("ICMSDemo.Authorization.Users.User", "ControlOwnerFK")
+                        .WithMany()
+                        .HasForeignKey("ControlOwnerId");
+                });
+
             modelBuilder.Entity("ICMSDemo.DepartmentRatingHistory.DepartmentRating", b =>
                 {
                     b.HasOne("Abp.Organizations.OrganizationUnit", "OrganizationUnitFk")
@@ -3008,6 +3266,45 @@ namespace ICMSDemo.Migrations
                         .HasForeignKey("ExceptionTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ICMSDemo.LossEvents.LossEvent", b =>
+                {
+                    b.HasOne("Abp.Organizations.OrganizationUnit", "DepartmentFk")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId");
+
+                    b.HasOne("ICMSDemo.Authorization.Users.User", "EmployeeUserFk")
+                        .WithMany()
+                        .HasForeignKey("EmployeeUserId");
+
+                    b.HasOne("ICMSDemo.LossEvents.LossType", "LossTypeFk")
+                        .WithMany()
+                        .HasForeignKey("LossTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ICMSDemo.LossEvents.LossTypeColumn", b =>
+                {
+                    b.HasOne("ICMSDemo.LossEvents.LossType", "LossTypeFk")
+                        .WithMany()
+                        .HasForeignKey("LossTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ICMSDemo.LossEvents.LossTypeTrigger", b =>
+                {
+                    b.HasOne("ICMSDemo.LossEvents.LossType", "LossTypeFk")
+                        .WithMany()
+                        .HasForeignKey("LossTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ICMSDemo.Authorization.Users.User", "NotifyUserFk")
+                        .WithMany()
+                        .HasForeignKey("NotifyUserId");
                 });
 
             modelBuilder.Entity("ICMSDemo.MultiTenancy.Payments.SubscriptionPayment", b =>
