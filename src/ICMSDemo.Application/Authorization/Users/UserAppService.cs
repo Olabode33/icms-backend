@@ -320,7 +320,7 @@ namespace ICMSDemo.Authorization.Users
         {
             var user = ObjectMapper.Map<User>(input.User);
             user.TenantId = AbpSession.TenantId;
-            await _appNotifier.WelcomeToTheApplicationTestAsync(user);
+            await _appNotifier.WelcomeToTheApplicationAsync(user);
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Create)]

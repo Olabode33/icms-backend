@@ -1,5 +1,4 @@
 ﻿using ICMSDemo.TestingTemplates;
-using Abp.Organizations;
 using ICMSDemo.Authorization.Users;
 
 using System;
@@ -18,8 +17,10 @@ using ICMSDemo.WorkingPapers;
 using ICMSDemo.Departments;
 using Abp.UI;
 using ICMSDemo.Projects;
-using Abp.Authorization.Users;
 using Abp.Timing;
+using ICMSDemo.Notifications;
+using ICMSDemo.WorkingPaperReviewComments;
+using ICMSDemo.WorkingPaperReviewComments.Dtos;
 
 namespace ICMSDemo.WorkingPaperNews
 {
@@ -34,10 +35,15 @@ namespace ICMSDemo.WorkingPaperNews
         private readonly IRepository<User, long> _lookup_userRepository;
         private readonly IRepository<Project> _lookup_projectRepository;
         private readonly IRepository<UnitOrganizationRole,long> _lookup_ouRoleRepository;
+        private readonly IRepository<WorkingPaperReviewComment> _workingPaperReviewCommentRepository;
+
+        private readonly IAppNotifier _appNotifier;
 
 
 
         public WorkingPaperNewsAppService(IRepository<WorkingPaper, Guid> workingPaperNewRepository,
+             IAppNotifier appNotifier,
+             IRepository<WorkingPaperReviewComment> workingPaperReviewCommentRepository,
             IRepository<TestingAttrribute, int> lookup_testingAttributeRepository, IRepository<UnitOrganizationRole, long> lookup_ouRoleRepository,
             IRepository<WorkingPaperDetail> workingPaperDetailsRepository, IRepository<Project> lookup_projectRepository,
             IRepository<TestingTemplate, int> lookup_testingTemplateRepository, IRepository<Department, long> lookup_organizationUnitRepository, IRepository<User, long> lookup_userRepository)
@@ -50,6 +56,8 @@ namespace ICMSDemo.WorkingPaperNews
             _lookup_testingAttributeRepository = lookup_testingAttributeRepository;
             _workingPaperDetailsRepository = workingPaperDetailsRepository;
             _lookup_ouRoleRepository = lookup_ouRoleRepository;
+            _appNotifier = appNotifier;
+            _workingPaperReviewCommentRepository = workingPaperReviewCommentRepository;
         }
 
         public async Task<PagedResultDto<GetWorkingPaperNewForViewDto>> GetAll(GetAllWorkingPaperNewsInput input)
@@ -205,6 +213,37 @@ namespace ICMSDemo.WorkingPaperNews
                 output.LastSequence = workingPaperDetils.Max(x => x.Sequence);
             }
 
+
+           var reviewCommentsListQuery = from w in _workingPaperReviewCommentRepository.GetAll()
+                                     join u in _lookup_userRepository.GetAll() on w.AssigneeUserId equals u.Id into j1
+                                     from s1 in j1.DefaultIfEmpty()
+
+                                     join u1 in _lookup_userRepository.GetAll() on w.AssignerUserId equals u1.Id into j2
+                                     from s2 in j2.DefaultIfEmpty()
+
+                                    where w.WorkingPaperId == input.Id
+                                    select new GetWorkingPaperReviewCommentForViewDto
+                                    {
+                                        UserName = s1 == null ? "" : s1.FullName,
+                                        UserName2 = s2 == null ?  "" : s2.FullName,
+                                        WorkingPaperReviewComment = new WorkingPaperReviewCommentDto()
+                                        {
+                                            AssigneeUserId = w.AssigneeUserId,
+                                            AssignerUserId = w.AssignerUserId,
+                                            ExpectedCompletionDate = w.ExpectedCompletionDate,
+                                            Id = w.Id,
+                                            Severity = w.Severity,
+                                            Status = w.Status,
+                                            Title = w.Title,
+                                            CreationTime = w.CreationTime,
+                                            WorkingPaperId = w.WorkingPaperId
+                                        }
+                                    };
+
+            var reviewCommentsList = await reviewCommentsListQuery.ToListAsync();
+            output.ReviewComments = reviewCommentsList.ToArray();
+
+
             return output;
         }
 
@@ -284,6 +323,10 @@ namespace ICMSDemo.WorkingPaperNews
 
                 var newAssignee = await _lookup_ouRoleRepository.FirstOrDefaultAsync(x => x.DepartmentRole == DepartmentRole.ControlHead && x.OrganizationUnitId == workingPaperNew.OrganizationUnitId);
                 workingPaperNew.AssignedToId = newAssignee.UserId;
+
+                var completedUser = await _lookup_userRepository.FirstOrDefaultAsync(x => x.Id == newAssignee.UserId);
+
+                await _appNotifier.NotifyControlManager(completedUser.ToUserIdentifier());
             }
         }
 
@@ -308,6 +351,10 @@ namespace ICMSDemo.WorkingPaperNews
             project.Progress = Convert.ToDecimal(progress);
 
             await _lookup_projectRepository.UpdateAsync(project);
+
+           var completedUser = await _lookup_userRepository.FirstOrDefaultAsync(x => x.Id == workingPaperNew.CompletedById);
+
+           await _appNotifier.NotifyControlOfficerOfApproval(completedUser.ToUserIdentifier());
         }
 
         private async Task<decimal> SaveWorkingPaperDetails(CreateOrEditTestingAttributeDto[] input, List<TestingAttrribute> testingAttrributes, Guid workingPaperId)
@@ -368,7 +415,7 @@ namespace ICMSDemo.WorkingPaperNews
         }
 
         [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews)]
-        public async Task<PagedResultDto<WorkingPaperNewTestingTemplateLookupTableDto>> GetAllTestingTemplateForLookupTable(GetAllForLookupTableInput input)
+        public async Task<PagedResultDto<WorkingPaperNewTestingTemplateLookupTableDto>> GetAllTestingTemplateForLookupTable(Dtos.GetAllForLookupTableInput input)
         {
             var query = _lookup_testingTemplateRepository.GetAll().WhereIf(
                    !string.IsNullOrWhiteSpace(input.Filter),
@@ -398,7 +445,7 @@ namespace ICMSDemo.WorkingPaperNews
         }
 
         [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews)]
-        public async Task<PagedResultDto<WorkingPaperNewOrganizationUnitLookupTableDto>> GetAllOrganizationUnitForLookupTable(GetAllForLookupTableInput input)
+        public async Task<PagedResultDto<WorkingPaperNewOrganizationUnitLookupTableDto>> GetAllOrganizationUnitForLookupTable(Dtos.GetAllForLookupTableInput input)
         {
             var query = _lookup_organizationUnitRepository.GetAll()
                .Where(x => !x.IsAbstract)
@@ -430,7 +477,7 @@ namespace ICMSDemo.WorkingPaperNews
         }
 
         [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews)]
-        public async Task<PagedResultDto<WorkingPaperNewUserLookupTableDto>> GetAllUserForLookupTable(GetAllForLookupTableInput input)
+        public async Task<PagedResultDto<WorkingPaperNewUserLookupTableDto>> GetAllUserForLookupTable(Dtos.GetAllForLookupTableInput input)
         {
            var user = await  UserManager.Users.FirstOrDefaultAsync(x => x.Id == AbpSession.UserId.Value);
 

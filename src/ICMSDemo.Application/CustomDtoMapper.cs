@@ -1,4 +1,6 @@
-﻿using ICMSDemo.LossEventTasks.Dtos;
+﻿using ICMSDemo.WorkingPaperReviewComments.Dtos;
+using ICMSDemo.WorkingPaperReviewComments;
+using ICMSDemo.LossEventTasks.Dtos;
 using ICMSDemo.LossEventTasks;
 using ICMSDemo.LossEvents.Dtos;
 using ICMSDemo.LossEvents;
@@ -85,6 +87,8 @@ namespace ICMSDemo
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditWorkingPaperReviewCommentDto, WorkingPaperReviewComment>().ReverseMap();
+            configuration.CreateMap<WorkingPaperReviewCommentDto, WorkingPaperReviewComment>().ReverseMap();
             configuration.CreateMap<CreateOrEditLossEventTaskDto, LossEventTask>().ReverseMap();
             configuration.CreateMap<LossEventTaskDto, LossEventTask>().ReverseMap();
             configuration.CreateMap<LossTypeDto, LossType>().ReverseMap();

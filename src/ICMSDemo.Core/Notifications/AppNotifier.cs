@@ -125,5 +125,32 @@ namespace ICMSDemo.Notifications
 
             await _notificationPublisher.PublishAsync(AppNotificationNames.DownloadInvalidImportUsers, notificationData, userIds: new[] { argsUser });
         }
+
+
+        public async Task NotifyControlManager(UserIdentifier argsUser)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    "NewWorkPaperCompleted",
+                    ICMSDemoConsts.LocalizationSourceName
+                )
+            );
+
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.NewWorkingPaperCreated, notificationData, userIds: new[] { argsUser });
+        }       
+        
+        public async Task NotifyControlOfficerOfApproval(UserIdentifier argsUser)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    "WorkingPaperApproved",
+                    ICMSDemoConsts.LocalizationSourceName
+                )
+            );
+
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.WorkingPaperApproved, notificationData, userIds: new[] { argsUser });
+        }
     }
 }

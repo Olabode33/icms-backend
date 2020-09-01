@@ -1,4 +1,5 @@
-﻿using ICMSDemo.LossEventTasks;
+﻿using ICMSDemo.WorkingPaperReviewComments;
+using ICMSDemo.LossEventTasks;
 using ICMSDemo.LossEvents;
 using ICMSDemo.LibraryControls;
 using ICMSDemo.LibraryRisks;
@@ -37,6 +38,8 @@ namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<WorkingPaperReviewComment> WorkingPaperReviewComments { get; set; }
+
         public virtual DbSet<LossEventTask> LossEventTasks { get; set; }
 
         public virtual DbSet<LossType> LossType { get; set; }
@@ -137,7 +140,12 @@ namespace ICMSDemo.EntityFrameworkCore
            
            
            
-            modelBuilder.Entity<LossEventTask>(l =>
+           
+            modelBuilder.Entity<WorkingPaperReviewComment>(w =>
+            {
+                w.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<LossEventTask>(l =>
             {
                 l.HasIndex(e => new { e.TenantId });
             });
