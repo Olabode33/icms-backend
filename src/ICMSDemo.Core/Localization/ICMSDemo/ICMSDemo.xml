@@ -71,7 +71,7 @@
     <text name="Impact_5">Very High</text>
     
     <text name="ITDependent">IT Dependent</text>
-    <text name="PendingReview">Pending Review</text>    <text name="NewWorkPaperCompleted">A new working paper has completed for your review.</text>    <text name="WorkingPaperApproved">Your working paper has been approved.</text>        <text name="LibraryControls">Library controls</text>
+    <text name="PendingReview">Pending</text>    <text name="NewWorkPaperCompleted">A new working paper has completed for your review.</text>    <text name="WorkingPaperApproved">Your working paper has been approved.</text>        <text name="LibraryControls">Library controls</text>
     <text name="LibraryControl">Library control</text>
     <text name="ICMSDemo.LibraryControls.LibraryControl">LibraryControl</text>
     <text name="ControlPoint">Control point</text>
