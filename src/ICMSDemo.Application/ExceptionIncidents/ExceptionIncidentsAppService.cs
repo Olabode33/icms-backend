@@ -531,18 +531,21 @@ namespace ICMSDemo.ExceptionIncidents
         [AbpAuthorize(AppPermissions.Pages_ExceptionIncidents)]
         public async Task<PagedResultDto<ExceptionIncidentUserLookupTableDto>> GetAllUserForLookupTable(GetAllForLookupTableInput input)
         {
-            var query = _lookup_userRepository
-                .GetAll()
-                .WhereIf(
-                   !string.IsNullOrWhiteSpace(input.Filter),
-                  e => e.Name.ToString().Contains(input.Filter)
-               );
+            var query = await _lookup_userRepository
+                .GetAllListAsync();
 
-            var totalCount = await query.CountAsync();
+            var totalCount = query.Count();
 
-            var userList = await query
-                .PageBy(input)
-                .ToListAsync();
+            var filtered = query;
+
+            if (!string.IsNullOrWhiteSpace(input.Filter))
+            {
+                filtered = query.Where(e => e.FullName.ToLower().Contains(input.Filter)).ToList();
+            }
+
+            var userList = filtered
+                .Skip(input.SkipCount).Take(input.MaxResultCount)
+                .ToList();
 
             var lookupTableDtoList = new List<ExceptionIncidentUserLookupTableDto>();
             foreach (var user in userList)
