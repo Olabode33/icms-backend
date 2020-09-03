@@ -17,6 +17,6 @@ namespace ICMSDemo.KeyRiskIndicators.Dtos
 
 		 		 public long? UserId { get; set; }
 
-		 
-    }
+		public string DataInputMethod { get; set; }
+	}
 }

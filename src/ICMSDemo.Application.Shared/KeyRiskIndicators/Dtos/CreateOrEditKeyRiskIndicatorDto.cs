@@ -16,6 +16,7 @@ namespace ICMSDemo.KeyRiskIndicators.Dtos
 		
 		
 		public string Nature { get; set; }
+		public string DataInputMethod { get; set; }
 		
 		
 		public decimal LowLevel { get; set; }

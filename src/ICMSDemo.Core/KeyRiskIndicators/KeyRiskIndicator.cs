@@ -18,7 +18,8 @@ namespace ICMSDemo.KeyRiskIndicators
 		public virtual string Name { get; set; }
 		
 		public virtual string Description { get; set; }
-		
+
+		public virtual string DataInputMethod { get; set; }
 		public virtual string Nature { get; set; }
 		
 		public virtual decimal LowLevel { get; set; }
