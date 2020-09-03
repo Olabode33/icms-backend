@@ -1,4 +1,8 @@
-﻿using ICMSDemo.WorkingPaperReviewComments.Dtos;
+﻿using ICMSDemo.KeyRiskIndicators.Dtos;
+using ICMSDemo.KeyRiskIndicators;
+using ICMSDemo.BusinessObjectives.Dtos;
+using ICMSDemo.BusinessObjectives;
+using ICMSDemo.WorkingPaperReviewComments.Dtos;
 using ICMSDemo.WorkingPaperReviewComments;
 using ICMSDemo.LossEventTasks.Dtos;
 using ICMSDemo.LossEventTasks;
@@ -87,6 +91,10 @@ namespace ICMSDemo
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreateOrEditKeyRiskIndicatorDto, KeyRiskIndicator>().ReverseMap();
+            configuration.CreateMap<KeyRiskIndicatorDto, KeyRiskIndicator>().ReverseMap();
+            configuration.CreateMap<CreateOrEditBusinessObjectiveDto, BusinessObjective>().ReverseMap();
+            configuration.CreateMap<BusinessObjectiveDto, BusinessObjective>().ReverseMap();
             configuration.CreateMap<CreateOrEditWorkingPaperReviewCommentDto, WorkingPaperReviewComment>().ReverseMap();
             configuration.CreateMap<WorkingPaperReviewCommentDto, WorkingPaperReviewComment>().ReverseMap();
             configuration.CreateMap<CreateOrEditLossEventTaskDto, LossEventTask>().ReverseMap();

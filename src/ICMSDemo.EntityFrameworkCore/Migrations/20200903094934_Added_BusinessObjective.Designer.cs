@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200903094934_Added_BusinessObjective")]
+    partial class Added_BusinessObjective
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1941,67 +1943,6 @@ namespace ICMSDemo.Migrations
                     b.ToTable("AppFriendships");
                 });
 
-            modelBuilder.Entity("ICMSDemo.KeyRiskIndicators.KeyRiskIndicator", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ExceptionTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("HighActionType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("HighLevel")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("LowActionType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("LowLevel")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("MediumActionType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("MediumLevel")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nature")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExceptionTypeId");
-
-                    b.HasIndex("TenantId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("KeyRiskIndicators");
-                });
-
             modelBuilder.Entity("ICMSDemo.LibraryControls.LibraryControl", b =>
                 {
                     b.Property<int>("Id")
@@ -3452,17 +3393,6 @@ namespace ICMSDemo.Migrations
                         .HasForeignKey("ExceptionTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ICMSDemo.KeyRiskIndicators.KeyRiskIndicator", b =>
-                {
-                    b.HasOne("ICMSDemo.ExceptionTypes.ExceptionType", "ExceptionTypeFk")
-                        .WithMany()
-                        .HasForeignKey("ExceptionTypeId");
-
-                    b.HasOne("ICMSDemo.Authorization.Users.User", "UserFk")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ICMSDemo.LossEvents.LossEvent", b =>
