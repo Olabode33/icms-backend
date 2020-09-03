@@ -17,7 +17,7 @@ namespace ICMSDemo.ExceptionTypes.Dtos
 
 		public int? TargetRemediation { get; set; }
 
+		public ExceptionRemediationTypeEnum? Remediation { get; set; }
 
-
-    }
+	}
 }

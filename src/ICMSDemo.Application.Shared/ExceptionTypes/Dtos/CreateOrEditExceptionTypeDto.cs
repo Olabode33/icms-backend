@@ -21,7 +21,8 @@ namespace ICMSDemo.ExceptionTypes.Dtos
 		
 		[Range(ExceptionTypeConsts.MinTargetRemediationValue, ExceptionTypeConsts.MaxTargetRemediationValue)]
 		public int? TargetRemediation { get; set; }
-		
+		public ExceptionRemediationTypeEnum? Remediation { get; set; }
+
 		public CreateOrEditExceptionTypeColumnDto[] OtherColumns { set; get; }
 
 		public long[] Escalations { set; get; }

@@ -58,4 +58,9 @@
     {
         Risk, Control, TestingStrategy
     }
+
+    public enum ExceptionRemediationTypeEnum
+    {
+        Remediable, NonRemediable
+    }
 }

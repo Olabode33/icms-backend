@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200901095056_Added_Remediation_to_ExceptionType")]
+    partial class Added_Remediation_to_ExceptionType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1374,65 +1376,6 @@ namespace ICMSDemo.Migrations
                     b.ToTable("AbpUsers");
                 });
 
-            modelBuilder.Entity("ICMSDemo.BusinessObjectives.BusinessObjective", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ObjectiveType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BusinessObjectives");
-                });
-
             modelBuilder.Entity("ICMSDemo.Chat.ChatMessage", b =>
                 {
                     b.Property<long>("Id")
@@ -1942,67 +1885,6 @@ namespace ICMSDemo.Migrations
                     b.HasIndex("TenantId", "UserId");
 
                     b.ToTable("AppFriendships");
-                });
-
-            modelBuilder.Entity("ICMSDemo.KeyRiskIndicators.KeyRiskIndicator", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ExceptionTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("HighActionType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("HighLevel")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("LowActionType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("LowLevel")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("MediumActionType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("MediumLevel")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nature")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExceptionTypeId");
-
-                    b.HasIndex("TenantId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("KeyRiskIndicators");
                 });
 
             modelBuilder.Entity("ICMSDemo.LibraryControls.LibraryControl", b =>
@@ -2812,65 +2694,6 @@ namespace ICMSDemo.Migrations
                     b.ToTable("TestingTemplates");
                 });
 
-            modelBuilder.Entity("ICMSDemo.WorkingPaperReviewComments.WorkingPaperReviewComment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long?>("AssigneeUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("AssignerUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CompletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("ExpectedCompletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Response")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Severity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("WorkingPaperId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssigneeUserId");
-
-                    b.HasIndex("AssignerUserId");
-
-                    b.HasIndex("TenantId");
-
-                    b.HasIndex("WorkingPaperId");
-
-                    b.ToTable("WorkingPaperReviewComments");
-                });
-
             modelBuilder.Entity("ICMSDemo.WorkingPapers.WorkingPaper", b =>
                 {
                     b.Property<Guid>("Id")
@@ -3344,13 +3167,6 @@ namespace ICMSDemo.Migrations
                         .HasForeignKey("LastModifierUserId");
                 });
 
-            modelBuilder.Entity("ICMSDemo.BusinessObjectives.BusinessObjective", b =>
-                {
-                    b.HasOne("ICMSDemo.Authorization.Users.User", "UserFk")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("ICMSDemo.Controls.Control", b =>
                 {
                     b.HasOne("ICMSDemo.Authorization.Users.User", "ControlOwnerFK")
@@ -3457,17 +3273,6 @@ namespace ICMSDemo.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ICMSDemo.KeyRiskIndicators.KeyRiskIndicator", b =>
-                {
-                    b.HasOne("ICMSDemo.ExceptionTypes.ExceptionType", "ExceptionTypeFk")
-                        .WithMany()
-                        .HasForeignKey("ExceptionTypeId");
-
-                    b.HasOne("ICMSDemo.Authorization.Users.User", "UserFk")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("ICMSDemo.LossEvents.LossEvent", b =>
                 {
                     b.HasOne("Abp.Organizations.OrganizationUnit", "DepartmentFk")
@@ -3562,21 +3367,6 @@ namespace ICMSDemo.Migrations
                     b.HasOne("ICMSDemo.ExceptionTypes.ExceptionType", "ExceptionType")
                         .WithMany()
                         .HasForeignKey("ExceptionTypeId");
-                });
-
-            modelBuilder.Entity("ICMSDemo.WorkingPaperReviewComments.WorkingPaperReviewComment", b =>
-                {
-                    b.HasOne("ICMSDemo.Authorization.Users.User", "AssigneeUserFk")
-                        .WithMany()
-                        .HasForeignKey("AssigneeUserId");
-
-                    b.HasOne("ICMSDemo.Authorization.Users.User", "AssignerUserFk")
-                        .WithMany()
-                        .HasForeignKey("AssignerUserId");
-
-                    b.HasOne("ICMSDemo.WorkingPapers.WorkingPaper", "WorkingPaperFk")
-                        .WithMany()
-                        .HasForeignKey("WorkingPaperId");
                 });
 
             modelBuilder.Entity("ICMSDemo.WorkingPapers.WorkingPaper", b =>
