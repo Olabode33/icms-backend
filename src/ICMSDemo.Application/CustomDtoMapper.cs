@@ -1,4 +1,6 @@
-﻿using ICMSDemo.KeyRiskIndicators.Dtos;
+﻿using ICMSDemo.ControlTestingAssessment.Dtos;
+using ICMSDemo.ControlTestingAssessment;
+using ICMSDemo.KeyRiskIndicators.Dtos;
 using ICMSDemo.KeyRiskIndicators;
 using ICMSDemo.BusinessObjectives.Dtos;
 using ICMSDemo.BusinessObjectives;
@@ -92,6 +94,8 @@ namespace ICMSDemo
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<RcsaProgramAssessmentDto, RcsaProgramAssessment>().ReverseMap();
+            configuration.CreateMap<CreateOrEditControlTestingDto, ControlTesting>().ReverseMap();
+            configuration.CreateMap<ControlTestingDto, ControlTesting>().ReverseMap();
             configuration.CreateMap<CreateOrEditKeyRiskIndicatorDto, KeyRiskIndicator>().ReverseMap();
             configuration.CreateMap<KeyRiskIndicatorDto, KeyRiskIndicator>().ReverseMap();
             configuration.CreateMap<CreateOrEditBusinessObjectiveDto, BusinessObjective>().ReverseMap();

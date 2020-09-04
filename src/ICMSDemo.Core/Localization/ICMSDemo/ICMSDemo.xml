@@ -1,7 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="InternalAudit">Internal Audit</text>
+  <texts>
+    <text name="InternalAudit">Internal Audit</text>
     <text name="OperationRisk">Operational Risk</text>
+    <text name="ControlTestingAssessment">Control testing assessment</text>
+    <text name="ControlTesting">Control testing</text>
+    <text name="ICMSDemo.ControlTestingAssessment.ControlTesting">ControlTesting</text>
+    <text name="TestingTemplateId">Testing template id</text>
+    <text name="ControlTestingsHeaderInfo">Control testings header info</text>
+    <text name="CreateNewControlTesting">Create new control testing</text>
+    <text name="EditControlTesting">Edit control testing</text>
+    <text name="DeleteControlTesting">Delete control testing</text>
+    <text name="ControlTestings">Control testings</text>
     <text name="KeyRiskIndicators">Key risk indicators</text>
     <text name="KeyRiskIndicator">Key risk indicator</text>
     <text name="ICMSDemo.KeyRiskIndicators.KeyRiskIndicator">KeyRiskIndicator</text>
@@ -49,7 +59,8 @@
     <text name="EditLossEventTask">Edit loss event task</text>
     <text name="DeleteLossEventTask">Delete loss event task</text>
     <text name="DateAssignedRange">Date assigned range</text>
-        <text name="InternalFraud">Internal Fraud</text>
+    
+    <text name="InternalFraud">Internal Fraud</text>
     <text name="ExternalFraud">External Fraud</text>
     <text name="EmploymentPracticesWorkplaceSafety">Employment Practices and Workplace Safety</text>
     <text name="ClientsProductsBusinessPractice">Clients, Products, and Business Practice</text>
@@ -96,7 +107,11 @@
     <text name="Impact_5">Very High</text>
     
     <text name="ITDependent">IT Dependent</text>
-    <text name="PendingReview">Pending</text>    <text name="NewWorkPaperCompleted">A new working paper has completed for your review.</text>    <text name="WorkingPaperApproved">Your working paper has been approved.</text>        <text name="LibraryControls">Library controls</text>
+    <text name="PendingReview">Pending</text>
+    <text name="NewWorkPaperCompleted">A new working paper has completed for your review.</text>
+    <text name="WorkingPaperApproved">Your working paper has been approved.</text>
+    
+    <text name="LibraryControls">Library controls</text>
     <text name="LibraryControl">Library control</text>
     <text name="ICMSDemo.LibraryControls.LibraryControl">LibraryControl</text>
     <text name="ControlPoint">Control point</text>
