@@ -258,6 +258,15 @@ namespace ICMSDemo.Projects
                 throw new UserFriendlyException("You must select a scope of review!");
             }
 
+            if (input.ProjectOwner == ProjectOwner.OperationRisk)
+            {
+                var program = await _projectRepository.FirstOrDefaultAsync(e => e.ProjectOwner == ProjectOwner.OperationRisk && e.Closed != true);
+                if (program != null)
+                {
+                    throw new UserFriendlyException("Only 1 RCSA Project can exist at a time.");
+                }
+            }
+
 
             var project = ObjectMapper.Map<Project>(input);
             project.StartDate = null;
