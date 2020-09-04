@@ -1,4 +1,5 @@
-﻿using ICMSDemo.KeyRiskIndicators;
+﻿using ICMSDemo.ControlTestingAssessment;
+using ICMSDemo.KeyRiskIndicators;
 using ICMSDemo.BusinessObjectives;
 using ICMSDemo.WorkingPaperReviewComments;
 using ICMSDemo.LossEventTasks;
@@ -40,6 +41,8 @@ namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<ControlTesting> ControlTestings { get; set; }
+
         public virtual DbSet<RcsaProgramAssessment> RcsaProgramAssessments { get; set; }
         public virtual DbSet<KeyRiskIndicator> KeyRiskIndicators { get; set; }
 
@@ -150,7 +153,12 @@ namespace ICMSDemo.EntityFrameworkCore
            
            
            
-            modelBuilder.Entity<KeyRiskIndicator>(k =>
+           
+            modelBuilder.Entity<ControlTesting>(c =>
+            {
+                c.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<KeyRiskIndicator>(k =>
             {
                 k.HasIndex(e => new { e.TenantId });
             });

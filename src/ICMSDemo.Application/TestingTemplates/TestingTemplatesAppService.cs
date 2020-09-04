@@ -253,6 +253,28 @@ namespace ICMSDemo.TestingTemplates
             return output;
         }
 
+
+
+        public List<NameValueDto> GetAllTestingTemplate()
+        {
+            var attributesToTest = _testingTemplateRepository.GetAll();
+
+            var output = new List<NameValueDto>();
+
+
+
+            foreach (var item in attributesToTest)
+            {
+                output.Add(new NameValueDto()
+                {
+                    Value = item.Id.ToString(),
+                    Name = item.Title
+                });
+            }
+
+            return output;
+        }
+
         [AbpAuthorize(AppPermissions.Pages_TestingTemplates_Edit)]
         public async Task<GetTestingTemplateForEditOutput> GetTestingTemplateForEdit(EntityDto input)
         {

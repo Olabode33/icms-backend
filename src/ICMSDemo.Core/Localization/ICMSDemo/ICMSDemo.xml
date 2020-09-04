@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="KeyRiskIndicators">Key risk indicators</text>
+  <texts>    <text name="ControlTestingAssessment">Control testing assessment</text>
+    <text name="ControlTesting">Control testing</text>
+    <text name="ICMSDemo.ControlTestingAssessment.ControlTesting">ControlTesting</text>
+    <text name="TestingTemplateId">Testing template id</text>
+    <text name="ControlTestingsHeaderInfo">Control testings header info</text>
+    <text name="CreateNewControlTesting">Create new control testing</text>
+    <text name="EditControlTesting">Edit control testing</text>
+    <text name="DeleteControlTesting">Delete control testing</text>
+    <text name="ControlTestings">Control testings</text>
+    <text name="KeyRiskIndicators">Key risk indicators</text>
     <text name="KeyRiskIndicator">Key risk indicator</text>
     <text name="ICMSDemo.KeyRiskIndicators.KeyRiskIndicator">KeyRiskIndicator</text>
     <text name="Nature">Nature</text>

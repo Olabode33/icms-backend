@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_ControlTestings = "Pages.ControlTestings";
+        public const string Pages_ControlTestings_Create = "Pages.ControlTestings.Create";
+        public const string Pages_ControlTestings_Edit = "Pages.ControlTestings.Edit";
+        public const string Pages_ControlTestings_Delete = "Pages.ControlTestings.Delete";
+
         public const string Pages_KeyRiskIndicators = "Pages.KeyRiskIndicators";
         public const string Pages_KeyRiskIndicators_Create = "Pages.KeyRiskIndicators.Create";
         public const string Pages_KeyRiskIndicators_Edit = "Pages.KeyRiskIndicators.Edit";
