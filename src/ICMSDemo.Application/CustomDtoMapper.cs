@@ -91,6 +91,7 @@ namespace ICMSDemo
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<RcsaProgramAssessmentDto, RcsaProgramAssessment>().ReverseMap();
             configuration.CreateMap<CreateOrEditKeyRiskIndicatorDto, KeyRiskIndicator>().ReverseMap();
             configuration.CreateMap<KeyRiskIndicatorDto, KeyRiskIndicator>().ReverseMap();
             configuration.CreateMap<CreateOrEditBusinessObjectiveDto, BusinessObjective>().ReverseMap();

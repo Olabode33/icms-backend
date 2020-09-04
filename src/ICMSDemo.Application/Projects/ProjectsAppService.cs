@@ -463,36 +463,5 @@ namespace ICMSDemo.Projects
             );
         }
 
-        public async Task<PagedResultDto<GetRcsaProgramAssessmentForViewDto>> GetProgramAssessment(GetAllRcsaProgramAssessmentInput input)
-        {
-            var filtered = _rcsaAssessmentRepository.GetAll().Include(e => e.VerifiedByUserFk).Where(e => e.ProjectId == input.ProjectId);
-
-            var pagedAndFilteredProjects = filtered
-                //.OrderBy(input.Sorting ?? "budgetedEndDate desc")
-                .PageBy(input);
-
-            var query = from rcsa in filtered
-                        join ou in _lookup_departmentRepository.GetAll().Include(e => e.SupervisorUserFk) on rcsa.BusinessUnitId equals ou.Id into ou1
-                        from ou2 in ou1.DefaultIfEmpty()
-                        select new GetRcsaProgramAssessmentForViewDto()
-                        {
-                            Assessment = ObjectMapper.Map<RcsaProgramAssessmentDto>(rcsa),
-                            UnitHead = ou2 == null ? "" : (ou2.SupervisorUserFk == null ? "" : ou2.SupervisorUserFk.FullName),
-                            VerifiedByUserName = rcsa.VerifiedByUserFk == null ? "" : rcsa.VerifiedByUserFk.FullName
-                        };
-
-            var totalCount = await filtered.CountAsync();
-
-            return new PagedResultDto<GetRcsaProgramAssessmentForViewDto>(
-                totalCount,
-                await query.ToListAsync()
-            );
-        }
-
-        public async Task SaveRcsaProgramAssessment(RcsaProgramAssessmentDto input)
-        {
-            var assesment = ObjectMapper.Map<RcsaProgramAssessment>(input);
-            await _rcsaAssessmentRepository.InsertAsync(assesment);
-        }
     }
 }

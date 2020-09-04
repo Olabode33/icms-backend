@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ICMSDemo.Projects.Dtos
 {
-    public class RcsaProgramAssessmentDto: EntityDto
+    public class RcsaProgramAssessmentDto: EntityDto<int?>
     {
         public int TenantId { get; set; }
         public int ProjectId { get; set; }
@@ -19,6 +19,7 @@ namespace ICMSDemo.Projects.Dtos
     public class GetRcsaProgramAssessmentForViewDto
     {
         public RcsaProgramAssessmentDto Assessment { get; set; }
+        public string DepartmentName { get; set; }
         public string UnitHead { get; set; }
         public string VerifiedByUserName { get; set; }
     }
@@ -26,5 +27,11 @@ namespace ICMSDemo.Projects.Dtos
     public class GetAllRcsaProgramAssessmentInput : PagedAndSortedResultRequestDto
     {
         public int ProjectId { get; set; }
+    }
+
+    public class RcsaProgramCheck
+    {
+        public int ProjectId { get; set; }
+        public bool Active { get; set; }
     }
 }
