@@ -1,6 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
-  <texts>    <text name="WorkingPaperReviewComments">Working paper review comments</text>
+  <texts>    <text name="KeyRiskIndicators">Key risk indicators</text>
+    <text name="KeyRiskIndicator">Key risk indicator</text>
+    <text name="ICMSDemo.KeyRiskIndicators.KeyRiskIndicator">KeyRiskIndicator</text>
+    <text name="Nature">Nature</text>
+    <text name="LowLevel">Low level</text>
+    <text name="LowActionType">Low action type</text>
+    <text name="MediumLevel">Medium level</text>
+    <text name="MediumActionType">Medium action type</text>
+    <text name="HighLevel">High level</text>
+    <text name="HighActionType">High action type</text>
+    <text name="KeyRiskIndicatorsHeaderInfo">Key risk indicators header info</text>
+    <text name="CreateNewKeyRiskIndicator">Create new key risk indicator</text>
+    <text name="EditKeyRiskIndicator">Edit key risk indicator</text>
+    <text name="DeleteKeyRiskIndicator">Delete key risk indicator</text>
+    <text name="ExceptionTypeCode">Exception type code</text>
+    <text name="BusinessObjectives">Business objectives</text>
+    <text name="BusinessObjective">Business objective</text>
+    <text name="ICMSDemo.BusinessObjectives.BusinessObjective">BusinessObjective</text>
+    <text name="ObjectiveType">Objective type</text>
+    <text name="BusinessObjectivesHeaderInfo">Business objectives header info</text>
+    <text name="CreateNewBusinessObjective">Create new business objective</text>
+    <text name="EditBusinessObjective">Edit business objective</text>
+    <text name="DeleteBusinessObjective">Delete business objective</text>
+    <text name="WorkingPaperReviewComments">Working paper review comments</text>
     <text name="WorkingPaperReviewComment">Working paper review comment</text>
     <text name="ICMSDemo.WorkingPaperReviewComments.WorkingPaperReviewComment">WorkingPaperReviewComment</text>
     <text name="Priority">Priority</text>

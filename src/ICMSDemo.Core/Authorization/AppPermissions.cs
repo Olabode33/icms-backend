@@ -6,6 +6,16 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_KeyRiskIndicators = "Pages.KeyRiskIndicators";
+        public const string Pages_KeyRiskIndicators_Create = "Pages.KeyRiskIndicators.Create";
+        public const string Pages_KeyRiskIndicators_Edit = "Pages.KeyRiskIndicators.Edit";
+        public const string Pages_KeyRiskIndicators_Delete = "Pages.KeyRiskIndicators.Delete";
+
+        public const string Pages_BusinessObjectives = "Pages.BusinessObjectives";
+        public const string Pages_BusinessObjectives_Create = "Pages.BusinessObjectives.Create";
+        public const string Pages_BusinessObjectives_Edit = "Pages.BusinessObjectives.Edit";
+        public const string Pages_BusinessObjectives_Delete = "Pages.BusinessObjectives.Delete";
+
         public const string Pages_WorkingPaperReviewComments = "Pages.WorkingPaperReviewComments";
         public const string Pages_WorkingPaperReviewComments_Create = "Pages.WorkingPaperReviewComments.Create";
         public const string Pages_WorkingPaperReviewComments_Edit = "Pages.WorkingPaperReviewComments.Edit";

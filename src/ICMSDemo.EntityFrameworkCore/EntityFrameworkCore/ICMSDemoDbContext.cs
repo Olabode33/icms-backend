@@ -1,4 +1,6 @@
-﻿using ICMSDemo.WorkingPaperReviewComments;
+﻿using ICMSDemo.KeyRiskIndicators;
+using ICMSDemo.BusinessObjectives;
+using ICMSDemo.WorkingPaperReviewComments;
 using ICMSDemo.LossEventTasks;
 using ICMSDemo.LossEvents;
 using ICMSDemo.LibraryControls;
@@ -38,6 +40,10 @@ namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<KeyRiskIndicator> KeyRiskIndicators { get; set; }
+
+        public virtual DbSet<BusinessObjective> BusinessObjectives { get; set; }
+
         public virtual DbSet<WorkingPaperReviewComment> WorkingPaperReviewComments { get; set; }
 
         public virtual DbSet<LossEventTask> LossEventTasks { get; set; }
@@ -141,7 +147,17 @@ namespace ICMSDemo.EntityFrameworkCore
            
            
            
-            modelBuilder.Entity<WorkingPaperReviewComment>(w =>
+           
+           
+            modelBuilder.Entity<KeyRiskIndicator>(k =>
+            {
+                k.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<BusinessObjective>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId });
+            });
+ modelBuilder.Entity<WorkingPaperReviewComment>(w =>
             {
                 w.HasIndex(e => new { e.TenantId });
             });

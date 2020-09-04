@@ -30,6 +30,20 @@ namespace ICMSDemo.Authorization
 
             var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
 
+            var keyRiskIndicators = pages.CreateChildPermission(AppPermissions.Pages_KeyRiskIndicators, L("KeyRiskIndicators"), multiTenancySides: MultiTenancySides.Tenant);
+            keyRiskIndicators.CreateChildPermission(AppPermissions.Pages_KeyRiskIndicators_Create, L("CreateNewKeyRiskIndicator"), multiTenancySides: MultiTenancySides.Tenant);
+            keyRiskIndicators.CreateChildPermission(AppPermissions.Pages_KeyRiskIndicators_Edit, L("EditKeyRiskIndicator"), multiTenancySides: MultiTenancySides.Tenant);
+            keyRiskIndicators.CreateChildPermission(AppPermissions.Pages_KeyRiskIndicators_Delete, L("DeleteKeyRiskIndicator"), multiTenancySides: MultiTenancySides.Tenant);
+
+
+
+            var businessObjectives = pages.CreateChildPermission(AppPermissions.Pages_BusinessObjectives, L("BusinessObjectives"), multiTenancySides: MultiTenancySides.Tenant);
+            businessObjectives.CreateChildPermission(AppPermissions.Pages_BusinessObjectives_Create, L("CreateNewBusinessObjective"), multiTenancySides: MultiTenancySides.Tenant);
+            businessObjectives.CreateChildPermission(AppPermissions.Pages_BusinessObjectives_Edit, L("EditBusinessObjective"), multiTenancySides: MultiTenancySides.Tenant);
+            businessObjectives.CreateChildPermission(AppPermissions.Pages_BusinessObjectives_Delete, L("DeleteBusinessObjective"), multiTenancySides: MultiTenancySides.Tenant);
+
+
+
             var workingPaperReviewComments = pages.CreateChildPermission(AppPermissions.Pages_WorkingPaperReviewComments, L("WorkingPaperReviewComments"), multiTenancySides: MultiTenancySides.Tenant);
             workingPaperReviewComments.CreateChildPermission(AppPermissions.Pages_WorkingPaperReviewComments_Create, L("CreateNewWorkingPaperReviewComment"), multiTenancySides: MultiTenancySides.Tenant);
             workingPaperReviewComments.CreateChildPermission(AppPermissions.Pages_WorkingPaperReviewComments_Edit, L("EditWorkingPaperReviewComment"), multiTenancySides: MultiTenancySides.Tenant);
