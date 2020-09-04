@@ -63,4 +63,9 @@
     {
         Remediable, NonRemediable
     }
+
+    public enum VerificationStatusEnum
+    {
+        Open, Submitted, Verified
+    }
 }

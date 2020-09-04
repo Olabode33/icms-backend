@@ -40,6 +40,7 @@ namespace ICMSDemo.EntityFrameworkCore
 {
     public class ICMSDemoDbContext : AbpZeroDbContext<Tenant, Role, User, ICMSDemoDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<RcsaProgramAssessment> RcsaProgramAssessments { get; set; }
         public virtual DbSet<KeyRiskIndicator> KeyRiskIndicators { get; set; }
 
         public virtual DbSet<BusinessObjective> BusinessObjectives { get; set; }

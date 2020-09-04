@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200904102617_Added_RcsaProgramAssessment")]
+    partial class Added_RcsaProgramAssessment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2595,41 +2597,6 @@ namespace ICMSDemo.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("ICMSDemo.Projects.RcsaProgramAssessment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("BusinessUnitId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("Changes")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("DateVerified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("VerificationStatus")
-                        .HasColumnType("int");
-
-                    b.Property<long>("VerifiedByUserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VerifiedByUserId");
-
-                    b.ToTable("RcsaProgramAssessments");
-                });
-
             modelBuilder.Entity("ICMSDemo.Ratings.Rating", b =>
                 {
                     b.Property<int>("Id")
@@ -3582,15 +3549,6 @@ namespace ICMSDemo.Migrations
                     b.HasOne("Abp.Organizations.OrganizationUnit", "ScopeFk")
                         .WithMany()
                         .HasForeignKey("ScopeId");
-                });
-
-            modelBuilder.Entity("ICMSDemo.Projects.RcsaProgramAssessment", b =>
-                {
-                    b.HasOne("ICMSDemo.Authorization.Users.User", "VerifiedByUserFk")
-                        .WithMany()
-                        .HasForeignKey("VerifiedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("ICMSDemo.TestingTemplates.TestingAttrribute", b =>
