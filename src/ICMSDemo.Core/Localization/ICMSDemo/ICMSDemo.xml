@@ -95,16 +95,16 @@
     <text name="DateDiscoveredRange">Date discovered range</text>
 
     
-    <text name="Likelihood_1">Very Low</text>
-    <text name="Likelihood_2">Low</text>
-    <text name="Likelihood_3">Medium</text>
-    <text name="Likelihood_4">High</text>
-    <text name="Likelihood_5">Very High</text>
-    <text name="Impact_1">Very Low</text>
-    <text name="Impact_2">Low</text>
-    <text name="Impact_3">Medium</text>
-    <text name="Impact_4">High</text>
-    <text name="Impact_5">Very High</text>
+    <text name="Likelihood_1">Rare</text>
+    <text name="Likelihood_2">Unlike</text>
+    <text name="Likelihood_3">Possible</text>
+    <text name="Likelihood_4">Likely</text>
+    <text name="Likelihood_5">Almost Certain</text>
+    <text name="Impact_1">Insignificant</text>
+    <text name="Impact_2">Minor</text>
+    <text name="Impact_3">Moderate</text>
+    <text name="Impact_4">Major</text>
+    <text name="Impact_5">Significant</text>
     
     <text name="ITDependent">IT Dependent</text>
     <text name="PendingReview">Pending</text>
