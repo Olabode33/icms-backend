@@ -18,6 +18,7 @@ using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ICMSDemo.Risks;
+using ICMSDemo.BusinessObjectives;
 
 namespace ICMSDemo.KeyRiskIndicators
 {
@@ -29,12 +30,13 @@ namespace ICMSDemo.KeyRiskIndicators
 		 private readonly IRepository<ExceptionType,int> _lookup_exceptionTypeRepository;
 		 private readonly IRepository<User,long> _lookup_userRepository;
 		 private readonly IRepository<Risk> _lookup_riskRepository;
+		 private readonly IRepository<BusinessObjective> _lookup_businessObjectiveRepository;
 		 
 
 		  public KeyRiskIndicatorsAppService(
               IRepository<KeyRiskIndicator> keyRiskIndicatorRepository, IKeyRiskIndicatorsExcelExporter keyRiskIndicatorsExcelExporter , IRepository<ExceptionType, int> lookup_exceptionTypeRepository,
-              IRepository<User, long> lookup_userRepository,
-              IRepository<Risk> lookup_riskRepository
+              IRepository<User, long> lookup_userRepository, 
+              IRepository<Risk> lookup_riskRepository, IRepository<BusinessObjective> lookup_businessObjectiveRepository
               ) 
 		  {
 			_keyRiskIndicatorRepository = keyRiskIndicatorRepository;
@@ -42,7 +44,7 @@ namespace ICMSDemo.KeyRiskIndicators
 			_lookup_exceptionTypeRepository = lookup_exceptionTypeRepository;
 		_lookup_userRepository = lookup_userRepository;
             _lookup_riskRepository = lookup_riskRepository;
-
+            _lookup_businessObjectiveRepository = lookup_businessObjectiveRepository;
           }
 
 		 public async Task<PagedResultDto<GetKeyRiskIndicatorForViewDto>> GetAll(GetAllKeyRiskIndicatorsInput input)
@@ -52,6 +54,7 @@ namespace ICMSDemo.KeyRiskIndicators
 						.Include( e => e.ExceptionTypeFk)
 						.Include( e => e.UserFk)
                         .Include( e => e.RiskFk)
+                        .Include( e => e.BusinessObjectiveFk)
 						.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false  || e.Name.Contains(input.Filter) || e.Description.Contains(input.Filter) || e.Nature.Contains(input.Filter) || e.LowActionType.Contains(input.Filter) || e.MediumActionType.Contains(input.Filter) || e.HighActionType.Contains(input.Filter))
 						.WhereIf(!string.IsNullOrWhiteSpace(input.NatureFilter),  e => e.Nature == input.NatureFilter)
 						.WhereIf(!string.IsNullOrWhiteSpace(input.ExceptionTypeCodeFilter), e => e.ExceptionTypeFk != null && e.ExceptionTypeFk.Code == input.ExceptionTypeCodeFilter)
@@ -78,7 +81,8 @@ namespace ICMSDemo.KeyRiskIndicators
                                         },
                                         ExceptionTypeCode = s1 == null || s1.Code == null ? "" : s1.Code.ToString(),
                                         UserName = s2 == null || s2.Name == null ? "" : s2.Name.ToString(),
-                                        RiskName = o.RiskFk != null ? o.RiskFk.Name : ""
+                                        RiskName = o.RiskFk != null ? o.RiskFk.Name : "",
+                                        BusinessObjectiveName = o.BusinessObjectiveFk != null ? o.BusinessObjectiveFk.Name : ""
 						};
 
             var totalCount = await filteredKeyRiskIndicators.CountAsync();
@@ -113,6 +117,11 @@ namespace ICMSDemo.KeyRiskIndicators
                 var _lookupUser = await _lookup_riskRepository.FirstOrDefaultAsync((int)output.KeyRiskIndicator.RiskId);
                 output.RiskName = _lookupUser?.Name?.ToString();
             }
+            if (output.KeyRiskIndicator.BusinessObjectiveId != null)
+            {
+                var _lookupUser = await _lookup_businessObjectiveRepository.FirstOrDefaultAsync((int)output.KeyRiskIndicator.BusinessObjectiveId);
+                output.BusinessObjectiveName = _lookupUser?.Name?.ToString();
+            }
 
             return output;
          }
@@ -141,6 +150,12 @@ namespace ICMSDemo.KeyRiskIndicators
             {
                 var _lookupUser = await _lookup_riskRepository.FirstOrDefaultAsync((int)output.KeyRiskIndicator.RiskId);
                 output.RiskName = _lookupUser?.Name?.ToString();
+            }
+
+            if (output.KeyRiskIndicator.BusinessObjectiveId != null)
+            {
+                var _lookupUser = await _lookup_businessObjectiveRepository.FirstOrDefaultAsync((int)output.KeyRiskIndicator.BusinessObjectiveId);
+                output.BusinessObjectiveName = _lookupUser?.Name?.ToString();
             }
 
             return output;
@@ -279,5 +294,34 @@ namespace ICMSDemo.KeyRiskIndicators
                 lookupTableDtoList
             );
          }
+
+        public async Task<PagedResultDto<KeyRiskIndicatorUserLookupTableDto>> GetAllBusinessObjectiveForLookupTable(GetAllForLookupTableInput input)
+        {
+            var query = _lookup_businessObjectiveRepository.GetAll().WhereIf(
+                   !string.IsNullOrWhiteSpace(input.Filter),
+                  e => e.Name != null && e.Name.Contains(input.Filter)
+               );
+
+            var totalCount = await query.CountAsync();
+
+            var userList = await query
+                .PageBy(input)
+                .ToListAsync();
+
+            var lookupTableDtoList = new List<KeyRiskIndicatorUserLookupTableDto>();
+            foreach (var user in userList)
+            {
+                lookupTableDtoList.Add(new KeyRiskIndicatorUserLookupTableDto
+                {
+                    Id = user.Id,
+                    DisplayName = user.Name?.ToString()
+                });
+            }
+
+            return new PagedResultDto<KeyRiskIndicatorUserLookupTableDto>(
+                totalCount,
+                lookupTableDtoList
+            );
+        }
     }
 }

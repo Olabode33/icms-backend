@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
 using ICMSDemo.Risks;
+using ICMSDemo.BusinessObjectives;
 
 namespace ICMSDemo.KeyRiskIndicators
 {
@@ -40,6 +41,12 @@ namespace ICMSDemo.KeyRiskIndicators
 
 		[ForeignKey("RiskId")]
 		public Risk RiskFk { get; set; }
+
+
+		public virtual int? BusinessObjectiveId { get; set; }
+
+		[ForeignKey("BusinessObjectiveId")]
+		public BusinessObjective BusinessObjectiveFk { get; set; }
 
 		public virtual int? ExceptionTypeId { get; set; }
 		

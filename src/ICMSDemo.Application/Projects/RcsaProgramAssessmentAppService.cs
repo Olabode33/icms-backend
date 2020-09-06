@@ -53,7 +53,7 @@ namespace ICMSDemo.Projects
 
         public async Task<RcsaProgramCheck> GetActiveRcsaProgram()
         {
-            var program = await _projectRepository.FirstOrDefaultAsync(e => e.ProjectOwner == ProjectOwner.OperationRisk && e.Commenced == true);
+            var program = await _projectRepository.FirstOrDefaultAsync(e => e.ProjectOwner == ProjectOwner.OperationRisk && e.Commenced == true && e.Closed == false) ;
 
             var check = new RcsaProgramCheck();
             if (program != null)

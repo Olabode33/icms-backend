@@ -19,5 +19,6 @@ namespace ICMSDemo.KeyRiskIndicators.Dtos
 
 		public string DataInputMethod { get; set; }
 		public int? RiskId { get; set; }
+		public int? BusinessObjectiveId { get; set; }
 	}
 }

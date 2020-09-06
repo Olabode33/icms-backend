@@ -328,12 +328,15 @@ namespace ICMSDemo.WorkingPaperNews
                 workingPaperNew.CompletionDate = DateTime.Now;
                 workingPaperNew.CompletedById = AbpSession.UserId;
 
-                var newAssignee = await _lookup_ouRoleRepository.FirstOrDefaultAsync(x => x.DepartmentRole == DepartmentRole.ControlHead && x.OrganizationUnitId == workingPaperNew.OrganizationUnitId);
-                workingPaperNew.AssignedToId = newAssignee.UserId;
+                if (workingPaperNew.OrganizationUnitId > 0)
+                {
+                    var newAssignee = await _lookup_ouRoleRepository.FirstOrDefaultAsync(x => x.DepartmentRole == DepartmentRole.ControlHead && x.OrganizationUnitId == workingPaperNew.OrganizationUnitId);
+                    workingPaperNew.AssignedToId = newAssignee.UserId;
 
-                var completedUser = await _lookup_userRepository.FirstOrDefaultAsync(x => x.Id == newAssignee.UserId);
+                    var completedUser = await _lookup_userRepository.FirstOrDefaultAsync(x => x.Id == newAssignee.UserId);
 
-                await _appNotifier.NotifyControlManager(completedUser.ToUserIdentifier());
+                    await _appNotifier.NotifyControlManager(completedUser.ToUserIdentifier());
+                }
             }
         }
 

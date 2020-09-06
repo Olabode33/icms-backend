@@ -293,20 +293,24 @@ namespace ICMSDemo.Projects
                     {
                         foreach (var item in allDepartments)
                         {
-                            RcsaProgramAssessment program = new RcsaProgramAssessment
+                            var processCount = await _lookup_processRepository.CountAsync(e => e.DepartmentId == item.Id);
+                            if (processCount > 0)
                             {
-                                BusinessUnitId = item.Id,
-                                ProjectId = id,
-                                Changes = false,
-                                DateVerified = null,
-                                VerificationStatus = VerificationStatusEnum.Open,
-                                VerifiedByUserId = null,
-                                TenantId = project.TenantId,
+                                RcsaProgramAssessment program = new RcsaProgramAssessment
+                                {
+                                    BusinessUnitId = item.Id,
+                                    ProjectId = id,
+                                    Changes = false,
+                                    DateVerified = null,
+                                    VerificationStatus = VerificationStatusEnum.Open,
+                                    VerifiedByUserId = null,
+                                    TenantId = project.TenantId,
 
-                            };
+                                };
 
 
-                            await _rcsaAssessmentRepository.InsertAsync(program);
+                                await _rcsaAssessmentRepository.InsertAsync(program);
+                            }
                         }
 
                     }
@@ -362,7 +366,7 @@ namespace ICMSDemo.Projects
 
             project.Closed = true;
             project.CloseDate = Clock.Now;
-            project.Commenced = false;
+            //project.Commenced = false;
 
 
             //// TODO:Abstract this into a background and hangfire job
