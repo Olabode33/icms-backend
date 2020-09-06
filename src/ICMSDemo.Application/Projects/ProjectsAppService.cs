@@ -231,29 +231,29 @@ namespace ICMSDemo.Projects
         [AbpAuthorize(AppPermissions.Pages_Projects_Create)]
         protected virtual async Task Create(CreateOrEditProjectDto input)
         {
-            if (input.BudgetedStartDate <= Clock.Now)
+            if (input.BudgetedStartDate <= Clock.Now && input.ProjectOwner != ProjectOwner.OperationRisk)
             {
                 throw new UserFriendlyException("The budgeted start date can not be in the past!");
             }
 
-            if (input.BudgetedEndDate <= Clock.Now)
+            if (input.BudgetedEndDate <= Clock.Now && input.ProjectOwner != ProjectOwner.OperationRisk)
             {
                 throw new UserFriendlyException("The budgeted end date can not be in the past!");
             }
 
-            if (input.BudgetedEndDate.Date <= input.BudgetedStartDate.Date)
+            if (input.BudgetedEndDate.Date <= input.BudgetedStartDate.Date && input.ProjectOwner != ProjectOwner.OperationRisk)
             {
                 throw new UserFriendlyException("The budgeted end date has to be after the budgeted start date!");
             }
 
 
-            if (input.ScopeEndDate.Value <= input.ScopeStartDate.Value)
+            if (input.ScopeEndDate.Value <= input.ScopeStartDate.Value && input.ProjectOwner != ProjectOwner.OperationRisk)
             {
                 throw new UserFriendlyException("The review Period end date has to be after the Period start date!");
             }
 
 
-            if (input.ScopeId == null)
+            if (input.ScopeId == null && input.ProjectOwner != ProjectOwner.OperationRisk)
             {
                 throw new UserFriendlyException("You must select a scope of review!");
             }
