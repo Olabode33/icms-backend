@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
+using ICMSDemo.Risks;
 
 namespace ICMSDemo.KeyRiskIndicators
 {
@@ -33,7 +34,12 @@ namespace ICMSDemo.KeyRiskIndicators
 		public virtual decimal HighLevel { get; set; }
 		
 		public virtual string HighActionType { get; set; }
-		
+
+
+		public virtual int? RiskId { get; set; }
+
+		[ForeignKey("RiskId")]
+		public Risk RiskFk { get; set; }
 
 		public virtual int? ExceptionTypeId { get; set; }
 		

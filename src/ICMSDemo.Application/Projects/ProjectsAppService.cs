@@ -29,7 +29,6 @@ using ICMSDemo.ExceptionIncidents;
 using ICMSDemo.Ratings;
 using ICMSDemo.DepartmentRatingHistory;
 using static ICMSDemo.IcmsEnums;
-using ICMSDemo.DepartmentRiskControls;
 
 namespace ICMSDemo.Projects
 {
@@ -42,7 +41,6 @@ namespace ICMSDemo.Projects
         private readonly IRepository<Department, long> _lookup_departmentRepository;
         private readonly IRepository<OrganizationUnit, long> _lookup_OURepository;
         private readonly IRepository<User, long> _lookup_userRepository;
-        private readonly IRepository<DepartmentRiskControl> _departmentRiskControlRepository;
         private readonly IRepository<WorkingPaper, Guid> _lookup_workingPaperRepository;
         private readonly IRepository<ExceptionIncident> _lookup_exceptionsRepository;
         private readonly IRepository<Rating> _lookup_ratingRepository;
@@ -55,7 +53,6 @@ namespace ICMSDemo.Projects
              IRepository<DepartmentRating> lookup_deptRatingRepository,
              IRepository<Rating> lookup_ratingRepository,
              IProjectsExcelExporter projectsExcelExporter,
-              IRepository<DepartmentRiskControl> departmentRiskControlRepository,
             IRepository<Department, long> lookup_departmentRepository,
             IRepository<Process, long> lookup_processRepository,
             IRepository<WorkingPaper, Guid> lookup_workingPaperRepository,
@@ -64,7 +61,6 @@ namespace ICMSDemo.Projects
             IRepository<RcsaProgramAssessment> rcsaAssessmentRepository)
         {
             _projectRepository = projectRepository;
-            _departmentRiskControlRepository = departmentRiskControlRepository;
             _projectsExcelExporter = projectsExcelExporter;
             _lookup_departmentRepository = lookup_departmentRepository;
             _lookup_processRepository = lookup_processRepository;
@@ -99,12 +95,12 @@ namespace ICMSDemo.Projects
                         .WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayNameFilter), e => e.ControlUnitFk != null && e.ControlUnitFk.DisplayName == input.OrganizationUnitDisplayNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayName2Filter), e => e.ScopeFk != null && e.ScopeFk.DisplayName == input.OrganizationUnitDisplayName2Filter)
                         .WhereIf(input.CommencedFilter, e => e.Commenced == input.CommencedFilter)
-                        .WhereIf(input.ProjectOwner != null, e => e.ProjectOwner == input.ProjectOwner || e.ProjectOwner == ProjectOwner.General);
+                        .WhereIf(input.ProjectOwner != null, e => e.ProjectOwner == input.ProjectOwner);
             //.WhereIf(input.ProjectOwner == ProjectOwner.General, e => e.ProjectOwner == null);
 
 
             var pagedAndFilteredProjects = filteredProjects
-                .OrderBy(input.Sorting ?? "budgetedEndDate desc")
+                .OrderBy(input.Sorting ?? "id desc")
                 .PageBy(input);
 
             var projects = from o in pagedAndFilteredProjects
@@ -129,7 +125,8 @@ namespace ICMSDemo.Projects
                                    Progress = o.Progress,
                                    ReviewType = o.ReviewType,
                                    Commenced = o.Commenced,
-                                   Id = o.Id
+                                   Id = o.Id,
+                                   Closed = o.Closed
                                },
                                OrganizationUnitDisplayName = s1 == null ? "" : s1.DisplayName.ToString(),
                                OrganizationUnitDisplayName2 = o.Cascade ? string.Format("{0} and its sub-sets", s2.DisplayName.ToString()) : s2.DisplayName.ToString()
@@ -257,7 +254,7 @@ namespace ICMSDemo.Projects
             }
 
 
-            if (input.ScopeId == null && input.ProjectOwner != ProjectOwner.OperationRisk)
+            if (input.ScopeId == null)
             {
                 throw new UserFriendlyException("You must select a scope of review!");
             }
@@ -287,38 +284,39 @@ namespace ICMSDemo.Projects
           //  await _projectRepository.InsertAsync(project);
             var id = await _projectRepository.InsertAndGetIdAsync(project);
 
-            try
+            if ( project.ProjectOwner == ProjectOwner.OperationRisk)
             {
-                var allDepartments = _departmentRiskControlRepository.GetAll();
-               // var allDepartments = await _lookup_departmentRepository.GetAll().Where(o=>o.;
-                
-                if (allDepartments != null && allDepartments.Count() > 0)
+                try
                 {
-                    foreach (var item in allDepartments)
+                    var allDepartments = await _lookup_departmentRepository.GetAllListAsync();
+                    if (allDepartments != null && allDepartments.Count() > 0)
                     {
-                        RcsaProgramAssessment program = new RcsaProgramAssessment
+                        foreach (var item in allDepartments)
                         {
-                            BusinessUnitId = item.Id,
-                            ProjectId = id,
-                            Changes = false,
-                            DateVerified = DateTime.Now,
-                            VerificationStatus = VerificationStatusEnum.Open,
-                            VerifiedByUserId = (long)AbpSession.UserId,
-                            TenantId = project.TenantId,
+                            RcsaProgramAssessment program = new RcsaProgramAssessment
+                            {
+                                BusinessUnitId = item.Id,
+                                ProjectId = id,
+                                Changes = false,
+                                DateVerified = null,
+                                VerificationStatus = VerificationStatusEnum.Open,
+                                VerifiedByUserId = null,
+                                TenantId = project.TenantId,
 
-                        };
+                            };
 
 
-                        await _rcsaAssessmentRepository.InsertAsync(program);
+                            await _rcsaAssessmentRepository.InsertAsync(program);
+                        }
+
                     }
 
                 }
+                catch (Exception)
+                {
 
-            }
-            catch (Exception)
-            {
 
-               
+                }
             }
             
 
@@ -364,6 +362,7 @@ namespace ICMSDemo.Projects
 
             project.Closed = true;
             project.CloseDate = Clock.Now;
+            project.Commenced = false;
 
 
             //// TODO:Abstract this into a background and hangfire job

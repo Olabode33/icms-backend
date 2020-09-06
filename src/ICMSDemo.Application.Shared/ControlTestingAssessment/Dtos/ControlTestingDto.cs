@@ -12,7 +12,7 @@ namespace ICMSDemo.ControlTestingAssessment.Dtos
 
 		public DateTime? EndDate { get; set; }
 
-
+        public long? AssignedUserId { get; set; }
 
     }
 }

@@ -76,10 +76,10 @@ namespace ICMSDemo.Projects
             var filtered = _rcsaAssessmentRepository.GetAll().Include(e => e.VerifiedByUserFk).Where(e => e.ProjectId == input.ProjectId);
 
             var pagedAndFilteredProjects = filtered
-                //.OrderBy(input.Sorting ?? "budgetedEndDate desc")
+                .OrderBy(input.Sorting ?? "businessUnitId")
                 .PageBy(input);
 
-            var query = from rcsa in filtered
+            var query = from rcsa in pagedAndFilteredProjects
                         join ou in _lookup_departmentRepository.GetAll().Include(e => e.SupervisorUserFk) on rcsa.BusinessUnitId equals ou.Id into ou1
                         from ou2 in ou1.DefaultIfEmpty()
                         select new GetRcsaProgramAssessmentForViewDto()

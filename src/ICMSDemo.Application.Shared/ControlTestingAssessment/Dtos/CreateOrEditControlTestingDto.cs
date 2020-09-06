@@ -10,7 +10,6 @@ namespace ICMSDemo.ControlTestingAssessment.Dtos
 
 		public string Name { get; set; }
 		
-		
 		public int? TestingTemplateId { get; set; }
 		
 		
@@ -18,5 +17,7 @@ namespace ICMSDemo.ControlTestingAssessment.Dtos
 		public virtual int? ProcessRiskControlId { get; set; }
 
 		public int? OrganizationUnitId { get; set; }
+		public virtual long? AssignedUserId { get; set; }
 	}
+
 }

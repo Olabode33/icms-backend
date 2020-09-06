@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200906130323_Udpate_RCSA_Assessment")]
+    partial class Udpate_RCSA_Assessment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1492,9 +1494,6 @@ namespace ICMSDemo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("AssignedUserId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -1538,8 +1537,6 @@ namespace ICMSDemo.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AssignedUserId");
 
                     b.HasIndex("TenantId");
 
@@ -2052,9 +2049,6 @@ namespace ICMSDemo.Migrations
                     b.Property<string>("Nature")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RiskId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
@@ -2064,8 +2058,6 @@ namespace ICMSDemo.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ExceptionTypeId");
-
-                    b.HasIndex("RiskId");
 
                     b.HasIndex("TenantId");
 
@@ -3455,13 +3447,6 @@ namespace ICMSDemo.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("ICMSDemo.ControlTestingAssessment.ControlTesting", b =>
-                {
-                    b.HasOne("ICMSDemo.Authorization.Users.User", "AssignedUserFk")
-                        .WithMany()
-                        .HasForeignKey("AssignedUserId");
-                });
-
             modelBuilder.Entity("ICMSDemo.Controls.Control", b =>
                 {
                     b.HasOne("ICMSDemo.Authorization.Users.User", "ControlOwnerFK")
@@ -3573,10 +3558,6 @@ namespace ICMSDemo.Migrations
                     b.HasOne("ICMSDemo.ExceptionTypes.ExceptionType", "ExceptionTypeFk")
                         .WithMany()
                         .HasForeignKey("ExceptionTypeId");
-
-                    b.HasOne("ICMSDemo.Risks.Risk", "RiskFk")
-                        .WithMany()
-                        .HasForeignKey("RiskId");
 
                     b.HasOne("ICMSDemo.Authorization.Users.User", "UserFk")
                         .WithMany()

@@ -12,6 +12,6 @@ namespace ICMSDemo.KeyRiskIndicators.Dtos
 
 		public string UserName { get; set;}
 
-
+        public string RiskName { get; set; }
     }
 }

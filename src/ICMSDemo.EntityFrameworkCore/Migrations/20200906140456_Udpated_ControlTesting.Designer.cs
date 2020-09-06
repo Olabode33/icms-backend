@@ -4,14 +4,16 @@ using ICMSDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ICMSDemo.Migrations
 {
     [DbContext(typeof(ICMSDemoDbContext))]
-    partial class ICMSDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200906140456_Udpated_ControlTesting")]
+    partial class Udpated_ControlTesting
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2052,9 +2054,6 @@ namespace ICMSDemo.Migrations
                     b.Property<string>("Nature")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RiskId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
@@ -2064,8 +2063,6 @@ namespace ICMSDemo.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ExceptionTypeId");
-
-                    b.HasIndex("RiskId");
 
                     b.HasIndex("TenantId");
 
@@ -3573,10 +3570,6 @@ namespace ICMSDemo.Migrations
                     b.HasOne("ICMSDemo.ExceptionTypes.ExceptionType", "ExceptionTypeFk")
                         .WithMany()
                         .HasForeignKey("ExceptionTypeId");
-
-                    b.HasOne("ICMSDemo.Risks.Risk", "RiskFk")
-                        .WithMany()
-                        .HasForeignKey("RiskId");
 
                     b.HasOne("ICMSDemo.Authorization.Users.User", "UserFk")
                         .WithMany()

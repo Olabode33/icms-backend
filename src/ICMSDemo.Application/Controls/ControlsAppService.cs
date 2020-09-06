@@ -142,8 +142,8 @@ namespace ICMSDemo.Controls
 					Name = input.Name,
 					Description = input.Description,
 					Severity = Severity.Medium,
-					TargetRemediation = id,
-
+					TargetRemediation = 10,
+					Remediation = ExceptionRemediationTypeEnum.Remediable
 				};
 
 				await _exceptionTypesAppService.CreateOrEdit(exception);
