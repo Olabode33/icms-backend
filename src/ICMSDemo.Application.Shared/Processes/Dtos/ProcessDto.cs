@@ -12,7 +12,7 @@ namespace ICMSDemo.Processes.Dtos
 		public bool Casade { get; set; }
 		 public long? OwnerId { get; set; }
 
-		 		 public long? DepartmentId { get; set; }
+		 public long? DepartmentId { get; set; }
 
 		 
     }

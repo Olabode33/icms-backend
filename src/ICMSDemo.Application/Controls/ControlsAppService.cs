@@ -17,6 +17,10 @@ using ICMSDemo.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using ICMSDemo.ExceptionTypes.Dtos;
+using ICMSDemo.ExceptionTypes;
+using ICMSDemo.WorkingPaperNews;
+using ICMSDemo.WorkingPaperNews.Dtos;
 
 namespace ICMSDemo.Controls
 {
@@ -25,14 +29,19 @@ namespace ICMSDemo.Controls
     {
 		 private readonly IRepository<Control> _controlRepository;
 		 private readonly IControlsExcelExporter _controlsExcelExporter;
-		 
-
-		  public ControlsAppService(IRepository<Control> controlRepository, IControlsExcelExporter controlsExcelExporter ) 
+		private readonly IExceptionTypesAppService _exceptionTypesAppService;
+		
+		public ControlsAppService(IRepository<Control> controlRepository,
+			IControlsExcelExporter controlsExcelExporter,
+			IExceptionTypesAppService exceptionTypesAppService
+			) 
 		  {
 			_controlRepository = controlRepository;
 			_controlsExcelExporter = controlsExcelExporter;
+			_exceptionTypesAppService = exceptionTypesAppService;
 			
-		  }
+
+		}
 
 		 public async Task<PagedResultDto<GetControlForViewDto>> GetAll(GetAllControlsInput input)
          {
@@ -125,8 +134,31 @@ namespace ICMSDemo.Controls
 				control.TenantId = (int) AbpSession.TenantId;
 			}
 		
-
             var id  = await _controlRepository.InsertAndGetIdAsync(control);
+            try
+            {
+				CreateOrEditExceptionTypeDto exception = new CreateOrEditExceptionTypeDto
+				{
+					Name = input.Name,
+					Description = input.Description,
+					Severity = Severity.Medium,
+					TargetRemediation = id,
+
+				};
+
+				await _exceptionTypesAppService.CreateOrEdit(exception);
+
+
+				
+
+			}
+            catch (Exception)
+            {
+
+               
+            }
+
+
 			return new NameValueDto<int>
 			{
 				Name = control.Name,

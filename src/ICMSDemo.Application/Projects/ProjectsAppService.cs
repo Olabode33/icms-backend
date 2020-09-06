@@ -280,7 +280,42 @@ namespace ICMSDemo.Projects
                 project.TenantId = (int)AbpSession.TenantId;
             }
 
-            await _projectRepository.InsertAsync(project);
+          //  await _projectRepository.InsertAsync(project);
+            var id = await _projectRepository.InsertAndGetIdAsync(project);
+
+            try
+            {
+                var allDepartments = await _lookup_departmentRepository.GetAllListAsync();
+                if (allDepartments != null && allDepartments.Count() > 0)
+                {
+                    foreach (var item in allDepartments)
+                    {
+                        RcsaProgramAssessment program = new RcsaProgramAssessment
+                        {
+                            BusinessUnitId = input.ProjectOwner == ProjectOwner.OperationRisk ? 2:(input.ProjectOwner == ProjectOwner.General ? 3:(input.ProjectOwner == ProjectOwner.InternalAudit?0:1)),
+                            ProjectId = id,
+                            Changes = true,
+                            DateVerified = DateTime.Now,
+                            VerificationStatus = VerificationStatusEnum.Open,
+                            VerifiedByUserId = (long)AbpSession.UserId,
+                            TenantId = project.TenantId,
+
+                        };
+
+
+                        await _rcsaAssessmentRepository.InsertAsync(program);
+                    }
+
+                }
+
+            }
+            catch (Exception)
+            {
+
+               
+            }
+            
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_Projects_Edit)]

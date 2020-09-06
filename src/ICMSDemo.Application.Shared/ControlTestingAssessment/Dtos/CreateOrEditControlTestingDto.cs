@@ -17,6 +17,6 @@ namespace ICMSDemo.ControlTestingAssessment.Dtos
 		public string EndDate { get; set; }
 		public virtual int? ProcessRiskControlId { get; set; }
 
-
+		public int? OrganizationUnitId { get; set; }
 	}
 }

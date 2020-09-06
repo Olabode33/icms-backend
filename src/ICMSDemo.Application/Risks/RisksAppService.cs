@@ -15,6 +15,8 @@ using ICMSDemo.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using ICMSDemo.ExceptionTypes;
+using ICMSDemo.ExceptionTypes.Dtos;
 
 namespace ICMSDemo.Risks
 {
@@ -22,12 +24,12 @@ namespace ICMSDemo.Risks
     public class RisksAppService : ICMSDemoAppServiceBase, IRisksAppService
     {
 		 private readonly IRepository<Risk> _riskRepository;
-		 
+		private readonly IExceptionTypesAppService _exceptionTypesAppService;
 
-		  public RisksAppService(IRepository<Risk> riskRepository ) 
+		public RisksAppService(IRepository<Risk> riskRepository, IExceptionTypesAppService exceptionTypesAppService) 
 		  {
 			_riskRepository = riskRepository;
-			
+			_exceptionTypesAppService = exceptionTypesAppService;
 		  }
 
 		 public async Task<PagedResultDto<GetRiskForViewDto>> GetAll(GetAllRisksInput input)
@@ -111,6 +113,26 @@ namespace ICMSDemo.Risks
 			risk.Code = "R-" + prevCount.ToString();
 
             var id = await _riskRepository.InsertAndGetIdAsync(risk);
+
+            try
+            {
+				CreateOrEditExceptionTypeDto exception = new CreateOrEditExceptionTypeDto
+				{
+					Name = input.Name,
+					Description = input.Description,
+					Severity = input.Severity,
+					TargetRemediation = id,
+
+				};
+
+				await _exceptionTypesAppService.CreateOrEdit(exception);
+
+			}
+            catch (Exception)
+            {
+
+                
+            }
 
 			return new NameValueDto<int>
 			{

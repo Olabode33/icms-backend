@@ -23,7 +23,7 @@ namespace ICMSDemo.Processes
 		
 		Task<PagedResultDto<ProcessOrganizationUnitLookupTableDto>> GetAllOrganizationUnitForLookupTable(GetAllForLookupTableInput input);
 
-
+		Task<FileDto> GetProcessToExcel();
 
 
 	}

@@ -18,5 +18,6 @@ namespace ICMSDemo.ControlTestingAssessment
 		public virtual DateTime? EndDate { get; set; }
         public virtual int? ProcessRiskControlId { get; set; }
         public virtual int? ProjectId { get; set; }
+        public int? OrganizationUnitId { get; set; }
     }
 }

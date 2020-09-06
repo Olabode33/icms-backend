@@ -17,6 +17,8 @@ using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ICMSDemo.Projects;
 using static ICMSDemo.IcmsEnums;
+using ICMSDemo.WorkingPaperNews.Dtos;
+using ICMSDemo.WorkingPaperNews;
 
 namespace ICMSDemo.ControlTestingAssessment
 {
@@ -26,15 +28,17 @@ namespace ICMSDemo.ControlTestingAssessment
 		 private readonly IRepository<ControlTesting> _controlTestingRepository;
 		 private readonly IControlTestingsExcelExporter _controlTestingsExcelExporter;
 		private readonly IRepository<Project> _projectRepository;
+		private readonly IWorkingPaperNewsAppService _workingPaperNewsAppService;
 
 		public ControlTestingsAppService(IRepository<ControlTesting> controlTestingRepository,
-			IControlTestingsExcelExporter controlTestingsExcelExporter, IRepository<Project> projectRepository ) 
+			IControlTestingsExcelExporter controlTestingsExcelExporter, 
+			IRepository<Project> projectRepository, IWorkingPaperNewsAppService workingPaperNewsAppService) 
 		  {
 			_controlTestingRepository = controlTestingRepository;
 			_projectRepository = projectRepository;
 			_controlTestingsExcelExporter = controlTestingsExcelExporter;
-			
-		  }
+			_workingPaperNewsAppService = workingPaperNewsAppService;
+		}
 
 		 public async Task<PagedResultDto<GetControlTestingForViewDto>> GetAll(GetAllControlTestingsInput input)
          {
@@ -115,10 +119,31 @@ namespace ICMSDemo.ControlTestingAssessment
 			}
 		
 
-            await _controlTestingRepository.InsertAsync(controlTesting);
-         }
+			var id = await _controlTestingRepository.InsertAndGetIdAsync(controlTesting);
 
-		 [AbpAuthorize(AppPermissions.Pages_ControlTestings_Edit)]
+            try
+            {
+				CreateOrEditWorkingPaperNewDto workingPaper = new CreateOrEditWorkingPaperNewDto
+				{
+					AssignedToId = controlTesting.CreatorUserId,
+					Comment = controlTesting.Name,
+					TestingTemplateId = controlTesting.TestingTemplateId,
+					OrganizationUnitId = controlTesting.OrganizationUnitId
+				};
+				await _workingPaperNewsAppService.CreateOrEdit(workingPaper);
+
+			}
+            catch (Exception)
+            {
+
+               
+            }
+         
+
+
+		}
+
+		[AbpAuthorize(AppPermissions.Pages_ControlTestings_Edit)]
 		 protected virtual async Task Update(CreateOrEditControlTestingDto input)
          {
             var controlTesting = await _controlTestingRepository.FirstOrDefaultAsync((int)input.Id);
@@ -133,6 +158,7 @@ namespace ICMSDemo.ControlTestingAssessment
          {
             await _controlTestingRepository.DeleteAsync(input.Id);
          } 
+
 
 		public async Task<FileDto> GetControlTestingsToExcel(GetAllControlTestingsForExcelInput input)
          {
@@ -154,7 +180,6 @@ namespace ICMSDemo.ControlTestingAssessment
                                 Id = o.Id
 							}
 						 });
-
 
             var controlTestingListDtos = await query.ToListAsync();
 
