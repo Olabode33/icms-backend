@@ -148,9 +148,6 @@ namespace ICMSDemo.Controls
 
 				await _exceptionTypesAppService.CreateOrEdit(exception);
 
-
-				
-
 			}
             catch (Exception)
             {

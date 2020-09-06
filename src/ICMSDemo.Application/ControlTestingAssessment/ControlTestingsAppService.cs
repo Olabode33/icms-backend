@@ -19,6 +19,11 @@ using ICMSDemo.Projects;
 using static ICMSDemo.IcmsEnums;
 using ICMSDemo.WorkingPaperNews.Dtos;
 using ICMSDemo.WorkingPaperNews;
+using ICMSDemo.ProcessRiskControls;
+using ICMSDemo.Processes;
+using ICMSDemo.ProcessRisks;
+using ICMSDemo.Processes.Dtos;
+using Abp.Organizations;
 
 namespace ICMSDemo.ControlTestingAssessment
 {
@@ -28,16 +33,29 @@ namespace ICMSDemo.ControlTestingAssessment
 		 private readonly IRepository<ControlTesting> _controlTestingRepository;
 		 private readonly IControlTestingsExcelExporter _controlTestingsExcelExporter;
 		private readonly IRepository<Project> _projectRepository;
+		private readonly IRepository<Process, long> _processRepository;
+		private readonly IRepository<OrganizationUnit, long> _lookup_organizationUnitRepository;
+		private readonly IRepository<ProcessRisk> _lookup_processRiskRepository;
+		private readonly IRepository<ProcessRiskControl> _lookup_processRiskControlRepository;
 		private readonly IWorkingPaperNewsAppService _workingPaperNewsAppService;
 
 		public ControlTestingsAppService(IRepository<ControlTesting> controlTestingRepository,
 			IControlTestingsExcelExporter controlTestingsExcelExporter, 
-			IRepository<Project> projectRepository, IWorkingPaperNewsAppService workingPaperNewsAppService) 
+			IRepository<Project> projectRepository,
+			IRepository<OrganizationUnit, long> lookup_organizationUnitRepository,
+			IWorkingPaperNewsAppService workingPaperNewsAppService,
+			 IRepository<Process, long> processRepository,
+			  IRepository<ProcessRisk> lookup_processRiskRepository,
+			IRepository<ProcessRiskControl> lookup_processRiskControlRepository) 
 		  {
 			_controlTestingRepository = controlTestingRepository;
 			_projectRepository = projectRepository;
+			_processRepository = processRepository;
+			_lookup_organizationUnitRepository = lookup_organizationUnitRepository;
 			_controlTestingsExcelExporter = controlTestingsExcelExporter;
 			_workingPaperNewsAppService = workingPaperNewsAppService;
+			_lookup_processRiskRepository = lookup_processRiskRepository;
+			_lookup_processRiskControlRepository = lookup_processRiskControlRepository;
 		}
 
 		 public async Task<PagedResultDto<GetControlTestingForViewDto>> GetAll(GetAllControlTestingsInput input)
@@ -160,28 +178,24 @@ namespace ICMSDemo.ControlTestingAssessment
          } 
 
 
-		public async Task<FileDto> GetControlTestingsToExcel(GetAllControlTestingsForExcelInput input)
+		public async Task<FileDto> GetControlTestingsToExcel()
          {
+			var list = new ExportToExcelDto();
+			var filteredControlTestings = _lookup_organizationUnitRepository.GetAll();
 
-			var filteredControlTestings = _controlTestingRepository.GetAll()
-						.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter))
-						.WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
-						.WhereIf(input.MinTestingTemplateIdFilter != null, e => e.TestingTemplateId >= input.MinTestingTemplateIdFilter)
-						.WhereIf(input.MaxTestingTemplateIdFilter != null, e => e.TestingTemplateId <= input.MaxTestingTemplateIdFilter);
-					//	.WhereIf(!string.IsNullOrWhiteSpace(input.EndDateFilter),  e => e.EndDate == input.EndDateFilter);
-
-			var query = (from o in filteredControlTestings
-                         select new GetControlTestingForViewDto() { 
-							ControlTesting = new ControlTestingDto
-							{
-                                Name = o.Name,
-                                TestingTemplateId = o.TestingTemplateId,
-                                EndDate = o.EndDate,
-                                Id = o.Id
-							}
+            var query = (from o in filteredControlTestings
+						 select new GetProcessForViewDto()
+						 {
+							 Process = new ProcessDto
+							 {
+								 Name = o.DisplayName,
+								 Description = o.DisplayName,
+								 
+							 },
 						 });
 
-            var controlTestingListDtos = await query.ToListAsync();
+
+			var controlTestingListDtos = await query.ToListAsync();
 
             return _controlTestingsExcelExporter.ExportToFile(controlTestingListDtos);
          }

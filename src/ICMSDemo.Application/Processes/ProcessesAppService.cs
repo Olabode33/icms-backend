@@ -20,7 +20,6 @@ using ICMSDemo.ProcessRisks;
 using ICMSDemo.ProcessRiskControls;
 using ICMSDemo.Organizations.Dto;
 using Abp.Collections.Extensions;
-using ICMSDemo.Processes.Exporting;
 
 namespace ICMSDemo.Processes
 {
@@ -32,15 +31,14 @@ namespace ICMSDemo.Processes
         private readonly IRepository<OrganizationUnit, long> _lookup_organizationUnitRepository;
         private readonly IRepository<ProcessRisk> _lookup_processRiskRepository;
         private readonly IRepository<ProcessRiskControl> _lookup_processRiskControlRepository;
-        private readonly IProcessingExcelExporter _processingExcelExporter;
+
 
         public ProcessesAppService(
             IRepository<Process, long> processRepository, 
             IRepository<User, long> lookup_userRepository, 
             IRepository<OrganizationUnit, long> lookup_organizationUnitRepository,
             IRepository<ProcessRisk> lookup_processRiskRepository,
-            IRepository<ProcessRiskControl> lookup_processRiskControlRepository,
-            IProcessingExcelExporter processingExcelExporter
+            IRepository<ProcessRiskControl> lookup_processRiskControlRepository
             )
         {
             _processRepository = processRepository;
@@ -48,7 +46,6 @@ namespace ICMSDemo.Processes
             _lookup_organizationUnitRepository = lookup_organizationUnitRepository;
             _lookup_processRiskRepository = lookup_processRiskRepository;
             _lookup_processRiskControlRepository = lookup_processRiskControlRepository;
-            _processingExcelExporter = processingExcelExporter;
         }
 
     
@@ -122,6 +119,7 @@ namespace ICMSDemo.Processes
 
                 var departments = await _lookup_organizationUnitRepository.GetAllListAsync(x => codes.Any(e => e == x.Code));
                 processsList = processsList.Where(x => codes.Any(e => e == x.DepartmentCode)).ToList();
+               
             }
 
             return new ListResultDto<OrganizationUnitDto>(processsList);
@@ -137,7 +135,6 @@ namespace ICMSDemo.Processes
                         .WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.UserNameFilter), e => e.OwnerFk != null && e.OwnerFk.Name == input.UserNameFilter)
                         .WhereIf(!string.IsNullOrWhiteSpace(input.OrganizationUnitDisplayNameFilter), e => e.DepartmentFk != null && e.DepartmentFk.DisplayName == input.OrganizationUnitDisplayNameFilter);
-
 
             var pagedAndFilteredProcesses = filteredProcesses
                 .OrderBy(input.Sorting ?? "id asc")
@@ -303,34 +300,12 @@ namespace ICMSDemo.Processes
                 await _processRepository.GetAsync(input.Id)
                 );
         }
+
         private OrganizationUnitDto CreateOrganizationUnitDto(OrganizationUnit organizationUnit)
         {
             var dto = ObjectMapper.Map<OrganizationUnitDto>(organizationUnit);
             dto.MemberCount = 0;
             return dto;
         }
-
-        public async Task<FileDto> GetProcessToExcel()
-        {
-            var filteredControlTestings = _processRepository.GetAll();
-            var query = (from o in filteredControlTestings
-
-                         select new GetProcessForViewDto()
-                         {
-                             Process = new ProcessDto
-                             {
-                                 Name = o.Name,
-                                 Description = o.Description,
-                                 Casade = o.Casade,
-                                 Id = o.Id,
-                                 
-                             },
-                         });
-
-            var processListDtos = await query.ToListAsync();
-
-            return _processingExcelExporter.ExportToFile(processListDtos);
-        }
-
     }
 }

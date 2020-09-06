@@ -29,6 +29,7 @@ using ICMSDemo.ExceptionIncidents;
 using ICMSDemo.Ratings;
 using ICMSDemo.DepartmentRatingHistory;
 using static ICMSDemo.IcmsEnums;
+using ICMSDemo.DepartmentRiskControls;
 
 namespace ICMSDemo.Projects
 {
@@ -41,6 +42,7 @@ namespace ICMSDemo.Projects
         private readonly IRepository<Department, long> _lookup_departmentRepository;
         private readonly IRepository<OrganizationUnit, long> _lookup_OURepository;
         private readonly IRepository<User, long> _lookup_userRepository;
+        private readonly IRepository<DepartmentRiskControl> _departmentRiskControlRepository;
         private readonly IRepository<WorkingPaper, Guid> _lookup_workingPaperRepository;
         private readonly IRepository<ExceptionIncident> _lookup_exceptionsRepository;
         private readonly IRepository<Rating> _lookup_ratingRepository;
@@ -53,6 +55,7 @@ namespace ICMSDemo.Projects
              IRepository<DepartmentRating> lookup_deptRatingRepository,
              IRepository<Rating> lookup_ratingRepository,
              IProjectsExcelExporter projectsExcelExporter,
+              IRepository<DepartmentRiskControl> departmentRiskControlRepository,
             IRepository<Department, long> lookup_departmentRepository,
             IRepository<Process, long> lookup_processRepository,
             IRepository<WorkingPaper, Guid> lookup_workingPaperRepository,
@@ -61,6 +64,7 @@ namespace ICMSDemo.Projects
             IRepository<RcsaProgramAssessment> rcsaAssessmentRepository)
         {
             _projectRepository = projectRepository;
+            _departmentRiskControlRepository = departmentRiskControlRepository;
             _projectsExcelExporter = projectsExcelExporter;
             _lookup_departmentRepository = lookup_departmentRepository;
             _lookup_processRepository = lookup_processRepository;
@@ -285,16 +289,18 @@ namespace ICMSDemo.Projects
 
             try
             {
-                var allDepartments = await _lookup_departmentRepository.GetAllListAsync();
+                var allDepartments = _departmentRiskControlRepository.GetAll();
+               // var allDepartments = await _lookup_departmentRepository.GetAll().Where(o=>o.;
+                
                 if (allDepartments != null && allDepartments.Count() > 0)
                 {
                     foreach (var item in allDepartments)
                     {
                         RcsaProgramAssessment program = new RcsaProgramAssessment
                         {
-                            BusinessUnitId = input.ProjectOwner == ProjectOwner.OperationRisk ? 2:(input.ProjectOwner == ProjectOwner.General ? 3:(input.ProjectOwner == ProjectOwner.InternalAudit?0:1)),
+                            BusinessUnitId = item.Id,
                             ProjectId = id,
-                            Changes = true,
+                            Changes = false,
                             DateVerified = DateTime.Now,
                             VerificationStatus = VerificationStatusEnum.Open,
                             VerifiedByUserId = (long)AbpSession.UserId,

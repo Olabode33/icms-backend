@@ -20,7 +20,7 @@ namespace ICMSDemo.ControlTestingAssessment
 
 		Task Delete(EntityDto input);
 
-		Task<FileDto> GetControlTestingsToExcel(GetAllControlTestingsForExcelInput input);
+		Task<FileDto> GetControlTestingsToExcel();
 
 		
     }

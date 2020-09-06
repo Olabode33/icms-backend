@@ -122,6 +122,7 @@ namespace ICMSDemo.Risks
 					Description = input.Description,
 					Severity = input.Severity,
 					TargetRemediation = id,
+					
 
 				};
 

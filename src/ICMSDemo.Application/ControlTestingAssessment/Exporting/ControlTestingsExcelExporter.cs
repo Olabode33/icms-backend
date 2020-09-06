@@ -5,6 +5,7 @@ using ICMSDemo.DataExporting.Excel.EpPlus;
 using ICMSDemo.ControlTestingAssessment.Dtos;
 using ICMSDemo.Dto;
 using ICMSDemo.Storage;
+using ICMSDemo.Processes.Dtos;
 
 namespace ICMSDemo.ControlTestingAssessment.Exporting
 {
@@ -24,10 +25,10 @@ namespace ICMSDemo.ControlTestingAssessment.Exporting
             _abpSession = abpSession;
         }
 
-        public FileDto ExportToFile(List<GetControlTestingForViewDto> controlTestings)
+        public FileDto ExportToFile(List<GetProcessForViewDto> controlTestings)
         {
             return CreateExcelPackage(
-                "ControlTestings.xlsx",
+                "Processes.xlsx",
                 excelPackage =>
                 {
                     
@@ -37,15 +38,14 @@ namespace ICMSDemo.ControlTestingAssessment.Exporting
                     AddHeader(
                         sheet,
                         L("Name"),
-                        L("TestingTemplateId"),
-                        L("EndDate")
+                        L("Description")
+                      
                         );
 
                     AddObjects(
                         sheet, 2, controlTestings,
-                        _ => _.ControlTesting.Name,
-                        _ => _.ControlTesting.TestingTemplateId,
-                        _ => _.ControlTesting.EndDate
+                        _ => _.Process.Name,
+                        _ => _.Process.Description
                         );
 
 					
