@@ -183,7 +183,7 @@ namespace ICMSDemo.ControlTestingAssessment
 
 		public async Task<FileDto> GetControlTestingsToExcel()
          {
-			var list = new ExportToExcelDto();
+			//var list = new ExportToExcelDto();
 			var filteredControlTestings = _lookup_organizationUnitRepository.GetAll();
 
             var query = (from o in filteredControlTestings
