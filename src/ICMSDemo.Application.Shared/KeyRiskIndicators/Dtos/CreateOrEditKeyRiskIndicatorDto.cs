@@ -40,7 +40,8 @@ namespace ICMSDemo.KeyRiskIndicators.Dtos
 		 public int? ExceptionTypeId { get; set; }
 		 
 		 		 public long? UserId { get; set; }
-		 
-		 
-    }
+
+		public int? RiskId { get; set; }
+
+	}
 }

@@ -17,6 +17,7 @@ using ICMSDemo.Authorization;
 using Abp.Extensions;
 using Abp.Authorization;
 using Microsoft.EntityFrameworkCore;
+using ICMSDemo.Risks;
 
 namespace ICMSDemo.KeyRiskIndicators
 {
@@ -27,16 +28,22 @@ namespace ICMSDemo.KeyRiskIndicators
 		 private readonly IKeyRiskIndicatorsExcelExporter _keyRiskIndicatorsExcelExporter;
 		 private readonly IRepository<ExceptionType,int> _lookup_exceptionTypeRepository;
 		 private readonly IRepository<User,long> _lookup_userRepository;
+		 private readonly IRepository<Risk> _lookup_riskRepository;
 		 
 
-		  public KeyRiskIndicatorsAppService(IRepository<KeyRiskIndicator> keyRiskIndicatorRepository, IKeyRiskIndicatorsExcelExporter keyRiskIndicatorsExcelExporter , IRepository<ExceptionType, int> lookup_exceptionTypeRepository, IRepository<User, long> lookup_userRepository) 
+		  public KeyRiskIndicatorsAppService(
+              IRepository<KeyRiskIndicator> keyRiskIndicatorRepository, IKeyRiskIndicatorsExcelExporter keyRiskIndicatorsExcelExporter , IRepository<ExceptionType, int> lookup_exceptionTypeRepository,
+              IRepository<User, long> lookup_userRepository,
+              IRepository<Risk> lookup_riskRepository
+              ) 
 		  {
 			_keyRiskIndicatorRepository = keyRiskIndicatorRepository;
 			_keyRiskIndicatorsExcelExporter = keyRiskIndicatorsExcelExporter;
 			_lookup_exceptionTypeRepository = lookup_exceptionTypeRepository;
 		_lookup_userRepository = lookup_userRepository;
-		
-		  }
+            _lookup_riskRepository = lookup_riskRepository;
+
+          }
 
 		 public async Task<PagedResultDto<GetKeyRiskIndicatorForViewDto>> GetAll(GetAllKeyRiskIndicatorsInput input)
          {
@@ -44,6 +51,7 @@ namespace ICMSDemo.KeyRiskIndicators
 			var filteredKeyRiskIndicators = _keyRiskIndicatorRepository.GetAll()
 						.Include( e => e.ExceptionTypeFk)
 						.Include( e => e.UserFk)
+                        .Include( e => e.RiskFk)
 						.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false  || e.Name.Contains(input.Filter) || e.Description.Contains(input.Filter) || e.Nature.Contains(input.Filter) || e.LowActionType.Contains(input.Filter) || e.MediumActionType.Contains(input.Filter) || e.HighActionType.Contains(input.Filter))
 						.WhereIf(!string.IsNullOrWhiteSpace(input.NatureFilter),  e => e.Nature == input.NatureFilter)
 						.WhereIf(!string.IsNullOrWhiteSpace(input.ExceptionTypeCodeFilter), e => e.ExceptionTypeFk != null && e.ExceptionTypeFk.Code == input.ExceptionTypeCodeFilter)
@@ -53,23 +61,24 @@ namespace ICMSDemo.KeyRiskIndicators
                 .OrderBy(input.Sorting ?? "id asc")
                 .PageBy(input);
 
-			var keyRiskIndicators = from o in pagedAndFilteredKeyRiskIndicators
-                         join o1 in _lookup_exceptionTypeRepository.GetAll() on o.ExceptionTypeId equals o1.Id into j1
-                         from s1 in j1.DefaultIfEmpty()
-                         
-                         join o2 in _lookup_userRepository.GetAll() on o.UserId equals o2.Id into j2
-                         from s2 in j2.DefaultIfEmpty()
-                         
-                         select new GetKeyRiskIndicatorForViewDto() {
-							KeyRiskIndicator = new KeyRiskIndicatorDto
-							{
-                                Name = o.Name,
-                                Nature = o.Nature,
-                                LowLevel = o.LowLevel,
-                                Id = o.Id
-							},
-                         	ExceptionTypeCode = s1 == null || s1.Code == null ? "" : s1.Code.ToString(),
-                         	UserName = s2 == null || s2.Name == null ? "" : s2.Name.ToString()
+            var keyRiskIndicators = from o in pagedAndFilteredKeyRiskIndicators
+                                    join o1 in _lookup_exceptionTypeRepository.GetAll() on o.ExceptionTypeId equals o1.Id into j1
+                                    from s1 in j1.DefaultIfEmpty()
+
+                                    join o2 in _lookup_userRepository.GetAll() on o.UserId equals o2.Id into j2
+                                    from s2 in j2.DefaultIfEmpty()
+
+                                    select new GetKeyRiskIndicatorForViewDto() {
+                                        KeyRiskIndicator = new KeyRiskIndicatorDto
+                                        {
+                                            Name = o.Name,
+                                            Nature = o.Nature,
+                                            LowLevel = o.LowLevel,
+                                            Id = o.Id
+                                        },
+                                        ExceptionTypeCode = s1 == null || s1.Code == null ? "" : s1.Code.ToString(),
+                                        UserName = s2 == null || s2.Name == null ? "" : s2.Name.ToString(),
+                                        RiskName = o.RiskFk != null ? o.RiskFk.Name : ""
 						};
 
             var totalCount = await filteredKeyRiskIndicators.CountAsync();
@@ -97,7 +106,14 @@ namespace ICMSDemo.KeyRiskIndicators
                 var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)output.KeyRiskIndicator.UserId);
                 output.UserName = _lookupUser?.Name?.ToString();
             }
-			
+
+
+            if (output.KeyRiskIndicator.RiskId != null)
+            {
+                var _lookupUser = await _lookup_riskRepository.FirstOrDefaultAsync((int)output.KeyRiskIndicator.RiskId);
+                output.RiskName = _lookupUser?.Name?.ToString();
+            }
+
             return output;
          }
 		 
@@ -119,7 +135,14 @@ namespace ICMSDemo.KeyRiskIndicators
                 var _lookupUser = await _lookup_userRepository.FirstOrDefaultAsync((long)output.KeyRiskIndicator.UserId);
                 output.UserName = _lookupUser?.Name?.ToString();
             }
-			
+
+
+            if (output.KeyRiskIndicator.RiskId != null)
+            {
+                var _lookupUser = await _lookup_riskRepository.FirstOrDefaultAsync((int)output.KeyRiskIndicator.RiskId);
+                output.RiskName = _lookupUser?.Name?.ToString();
+            }
+
             return output;
          }
 
@@ -218,7 +241,7 @@ namespace ICMSDemo.KeyRiskIndicators
 				lookupTableDtoList.Add(new KeyRiskIndicatorExceptionTypeLookupTableDto
 				{
 					Id = exceptionType.Id,
-					DisplayName = exceptionType.Code?.ToString()
+					DisplayName = exceptionType.Name + " [" + exceptionType.Code?.ToString()  + "]"
 				});
 			}
 

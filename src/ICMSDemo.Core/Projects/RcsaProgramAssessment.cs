@@ -13,9 +13,9 @@ namespace ICMSDemo.Projects
         public int TenantId { get; set; }
         public virtual int ProjectId { get; set; }
         public virtual long BusinessUnitId { get; set; }
-        public virtual DateTime DateVerified { get; set; }
+        public virtual DateTime? DateVerified { get; set; }
         public virtual VerificationStatusEnum VerificationStatus { get; set; }
-        public virtual long VerifiedByUserId { get; set; }
+        public virtual long? VerifiedByUserId { get; set; }
 
         [ForeignKey("VerifiedByUserId")]
         public User VerifiedByUserFk { get; set; }

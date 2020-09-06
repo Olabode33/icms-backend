@@ -42,7 +42,7 @@ namespace ICMSDemo.ControlTestingAssessment
 
 		 public async Task<PagedResultDto<GetControlTestingForViewDto>> GetAll(GetAllControlTestingsInput input)
          {
-			var filteredControlTestings = _controlTestingRepository.GetAll()
+			var filteredControlTestings = _controlTestingRepository.GetAll().Include(e => e.AssignedUserFk)
 						.WhereIf(!string.IsNullOrWhiteSpace(input.Filter), e => false || e.Name.Contains(input.Filter))
 						.WhereIf(!string.IsNullOrWhiteSpace(input.NameFilter), e => e.Name == input.NameFilter)
 						.WhereIf(input.MinTestingTemplateIdFilter != null, e => e.TestingTemplateId >= input.MinTestingTemplateIdFilter)
@@ -60,11 +60,12 @@ namespace ICMSDemo.ControlTestingAssessment
                                 Name = o.Name,
                                 TestingTemplateId = o.TestingTemplateId,
                                 EndDate = o.EndDate,
-                                Id = o.Id
+                                Id = o.Id,
+								AssignedUserId = o.AssignedUserId
 							},
-							Name = o.Name,
+							Name = o.AssignedUserFk == null ? o.Name : o.AssignedUserFk.FullName,
 							EndDate = o.EndDate,
-							Id = o.Id
+							Id = o.Id,
 						 };
 
             var totalCount = await filteredControlTestings.CountAsync();
@@ -125,10 +126,12 @@ namespace ICMSDemo.ControlTestingAssessment
             {
 				CreateOrEditWorkingPaperNewDto workingPaper = new CreateOrEditWorkingPaperNewDto
 				{
-					AssignedToId = controlTesting.CreatorUserId,
+					AssignedToId = controlTesting.AssignedUserId,
 					Comment = controlTesting.Name,
 					TestingTemplateId = controlTesting.TestingTemplateId,
-					OrganizationUnitId = controlTesting.OrganizationUnitId
+					OrganizationUnitId = controlTesting.OrganizationUnitId,
+					ProjectId = controlTesting.ProjectId,
+					Id = null
 				};
 				await _workingPaperNewsAppService.CreateOrEdit(workingPaper);
 

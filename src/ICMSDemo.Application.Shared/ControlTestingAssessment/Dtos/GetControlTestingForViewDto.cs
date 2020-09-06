@@ -12,7 +12,7 @@ namespace ICMSDemo.ControlTestingAssessment.Dtos
 
         public int? Id { get; set; }
 
-
+        public string AssignedToUserFullName { get; set; }
         public DateTime? EndDate { get; set; }
 
     }

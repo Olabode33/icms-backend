@@ -120,9 +120,9 @@ namespace ICMSDemo.Risks
 				{
 					Name = input.Name,
 					Description = input.Description,
-					Severity = input.Severity,
-					TargetRemediation = id,
-
+					Severity = Severity.Medium,
+					TargetRemediation = 10,
+					Remediation = ExceptionRemediationTypeEnum.Remediable
 				};
 
 				await _exceptionTypesAppService.CreateOrEdit(exception);

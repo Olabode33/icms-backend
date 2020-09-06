@@ -8,56 +8,58 @@ namespace ICMSDemo.WorkingPaperNews.Dtos
 {
     public class CreateOrEditWorkingPaperNewDto : EntityDto<Guid?>
     {
-		public CreateOrEditTestingAttributeDto[] Attributes { set; get; }
-		public string Code { get; set; }
-		
-		
-		public string Comment { get; set; }
-		
-		
-		public DateTime TaskDate { get; set; }
-		
-		
-		public DateTime DueDate { get; set; }
-		
-		
-		public TaskStatus TaskStatus { get; set; }
-		
-		
-		public decimal Score { get; set; }
-		
-		
-		public DateTime? ReviewDate { get; set; }
-		
-		
-		public DateTime? CompletionDate { get; set; }
-		
-		
-		 public int? TestingTemplateId { get; set; }
-		 
-		 		 public long? OrganizationUnitId { get; set; }
-		 
-		 		 public long? CompletedUserId { get; set; }
-		 
-		 		 public long? ReviewedUserId { get; set; }
+        public CreateOrEditTestingAttributeDto[] Attributes { set; get; }
+        public string Code { get; set; }
+
+
+        public string Comment { get; set; }
+
+
+        public DateTime TaskDate { get; set; }
+
+
+        public DateTime DueDate { get; set; }
+
+
+        public TaskStatus TaskStatus { get; set; }
+
+
+        public decimal Score { get; set; }
+
+
+        public DateTime? ReviewDate { get; set; }
+
+
+        public DateTime? CompletionDate { get; set; }
+
+
+        public int? TestingTemplateId { get; set; }
+
+        public long? OrganizationUnitId { get; set; }
+
+        public long? CompletedUserId { get; set; }
+
+        public long? ReviewedUserId { get; set; }
         public long? AssignedToId { get; set; }
+        public long? ProjectId { get; set; }
     }
 
-	public class CreateOrEditTestingAttributeDto {
-		public string AttributeText { get; set; }
-		public bool Result { get; set; }
-		public int Weight { get; set; }
-		public string Comments { get; set; }
-		public int? TestingAttrributeId { get; set; }
+    public class CreateOrEditTestingAttributeDto
+    {
+        public string AttributeText { get; set; }
+        public bool Result { get; set; }
+        public int Weight { get; set; }
+        public string Comments { get; set; }
+        public int? TestingAttrributeId { get; set; }
         public int Sequence { get; set; }
-		public Guid? WorkingPaperId { get; set; }
+        public Guid? WorkingPaperId { get; set; }
         public string SampleIdentifier { get; set; }
-		public int? ParentId { get; set; }
-	}
+        public int? ParentId { get; set; }
+    }
 
-	public class AssignWorkingPaperNewDto : EntityDto<Guid>
-	{
-		public long UserId { get; set; }
-	}
+    public class AssignWorkingPaperNewDto : EntityDto<Guid>
+    {
+        public long UserId { get; set; }
+    }
 
 }

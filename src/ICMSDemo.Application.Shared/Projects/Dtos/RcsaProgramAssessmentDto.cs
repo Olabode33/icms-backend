@@ -12,7 +12,7 @@ namespace ICMSDemo.Projects.Dtos
         public long BusinessUnitId { get; set; }
         public DateTime? DateVerified { get; set; }
         public VerificationStatusEnum VerificationStatus { get; set; }
-        public long VerifiedByUserId { get; set; }
+        public long? VerifiedByUserId { get; set; }
         public bool Changes { get; set; }
     }
 

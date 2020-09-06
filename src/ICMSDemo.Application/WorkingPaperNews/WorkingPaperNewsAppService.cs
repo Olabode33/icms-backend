@@ -21,6 +21,7 @@ using Abp.Timing;
 using ICMSDemo.Notifications;
 using ICMSDemo.WorkingPaperReviewComments;
 using ICMSDemo.WorkingPaperReviewComments.Dtos;
+using Microsoft.AspNetCore.Components;
 
 namespace ICMSDemo.WorkingPaperNews
 {
@@ -173,7 +174,7 @@ namespace ICMSDemo.WorkingPaperNews
                 };
             }
 
-            if (output.WorkingPaperNew.OrganizationUnitId != null)
+            if (output.WorkingPaperNew.OrganizationUnitId != null && output.WorkingPaperNew.OrganizationUnitId > 0)
             {
                 var _lookupOrganizationUnit = await _lookup_organizationUnitRepository.FirstOrDefaultAsync((long)output.WorkingPaperNew.OrganizationUnitId);
                 output.OrganizationUnitDisplayName = _lookupOrganizationUnit.DisplayName.ToString();
@@ -282,19 +283,25 @@ namespace ICMSDemo.WorkingPaperNews
                 workingPaperNew.TenantId = (int)AbpSession.TenantId;
             }
             workingPaperNew.Code = DateTime.Now.ToString("YYMMdd") + "-" + Guid.NewGuid().ToString().ToUpper().Substring(1, 5);
-            workingPaperNew.CompletedById = AbpSession.UserId;
+            //workingPaperNew.CompletedById = AbpSession.UserId;
             workingPaperNew.CompletionDate = DateTime.Now;
             workingPaperNew.DueDate = DateTime.Now.AddDays(1);
-            workingPaperNew.TaskStatus = input.Attributes.Length >= testingTemplate.SampleSize ? TaskStatus.PendingReview : TaskStatus.Open;
+            workingPaperNew.TaskStatus = input.Attributes != null ? (input.Attributes.Length >= testingTemplate.SampleSize ? TaskStatus.PendingReview : TaskStatus.Open) : TaskStatus.Open;
             workingPaperNew.TaskDate = DateTime.Now;
+            workingPaperNew.ProjectId = (int)input.ProjectId;
+            workingPaperNew.AssignedToId = input.AssignedToId;
 
             var id = await _workingPaperNewRepository.InsertAndGetIdAsync(workingPaperNew);
             await CurrentUnitOfWork.SaveChangesAsync();
-            workingPaperNew.Score = await SaveWorkingPaperDetails(input.Attributes, testingTemplateAttributes, id);
 
-            //Save score
-            workingPaperNew.Id = id;
-            await _workingPaperNewRepository.UpdateAsync(workingPaperNew);
+            if (input.Attributes != null)
+            {
+                workingPaperNew.Score = await SaveWorkingPaperDetails(input.Attributes, testingTemplateAttributes, id);
+                //Save score
+                workingPaperNew.Id = id;
+                await _workingPaperNewRepository.UpdateAsync(workingPaperNew);
+            }
+
         }
 
         [AbpAuthorize(AppPermissions.Pages_WorkingPaperNews_Update)]

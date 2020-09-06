@@ -24,7 +24,7 @@ using ICMSDemo.Processes.Exporting;
 
 namespace ICMSDemo.Processes
 {
-    [AbpAuthorize(AppPermissions.Pages_Processes)]
+    //[AbpAuthorize(AppPermissions.Pages_Processes)]
     public class ProcessesAppService : ICMSDemoAppServiceBase, IProcessesAppService
     {
         private readonly IRepository<Process, long> _processRepository;
@@ -32,15 +32,15 @@ namespace ICMSDemo.Processes
         private readonly IRepository<OrganizationUnit, long> _lookup_organizationUnitRepository;
         private readonly IRepository<ProcessRisk> _lookup_processRiskRepository;
         private readonly IRepository<ProcessRiskControl> _lookup_processRiskControlRepository;
-        private readonly IProcessingExcelExporter _processingExcelExporter;
+        //private readonly IProcessingExcelExporter _processingExcelExporter;
 
         public ProcessesAppService(
             IRepository<Process, long> processRepository, 
             IRepository<User, long> lookup_userRepository, 
             IRepository<OrganizationUnit, long> lookup_organizationUnitRepository,
             IRepository<ProcessRisk> lookup_processRiskRepository,
-            IRepository<ProcessRiskControl> lookup_processRiskControlRepository,
-            IProcessingExcelExporter processingExcelExporter
+            IRepository<ProcessRiskControl> lookup_processRiskControlRepository//,
+            //IProcessingExcelExporter processingExcelExporter
             )
         {
             _processRepository = processRepository;
@@ -48,7 +48,7 @@ namespace ICMSDemo.Processes
             _lookup_organizationUnitRepository = lookup_organizationUnitRepository;
             _lookup_processRiskRepository = lookup_processRiskRepository;
             _lookup_processRiskControlRepository = lookup_processRiskControlRepository;
-            _processingExcelExporter = processingExcelExporter;
+            //_processingExcelExporter = processingExcelExporter;
         }
 
     
@@ -310,27 +310,27 @@ namespace ICMSDemo.Processes
             return dto;
         }
 
-        public async Task<FileDto> GetProcessToExcel()
-        {
-            var filteredControlTestings = _processRepository.GetAll();
-            var query = (from o in filteredControlTestings
+        //public async Task<FileDto> GetProcessToExcel()
+        //{
+        //    var filteredControlTestings = _processRepository.GetAll();
+        //    var query = (from o in filteredControlTestings
 
-                         select new GetProcessForViewDto()
-                         {
-                             Process = new ProcessDto
-                             {
-                                 Name = o.Name,
-                                 Description = o.Description,
-                                 Casade = o.Casade,
-                                 Id = o.Id,
+        //                 select new GetProcessForViewDto()
+        //                 {
+        //                     Process = new ProcessDto
+        //                     {
+        //                         Name = o.Name,
+        //                         Description = o.Description,
+        //                         Casade = o.Casade,
+        //                         Id = o.Id,
                                  
-                             },
-                         });
+        //                     },
+        //                 });
 
-            var processListDtos = await query.ToListAsync();
+        //    var processListDtos = await query.ToListAsync();
 
-            return _processingExcelExporter.ExportToFile(processListDtos);
-        }
+        //    return _processingExcelExporter.ExportToFile(processListDtos);
+        //}
 
     }
 }

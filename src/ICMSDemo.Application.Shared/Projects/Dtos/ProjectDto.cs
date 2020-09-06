@@ -35,6 +35,7 @@ namespace ICMSDemo.Projects.Dtos
 
 		 		 public long? ScopeId { get; set; }
         public bool Commenced { get; set; }
+        public bool Closed { get; set; }
         public ProjectOwner? ProjectOwner { get; set; }
     }
 }
