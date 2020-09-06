@@ -100,18 +100,18 @@ namespace ICMSDemo.Controls
             return output;
          }
 
-		 public async Task CreateOrEdit(CreateOrEditControlDto input)
+		 public async Task<NameValueDto<int>> CreateOrEdit(CreateOrEditControlDto input)
          {
             if(input.Id == null){
-				await Create(input);
+				return await Create(input);
 			}
 			else{
-				await Update(input);
+				return await Update(input);
 			}
          }
 
 		 [AbpAuthorize(AppPermissions.Pages_Controls_Create)]
-		 protected virtual async Task Create(CreateOrEditControlDto input)
+		 protected virtual async Task<NameValueDto<int>> Create(CreateOrEditControlDto input)
          {
             var control = ObjectMapper.Map<Control>(input);
 			var prevCount = await _controlRepository.CountAsync();
@@ -126,14 +126,24 @@ namespace ICMSDemo.Controls
 			}
 		
 
-            await _controlRepository.InsertAsync(control);
+            var id  = await _controlRepository.InsertAndGetIdAsync(control);
+			return new NameValueDto<int>
+			{
+				Name = control.Name,
+				Value = id
+			};
          }
 
 		 [AbpAuthorize(AppPermissions.Pages_Controls_Edit)]
-		 protected virtual async Task Update(CreateOrEditControlDto input)
+		 protected virtual async Task<NameValueDto<int>> Update(CreateOrEditControlDto input)
          {
             var control = await _controlRepository.FirstOrDefaultAsync((int)input.Id);
              ObjectMapper.Map(input, control);
+			return new NameValueDto<int>
+			{
+				Name = input.Name,
+				Value = control.Id
+			};
          }
 
 		 [AbpAuthorize(AppPermissions.Pages_Controls_Delete)]

@@ -15,7 +15,7 @@ namespace ICMSDemo.Risks
 
 		Task<GetRiskForEditOutput> GetRiskForEdit(EntityDto input);
 
-		Task CreateOrEdit(CreateOrEditRiskDto input);
+		Task<NameValueDto<int>> CreateOrEdit(CreateOrEditRiskDto input);
 
 		Task Delete(EntityDto input);
 

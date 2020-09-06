@@ -15,7 +15,7 @@ namespace ICMSDemo.Controls
 
 		Task<GetControlForEditOutput> GetControlForEdit(EntityDto input);
 
-		Task CreateOrEdit(CreateOrEditControlDto input);
+		Task<NameValueDto<int>> CreateOrEdit(CreateOrEditControlDto input);
 
 		Task Delete(EntityDto input);
 

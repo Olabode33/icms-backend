@@ -84,18 +84,18 @@ namespace ICMSDemo.Risks
             return output;
          }
 
-		 public async Task CreateOrEdit(CreateOrEditRiskDto input)
+		 public async Task<NameValueDto<int>> CreateOrEdit(CreateOrEditRiskDto input)
          {
             if(input.Id == null){
-				await Create(input);
+				return await Create(input);
 			}
 			else{
-				await Update(input);
+				return await Update(input);
 			}
          }
 
 		 [AbpAuthorize(AppPermissions.Pages_Risks_Create)]
-		 protected virtual async Task Create(CreateOrEditRiskDto input)
+		 protected virtual async Task<NameValueDto<int>> Create(CreateOrEditRiskDto input)
          {
             var risk = ObjectMapper.Map<Risk>(input);
 
@@ -110,14 +110,26 @@ namespace ICMSDemo.Risks
 
 			risk.Code = "R-" + prevCount.ToString();
 
-            await _riskRepository.InsertAsync(risk);
+            var id = await _riskRepository.InsertAndGetIdAsync(risk);
+
+			return new NameValueDto<int>
+			{
+				Name = input.Name,
+				Value = id
+			};
          }
 
 		 [AbpAuthorize(AppPermissions.Pages_Risks_Edit)]
-		 protected virtual async Task Update(CreateOrEditRiskDto input)
+		 protected virtual async Task<NameValueDto<int>> Update(CreateOrEditRiskDto input)
          {
             var risk = await _riskRepository.FirstOrDefaultAsync((int)input.Id);
              ObjectMapper.Map(input, risk);
+
+			return new NameValueDto<int>
+			{
+				Name = input.Name,
+				Value = risk.Id
+			};
          }
 
 		 [AbpAuthorize(AppPermissions.Pages_Risks_Delete)]
